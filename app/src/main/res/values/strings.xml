@@ -1,5 +1,8 @@
 <resources>
-    <string name="app_name">MegaMovies</string>
+    <string name="app_name">MegaShow</string>
+    <string name="app_desc">Get All The Movies and Tv Series</string>
+    <string name="top_review">Top Review</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -8,7 +11,7 @@
     <string name="action_settings">Settings</string>
 
     <!-- API KEY -->
-    <string name="api_key"> <!-- place you API KEY HERE --> </string>
+    <string name="api_key"><!--Place Your Api Key Here --></string>
 
     <!-- BASE URL -->
     <string name="movie_base_url">https://api.themoviedb.org/3/</string>

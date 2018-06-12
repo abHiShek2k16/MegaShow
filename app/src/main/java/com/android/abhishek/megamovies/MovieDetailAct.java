@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.android.abhishek.megamovies.adapter.MovieCastsAdapter;
@@ -86,6 +87,12 @@ public class MovieDetailAct extends AppCompatActivity {
     TextView readAll;
     @BindView(R.id.toolBarATMovieDetail)
     android.support.v7.widget.Toolbar toolbar;
+    @BindView(R.id.totaRatingBarAtMv)
+    RatingBar totalRating;
+    @BindView(R.id.ratingCountAtMv)
+    TextView ratingCount;
+    @BindView(R.id.ratingStrAtMv)
+    TextView ratingStrTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,6 +158,15 @@ public class MovieDetailAct extends AppCompatActivity {
             @Override
             public void unLiked(LikeButton likeButton) {
                 likeButton.setLiked(false);
+            }
+        });
+
+        readAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MovieDetailAct.this,ReviewAct.class);
+                intent.putExtra(getResources().getString(R.string.intent_id_passing),movieDetail.getMovieReview());
+                startActivity(intent);
             }
         });
 
@@ -233,6 +249,10 @@ public class MovieDetailAct extends AppCompatActivity {
         totalVoteTv.setText(totalVote);
         releaseDateTv.setText(changeFormatOfDate(releaseDate));
         overviewTv.setText(overView);
+
+        ratingCount.setText(totalVote);
+        ratingStrTv.setText(rating);
+        totalRating.setRating(Float.parseFloat(rating));
 
         trailerRv.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.HORIZONTAL));
         TrailerAdapter trailerAdapter = new TrailerAdapter(movieDetail.getMovieVideos().getVideosResults());

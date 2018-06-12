@@ -60,110 +60,123 @@
                     android:layout_marginBottom="@dimen/x16"
                     android:background="@drawable/white_circle_icon"
                     app:icon_type="heart"
-                    app:circle_start_color="@color/colorPrimary"
-                    app:dots_primary_color="@color/colorAccent"
-                    app:dots_secondary_color="@color/colorPrimary"
+                    app:circle_start_color="@color/colorPrimaryDark"
+                    app:dots_primary_color="@color/red"
+                    app:dots_secondary_color="@color/colorPrimaryDark"
                     app:circle_end_color="@color/colorAccent"
                     app:icon_size="@dimen/x32"
                     app:anim_scale_factor="2"
                     app:is_enabled="true" />
             </RelativeLayout>
 
-            <android.support.v7.widget.CardView
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="@dimen/x12"
-                app:cardElevation="@dimen/x12"
-                app:cardPreventCornerOverlap="true"
-                app:cardUseCompatPadding="true">
-                <LinearLayout
+                android:layout_height="wrap_content">
+                <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingLeft="@dimen/x12"
-                    android:paddingRight="@dimen/x16"
-                    android:paddingTop="@dimen/x16">
-
-                    <ImageView
-                        android:id="@+id/logoIv"
+                    app:cardCornerRadius="@dimen/x12"
+                    app:cardElevation="@dimen/x4"
+                    app:cardPreventCornerOverlap="true"
+                    app:cardUseCompatPadding="true"
+                    android:background="@color/grey">
+                    <android.support.v7.widget.CardView
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/image_logo_height"
-                        android:layout_weight="1"
-                        android:scaleType="fitXY"
-                        android:contentDescription="@string/image_desc"
-                        android:layout_marginBottom="@dimen/x12"/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:paddingLeft="@dimen/x32"
-                        android:paddingRight="@dimen/x12"
-                        android:paddingTop="@dimen/x32">
-
-                        <TextView
+                        android:layout_height="wrap_content"
+                        app:cardCornerRadius="@dimen/x12"
+                        app:cardElevation="@dimen/x12"
+                        app:cardPreventCornerOverlap="true"
+                        app:cardUseCompatPadding="true">
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/length"
-                            android:textColor="@color/black"
-                            android:textStyle="bold"
-                            android:fontFamily="sans-serif-condensed"/>
+                            android:orientation="horizontal"
+                            android:paddingLeft="@dimen/x12"
+                            android:paddingRight="@dimen/x16"
+                            android:paddingTop="@dimen/x16">
 
-                        <TextView
-                            android:id="@+id/lengthTvAtMovieDetail"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="@dimen/x16"
-                            android:layout_marginBottom="@dimen/x2"/>
+                            <ImageView
+                                android:id="@+id/logoIv"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/image_logo_height"
+                                android:layout_weight="1"
+                                android:scaleType="fitXY"
+                                android:contentDescription="@string/image_desc"
+                                android:layout_marginBottom="@dimen/x12"/>
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/rating"
-                            android:textColor="@color/black"
-                            android:textStyle="bold"
-                            android:fontFamily="sans-serif-condensed"/>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:paddingLeft="@dimen/x32"
+                                android:paddingRight="@dimen/x12"
+                                android:paddingTop="@dimen/x32">
 
-                        <TextView
-                            android:id="@+id/ratingTvAtMovieDetail"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="@dimen/x16"
-                            android:layout_marginBottom="@dimen/x2"/>
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/length"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold"
+                                    android:fontFamily="sans-serif-condensed"/>
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/total_rating"
-                            android:textColor="@color/black"
-                            android:textStyle="bold"
-                            android:fontFamily="sans-serif-condensed"/>
+                                <TextView
+                                    android:id="@+id/lengthTvAtMovieDetail"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="@dimen/x16"
+                                    android:layout_marginBottom="@dimen/x2"/>
 
-                        <TextView
-                            android:id="@+id/totalVoteTvAtMovieDetail"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="@dimen/x16"
-                            android:layout_marginBottom="@dimen/x2"/>
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/rating"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold"
+                                    android:fontFamily="sans-serif-condensed"/>
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/releasing_date"
-                            android:textColor="@color/black"
-                            android:textStyle="bold"
-                            android:fontFamily="sans-serif-condensed"/>
+                                <TextView
+                                    android:id="@+id/ratingTvAtMovieDetail"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="@dimen/x16"
+                                    android:layout_marginBottom="@dimen/x2"/>
 
-                        <TextView
-                            android:id="@+id/dateTvAtMovieDetail"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="@dimen/x16"
-                            android:layout_marginBottom="@dimen/x2"/>
-                    </LinearLayout>
-                </LinearLayout>
-            </android.support.v7.widget.CardView>
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/total_rating"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold"
+                                    android:fontFamily="sans-serif-condensed"/>
+
+                                <TextView
+                                    android:id="@+id/totalVoteTvAtMovieDetail"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="@dimen/x16"
+                                    android:layout_marginBottom="@dimen/x2"/>
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/releasing_date"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold"
+                                    android:fontFamily="sans-serif-condensed"/>
+
+                                <TextView
+                                    android:id="@+id/dateTvAtMovieDetail"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="@dimen/x16"
+                                    android:layout_marginBottom="@dimen/x2"/>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </android.support.v7.widget.CardView>
+                </android.support.v7.widget.CardView>
+            </FrameLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -195,7 +208,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/x1"
                 android:layout_marginTop="@dimen/x8"
                 android:background="@color/black"
                 android:layout_marginBottom="@dimen/x8"
@@ -216,18 +229,20 @@
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:fontFamily="sans-serif-condensed"
-                    android:paddingLeft="@dimen/x16"
+                    android:layout_marginBottom="@dimen/x8"
                     android:paddingTop="@dimen/x8"
-                    android:layout_marginBottom="@dimen/x8"/>
+                    android:paddingLeft="@dimen/x16"/>
                 <android.support.v7.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/trailerRv"/>
+                    android:id="@+id/trailerRv"
+                    android:layout_marginBottom="@dimen/x8"
+                    android:layout_marginTop="@dimen/x8"/>
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/x1"
                 android:layout_marginTop="@dimen/x8"
                 android:background="@color/black"
                 android:layout_marginBottom="@dimen/x8"
@@ -253,17 +268,67 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/castRvAtMovieDetail"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/x8"
+                    android:layout_marginTop="@dimen/x8"/>
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/x1"
                 android:layout_marginTop="@dimen/x8"
                 android:background="@color/black"
                 android:layout_marginBottom="@dimen/x8"
                 android:layout_marginRight="@dimen/x22"
                 android:layout_marginLeft="@dimen/x22"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/x128"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/ratingStrAtMv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textSize="@dimen/xs64"
+                    android:paddingLeft="@dimen/x16"
+                    android:paddingTop="@dimen/x12"
+                    android:textColor="@color/colorAccent"
+                    android:fontFamily="sans-serif-condensed"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="center">
+                    <RatingBar
+                        android:id="@+id/totaRatingBarAtMv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="?android:attr/ratingBarStyleSmall"
+                        android:numStars="10"
+                        android:paddingLeft="@dimen/x8"
+                        android:paddingRight="@dimen/x16"/>
+                    <TextView
+                        android:id="@+id/ratingCountAtMv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/x16S"
+                        android:layout_marginLeft="@dimen/x8"
+                        android:layout_marginRight="@dimen/x16"
+                        android:fontFamily="sans-serif-condensed"
+                        android:drawablePadding="@dimen/x8"
+                        android:drawableRight="@drawable/baseline_person_black_18dp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/top_review"
+                android:textAlignment="center"
+                android:textStyle="normal"
+                android:textSize="@dimen/xs22"
+                android:layout_marginBottom="@dimen/x8"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/reviewRvAtMovieDetail"
@@ -277,10 +342,11 @@
                 android:layout_height="wrap_content"
                 android:text="@string/review"
                 android:textAlignment="center"
-                android:textColor="@color/colorPrimary"
-                android:textSize="12sp"
+                android:textColor="@color/dark_green"
+                android:textSize="@dimen/x16S"
                 android:fontFamily="sans-serif-condensed"
                 android:paddingLeft="@dimen/x16"
+                android:paddingBottom="@dimen/x12"
                 android:paddingTop="@dimen/x16"
                 android:visibility="gone"/>
 

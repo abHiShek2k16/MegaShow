@@ -2,6 +2,7 @@ package com.android.abhishek.megamovies.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 
 import com.android.abhishek.megamovies.R;
 import com.android.abhishek.megamovies.model.ReviewResults;
+import com.cooltechworks.views.WhatsAppTextView;
 
 import java.util.ArrayList;
 
@@ -48,25 +50,25 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewCust
             char[] array = review.toCharArray();
             if(array.length<=100){
                 holder.reviewTv.setText(review);
-                holder.more.setVisibility(View.INVISIBLE);
             }else{
                 String reviewStr = review.substring(0,100)+"...";
                 holder.reviewTv.setText(reviewStr);
-                holder.more.setVisibility(View.VISIBLE);
             }
         }
 
-        holder.more.setOnClickListener(new View.OnClickListener() {
+        holder.reviewTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(flag){
-                    holder.more.setText("More");
-                    holder.reviewTv.setText(review.substring(0,100)+"...");
-                    flag = false;
-                }else {
-                    holder.more.setText("Less");
-                    holder.reviewTv.setText(review);
-                    flag = true;
+                char[] array = review.toCharArray();
+                if(array.length>100){
+                    if(flag){
+                        String reviewStr = review.substring(0,100)+"...";
+                        holder.reviewTv.setText(reviewStr);
+                        flag = false;
+                    }else {
+                        holder.reviewTv.setText(review);
+                        flag = true;
+                    }
                 }
             }
         });
@@ -83,9 +85,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewCust
         @BindView(R.id.authorNameTv)
         TextView authorNameTv;
         @BindView(R.id.reviewTv)
-        TextView reviewTv;
-        @BindView(R.id.moreBtn)
-        TextView more;
+        WhatsAppTextView reviewTv;
         public ReviewCustomAdapter(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);

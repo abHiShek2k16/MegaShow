@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:textSize="@dimen/xs12"
-        android:textColor="@color/black"
+        android:textColor="@color/grey"
         android:fontFamily="sans-serif-condensed"
         android:ellipsize="marquee"/>
 

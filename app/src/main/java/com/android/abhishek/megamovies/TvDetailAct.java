@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.android.abhishek.megamovies.adapter.CreatorAdapter;
@@ -88,6 +89,12 @@ public class TvDetailAct extends AppCompatActivity {
     TextView readAll;
     @BindView(R.id.toolBarAtTv)
     android.support.v7.widget.Toolbar toolbar;
+    @BindView(R.id.totaRatingBarAtTv)
+    RatingBar totalRating;
+    @BindView(R.id.ratingCountAtTv)
+    TextView ratingCount;
+    @BindView(R.id.ratingStrAtTv)
+    TextView ratingStrTv;
 
 
     @Override
@@ -144,6 +151,15 @@ public class TvDetailAct extends AppCompatActivity {
                 startActivity(intent);
             }
         }));
+
+        readAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(TvDetailAct.this,ReviewAct.class);
+                intent.putExtra(getResources().getString(R.string.intent_id_passing),tvDetail.getReview());
+                startActivity(intent);
+            }
+        });
 
         likeButton.setOnLikeListener(new OnLikeListener() {
             @Override
@@ -239,6 +255,10 @@ public class TvDetailAct extends AppCompatActivity {
         firstEpisodeDateTv.setText(changeFormatOfDate(firstEpisode));
         lastEpisodeDateTv.setText(changeFormatOfDate(lastEpisode));
         overviewTv.setText(overView);
+
+        ratingCount.setText(totalVote);
+        ratingStrTv.setText(rating);
+        totalRating.setRating(Float.parseFloat(rating));
 
         trailerRv.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.HORIZONTAL));
         TrailerAdapter trailerAdapter = new TrailerAdapter(tvDetail.getVideos().getVideosResults());
