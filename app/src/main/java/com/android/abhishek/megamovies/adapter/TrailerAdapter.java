@@ -21,11 +21,6 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerC
 
     private ArrayList<VideosResults> movieVideosResultsAl;
 
-    @BindString(R.string.trailer_image_base_url)
-    String TRAILER_IMAGE_BASE_URL;
-    @BindString(R.string.trailer_image_type_url)
-    String IMAGE_TYPE;
-
     public TrailerAdapter(ArrayList<VideosResults> movieVideosResultsAl) {
         this.movieVideosResultsAl = movieVideosResultsAl;
     }

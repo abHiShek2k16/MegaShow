@@ -21,7 +21,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.MovieListCusto
 
     private ArrayList<ListResults> arrayList;
 
-    @BindString(R.string.image_base_url)
+    @BindString(R.string.imageBaseUrl)
     String IMAGE_BASE_URL;
 
     public ListAdapter(ArrayList<ListResults> arrayList){

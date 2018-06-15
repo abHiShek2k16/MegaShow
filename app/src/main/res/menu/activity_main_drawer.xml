@@ -7,34 +7,34 @@
         <item
             android:id="@+id/navMv"
             android:icon="@drawable/baseline_movie_black_48"
-            android:title="Movie" />
+            android:title="@string/movieStr" />
         <item
             android:id="@+id/navTv"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Tv" />
+            android:title="@string/tvStr" />
         <item
             android:id="@+id/navFav"
             android:icon="@drawable/navigation_favorites"
-            android:title="Favourite" />
+            android:title="@string/favStr" />
         <item
             android:id="@+id/navSetting"
             android:icon="@drawable/navigation_settings"
-            android:title="Setting" />
+            android:title="@string/settingStr" />
         <item
             android:id="@+id/navExit"
             android:icon="@drawable/baseline_arrow_left_black_48"
-            android:title="Exit" />
+            android:title="@string/exitStr" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="@string/communicateStr">
         <menu>
             <item
                 android:id="@+id/navShare"
                 android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:title="@string/shareStr" />
             <item
                 android:id="@+id/navRate"
-                android:title="Rate"
+                android:title="@string/rateStr"
                 android:icon="@drawable/baseline_star_black_48"/>
         </menu>
     </item>

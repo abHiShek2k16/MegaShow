@@ -22,10 +22,8 @@ public class MovieCastsAdapter extends RecyclerView.Adapter<MovieCastsAdapter.Ca
 
     private ArrayList<MovieCastsResult> movieCastsResultsAl;
 
-    @BindString(R.string.empty)
+    @BindString(R.string.emptyString)
     String EMPTY;
-    @BindString(R.string.image_base_url)
-    String IMAGE_BASE_URL;
 
     public MovieCastsAdapter(ArrayList<MovieCastsResult> movieCastsResultsAl) {
         this.movieCastsResultsAl = movieCastsResultsAl;

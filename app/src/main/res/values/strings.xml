@@ -1,68 +1,119 @@
 <resources>
-    <string name="app_name">MegaShow</string>
-    <string name="app_desc">Get All The Movies and Tv Series</string>
-    <string name="top_review">Top Review</string>
+    <!--    APP INFO    -->
+    <string name="app_name" translatable="false">MegaShow</string>
+    <string name="appDescription" translatable="false">Get All The Movies and Tv Series</string>
 
+    <!--    INSERT YOUR API KEY  -->
+    <string name="apiKey" translatable="false"></string>
+
+    <!--    API BASE URL    -->
+    <string name="apiBaseUrl" translatable="false">https://api.themoviedb.org/3/</string>
+    <string name="imageBaseUrl" translatable="false">https://image.tmdb.org/t/p/w500</string>
+    <string name="videoWebBaseUrl" translatable="false">http://www.youtube.com/watch?v=</string>
+    <string name="videoAppBaseUrl" translatable="false">vnd.youtube:</string>
+    <string name="trailerImageBaseUrl" translatable="false">https://img.youtube.com/vi/</string>
+
+    <!--    API QUERY   -->
+    <string name="popularQ" translatable="false">popular</string>
+    <string name="topRatedQ" translatable="false">top_rated</string>
+    <string name="upcomingQ" translatable="false">upcoming</string>
+    <string name="nowPlayingQ" translatable="false">now_playing</string>
+    <string name="onTheAirQ" translatable="false">on_the_air</string>
+    <string name="airingTodayQ" translatable="false">airing_today</string>
+    <string name="appendQueryMv" translatable="false">videos,reviews,casts</string>
+    <string name="appendQueryTv" translatable="false">videos,reviews</string>
+    <string name="trailerQ" translatable="false">/0.jpg</string>
+
+    <!--    PREFERENCE KEY  -->
+    <string name="movieSortPref" translatable="false">sort_movie_by</string>
+    <string name="tvSortPref" translatable="false">sort_tv_by</string>
+    <string name="favSortPref" translatable="false">sort_fav_by</string>
+    <string name="shakePref" translatable="false">shake_feature_key</string>
+    <string name="notificationPref" translatable="false">notification_feature_key</string>
+    <string name="tvPref" translatable="false">tv</string>
+    <string name="moviePref" translatable="false">movie</string>
+
+    <!--    INTENT KEY  -->
+    <string name="intentPassingOne" translatable="false">INTENT_STRING_ONE</string>
+    <string name="intentPassingTwo" translatable="false">INTENT_STRING_TWO</string>
+
+    <!--    XML STRING -->
+    <string name="movieStr">Movies</string>
+    <string name="tvStr">Tv Series</string>
+    <string name="favStr">Favourite</string>
+    <string name="settingStr">Setting</string>
+    <string name="exitStr">Exit</string>
+    <string name="shareStr">Share</string>
+    <string name="rateStr">Rate</string>
+    <string name="communicateStr">Communicate</string>
+    <string name="popularStr">Popular</string>
+    <string name="topRatedStr">Top Rated</string>
+    <string name="latestStr">Latest</string>
+    <string name="upcomingStr">Upcoming</string>
+    <string name="nowPlayingStr">Now Playing</string>
+    <string name="onTheAirStr">On The Air</string>
+    <string name="airingTodayStr">Airing Today</string>
+    <string name="previousStr">Previous</string>
+    <string name="nextStr">Next</string>
+    <string name="lengthStr">Length :</string>
+    <string name="ratingStr">Rating :</string>
+    <string name="totalRatingStr">Total Vote :</string>
+    <string name="runtimeStr">Runtime :</string>
+    <string name="firstAirDateStr">First Episode :</string>
+    <string name="lastAirDateStr">Last Episode :</string>
+    <string name="releasingDateStr">Releasing Date :</string>
+    <string name="bioStr">Biography :</string>
+    <string name="descriptionStr">Description</string>
+    <string name="trailerStr">Trailer</string>
+    <string name="videoStr">Video</string>
+    <string name="castStr">Casts</string>
+    <string name="creatorStr">Created By</string>
+    <string name="reviewStr">Read All Review</string>
+    <string name="topReviewStr">Top Review</string>
+    <string name="imageDesc">Image</string>
+    <string name="movieSortPrefStr">Sort Movie By</string>
+    <string name="tvSortPrefStr">Sort Tv Series By</string>
+    <string name="favSortPrefStr">Sort Favourite List By</string>
+    <string name="shakePrefStr">On Phone Shake</string>
+    <string name="notificationPrefStr">Notify Me About Latest Show</string>
+    <string name="shakeSummaryOn">change the page</string>
+    <string name="shakeSummaryOff">do not change the page</string>
+    <string name="notificationSummaryOn">notify me about latest show</string>
+    <string name="notificationSummaryOff">do not show notification</string>
+
+    <!--    MONTH NAME  -->
+    <string name="jan"> Jan</string>
+    <string name="Feb"> Feb</string>
+    <string name="Mar"> Mar</string>
+    <string name="April"> April</string>
+    <string name="May"> May</string>
+    <string name="June"> June</string>
+    <string name="july"> July</string>
+    <string name="Aug"> Aug</string>
+    <string name="Sept"> Sept</string>
+    <string name="Oct"> Oct</string>
+    <string name="Nov"> Nov</string>
+    <string name="Dec"> Dec</string>
+
+    <!--    Error   -->
+    <string name="infoUnavailable">Info UnAvailable</string>
+    <string name="connectionError">No Internet Connection\nonly favourite list available while offline</string>
+    <string name="netproblem">No Internet Connection</string>
+    <string name="noReviewFound">No Review Available</string>
+    <string name="noTrailerFound">No Any Trailer Available</string>
+    <string name="tryAgainLater">Please Try Again Later</string>
+    <string name="tryAgain">Try Again</string>
+    <string name="somethingWrong">Something went wrong Try again in few minutes</string>
+    <string name="nothingToShow">Nothing To Show Here</string>
+    <string name="emptyString"></string>
+
+    <!--    NAVIGATION DRAWER   -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-
-    <!-- API KEY -->
-    <string name="api_key"><!--Place Your Api Key Here --></string>
-
-    <!-- BASE URL -->
-    <string name="movie_base_url">https://api.themoviedb.org/3/</string>
-    <string name="image_base_url">https://image.tmdb.org/t/p/w500</string>
-    <string name="youtube_video_image_base_url"></string>
-    <string name="video_web_base_url">http://www.youtube.com/watch?v=</string>
-    <string name="video_app_base_url">vnd.youtube:</string>
-    <string name="trailer_image_base_url">https://img.youtube.com/vi/</string>
-    <string name="trailer_image_type_url">/0.jpg</string>
-    <string name="popular_movie">popular</string>
-    <string name="top_rated_movie">top_rated</string>
-    <string name="upcoming">upcoming</string>
-    <string name="now_playing">now_playing</string>
-    <string name="on_the_air">on_the_air</string>
-    <string name="airing_today">airing_today</string>
-    <string name="append_query_movie">videos,reviews,casts</string>
-    <string name="append_query_tv">videos,reviews</string>
-
-    <!-- XML String -->
-    <string name="popular_str">Popular</string>
-    <string name="top_rated_str">Top Rated</string>
-    <string name="latest_str">Latest</string>
-    <string name="upcoming_str">Upcoming</string>
-    <string name="now_playing_str">Now Playing</string>
-    <string name="on_the_air_str">On The Air</string>
-    <string name="airing_today_str">Airing Today</string>
-    <string name="previous">Previous</string>
-    <string name="next">Next</string>
-    <string name="image_desc">Image</string>
-    <string name="length">Length :</string>
-    <string name="rating">Rating :</string>
-    <string name="total_rating">Total Vote :</string>
-    <string name="runtime">Runtime :</string>
-    <string name="first_air_date">First Episode :</string>
-    <string name="last_air_date">Last Episode :</string>
-    <string name="releasing_date">Releasing Date :</string>
-    <string name="description">Description</string>
-    <string name="trailer">Trailer</string>
-    <string name="video">Video</string>
-    <string name="cast">Casts</string>
-    <string name="creater">Created By</string>
-    <string name="review">Read All Review</string>
-    <string name="bio">Biography : </string>
-
-
-    <!--    Activity String -->
-    <string name="intent_id_passing">INTENT_ID</string>
-
-    <!--    Error   -->
-    <string name="info_unavailable">Info UnAvailable</string>
-    <string name="empty"></string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

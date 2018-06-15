@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference android:key="@string/movieSortPref"
+        android:title="@string/movieSortPrefStr"
+        android:defaultValue="@string/topRatedStr"
+        android:entryValues="@array/movie_sort_key"
+        android:entries="@array/movie_sort_pref"/>
+
+    <ListPreference android:key="@string/tvSortPref"
+        android:title="@string/tvSortPrefStr"
+        android:defaultValue="@string/topRatedStr"
+        android:entryValues="@array/tv_sort_key"
+        android:entries="@array/tv_sort_pref"/>
+
+    <ListPreference android:key="@string/favSortPref"
+        android:title="@string/favSortPrefStr"
+        android:defaultValue="@string/moviePref"
+        android:entryValues="@array/fav_sort_key"
+        android:entries="@array/fav_sort_pref"/>
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/shakePref"
+        android:title="@string/shakePrefStr"
+        android:summaryOff="@string/shakeSummaryOff"
+        android:summaryOn="@string/shakeSummaryOn"/>
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/notificationPref"
+        android:title="@string/notificationPrefStr"
+        android:summaryOff="@string/notificationSummaryOff"
+        android:summaryOn="@string/notificationSummaryOn"/>
+</PreferenceScreen>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="movie_sort_key">
+        <item>@string/topRatedQ</item>
+        <item>@string/popularQ</item>
+        <item>@string/upcomingQ</item>
+        <item>@string/nowPlayingQ</item>
+    </array>
+    <array name="movie_sort_pref">
+        <item>@string/topRatedStr</item>
+        <item>@string/popularStr</item>
+        <item>@string/upcomingStr</item>
+        <item>@string/nowPlayingStr</item>
+    </array>
+
+    <array name="tv_sort_key">
+        <item>@string/topRatedQ</item>
+        <item>@string/popularQ</item>
+        <item>@string/onTheAirQ</item>
+        <item>@string/airingTodayQ</item>
+    </array>
+    <array name="tv_sort_pref">
+        <item>@string/topRatedStr</item>
+        <item>@string/popularStr</item>
+        <item>@string/onTheAirStr</item>
+        <item>@string/airingTodayStr</item>
+    </array>
+
+    <array name="fav_sort_key">
+        <item>@string/tvPref</item>
+        <item>@string/moviePref</item>
+    </array>
+    <array name="fav_sort_pref">
+        <item>@string/tvStr</item>
+        <item>@string/movieStr</item>
+    </array>
+</resources>

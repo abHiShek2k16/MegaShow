@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:paddingLeft="@dimen/x8"
-        android:paddingRight="@dimen/x16S"
+        android:paddingRight="@dimen/xs16"
         android:paddingBottom="@dimen/x8"
         android:orientation="vertical">
         <TextView
@@ -34,7 +34,7 @@
             android:id="@+id/reviewTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/x16S"
+            android:textSize="@dimen/xs16"
             android:fontFamily="sans-serif-condensed"
             android:paddingRight="@dimen/x8"
             android:paddingLeft="@dimen/x8"

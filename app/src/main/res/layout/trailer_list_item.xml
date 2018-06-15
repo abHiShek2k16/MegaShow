@@ -8,9 +8,9 @@
     <ImageView
         android:id="@+id/trailerImage"
         android:layout_width="@dimen/x256"
-        android:layout_height="190dp"
+        android:layout_height="@dimen/x220"
         android:scaleType="fitXY"
-        android:contentDescription="@string/image_desc"/>
+        android:contentDescription="@string/imageDesc"/>
 
     <ImageView
         android:layout_width="@dimen/x48"
@@ -18,5 +18,5 @@
         android:layout_centerInParent="true"
         android:src="@drawable/youtube"
         android:scaleType="fitXY"
-        android:contentDescription="@string/image_desc"/>
+        android:contentDescription="@string/imageDesc"/>
 </RelativeLayout>

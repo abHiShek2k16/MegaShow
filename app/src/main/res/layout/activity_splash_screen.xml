@@ -22,10 +22,10 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_below="@id/useLessFour"
-        android:text="@string/app_desc"
+        android:text="@string/appDescription"
         android:textColor="@color/white"
         android:fontFamily="cursive"
         android:textStyle="italic"
-        android:textSize="@dimen/x16S"/>
+        android:textSize="@dimen/xs16"/>
 
 </RelativeLayout>

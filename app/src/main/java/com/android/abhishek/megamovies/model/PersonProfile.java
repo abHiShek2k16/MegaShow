@@ -2,8 +2,6 @@ package com.android.abhishek.megamovies.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
-
 public class PersonProfile {
     @SerializedName(EndPoint.BIRTHDAY)
     String birthday;

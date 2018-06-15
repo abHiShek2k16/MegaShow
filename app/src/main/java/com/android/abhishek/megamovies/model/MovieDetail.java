@@ -7,8 +7,6 @@ import java.util.ArrayList;
 public class MovieDetail {
 
     //  Detail Api
-    @SerializedName(EndPoint.ADULT)
-    private String adult;
     @SerializedName(EndPoint.BACKDROP_PATH)
     private String backdropPath;
     @SerializedName(EndPoint.OVERVIEW)
@@ -21,8 +19,6 @@ public class MovieDetail {
     private String releaseDate;
     @SerializedName(EndPoint.RUNTIME)
     private String runtime;
-    @SerializedName(EndPoint.STATUS)
-    private String status;
     @SerializedName(EndPoint.TITLE)
     private String title;
     @SerializedName(EndPoint.VOTE_AVERAGE)
@@ -42,25 +38,19 @@ public class MovieDetail {
     @SerializedName(EndPoint.CASTS)
     private MovieCasts movieCasts;
 
-    public MovieDetail(String adult, String backdropPath, String overview, String posterPath, ArrayList<ProductionCompany> productionCompanies, String releaseDate, String runtime, String status, String title, String voteAvg, String voteCount, Videos movieVideos, Review movieReview, MovieCasts movieCasts) {
-        this.adult = adult;
+    public MovieDetail(String backdropPath, String overview, String posterPath, ArrayList<ProductionCompany> productionCompanies, String releaseDate, String runtime, String title, String voteAvg, String voteCount, Videos movieVideos, Review movieReview, MovieCasts movieCasts) {
         this.backdropPath = backdropPath;
         this.overview = overview;
         this.posterPath = posterPath;
         this.productionCompanies = productionCompanies;
         this.releaseDate = releaseDate;
         this.runtime = runtime;
-        this.status = status;
         this.title = title;
         this.voteAvg = voteAvg;
         this.voteCount = voteCount;
         this.movieVideos = movieVideos;
         this.movieReview = movieReview;
         this.movieCasts = movieCasts;
-    }
-
-    public String getAdult() {
-        return adult;
     }
 
     public String getBackdropPath() {
@@ -85,10 +75,6 @@ public class MovieDetail {
 
     public String getRuntime() {
         return runtime;
-    }
-
-    public String getStatus() {
-        return status;
     }
 
     public String getTitle() {

@@ -22,9 +22,9 @@ public class CreatorAdapter extends RecyclerView.Adapter<CreatorAdapter.CreatorC
 
     private ArrayList<TvCreatedByResults> tvCreatorResultsAl;
 
-    @BindString(R.string.empty)
+    @BindString(R.string.emptyString)
     String EMPTY;
-    @BindString(R.string.image_base_url)
+    @BindString(R.string.imageBaseUrl)
     String IMAGE_BASE_URL;
 
     public CreatorAdapter(ArrayList<TvCreatedByResults> tvCreatorResultsAl) {
@@ -59,7 +59,7 @@ public class CreatorAdapter extends RecyclerView.Adapter<CreatorAdapter.CreatorC
     }
 
     public class CreatorCustomAdapter extends RecyclerView.ViewHolder{
-        @BindView(R.id.createrIv)
+        @BindView(R.id.creatorIv)
         ImageView creatorIv;
         @BindView(R.id.TvOneCreator)
         TextView nameTv;

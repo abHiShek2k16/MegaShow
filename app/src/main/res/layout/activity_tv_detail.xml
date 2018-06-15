@@ -22,7 +22,7 @@
                     android:id="@+id/posterImageAtTv"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/x256"
-                    android:contentDescription="@string/image_desc"
+                    android:contentDescription="@string/imageDesc"
                     android:scaleType="fitXY" />
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolBarAtTv"
@@ -45,7 +45,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/x16S"
+                    android:textSize="@dimen/xs16"
                     android:layout_below="@id/movieNameAtTv"
                     android:paddingBottom="@dimen/x8"
                     android:paddingLeft="@dimen/x16"/>
@@ -94,10 +94,10 @@
                     <ImageView
                         android:id="@+id/logoIvAtTv"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/image_logo_height"
+                        android:layout_height="@dimen/x220"
                         android:layout_weight="1"
                         android:scaleType="fitXY"
-                        android:contentDescription="@string/image_desc"
+                        android:contentDescription="@string/imageDesc"
                         android:layout_marginBottom="@dimen/x12"/>
 
                     <LinearLayout
@@ -112,7 +112,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/runtime"
+                            android:text="@string/runtimeStr"
                             android:textColor="@color/black"
                             android:textStyle="bold"
                             android:fontFamily="sans-serif-condensed"/>
@@ -122,12 +122,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingLeft="@dimen/x16"
-                            android:layout_marginBottom="@dimen/x2"/>
+                            android:layout_marginBottom="@dimen/x2"
+                            android:singleLine="true"
+                            android:ellipsize="marquee"/>
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/rating"
+                            android:text="@string/ratingStr"
                             android:textColor="@color/black"
                             android:textStyle="bold"
                             android:fontFamily="sans-serif-condensed"/>
@@ -137,12 +139,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingLeft="@dimen/x16"
-                            android:layout_marginBottom="@dimen/x2"/>
+                            android:layout_marginBottom="@dimen/x2"
+                            android:singleLine="true"
+                            android:ellipsize="marquee"/>
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/total_rating"
+                            android:text="@string/totalRatingStr"
                             android:textColor="@color/black"
                             android:textStyle="bold"
                             android:fontFamily="sans-serif-condensed"/>
@@ -152,12 +156,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingLeft="@dimen/x16"
-                            android:layout_marginBottom="@dimen/x2"/>
+                            android:layout_marginBottom="@dimen/x2"
+                            android:singleLine="true"
+                            android:ellipsize="marquee"/>
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/first_air_date"
+                            android:text="@string/firstAirDateStr"
                             android:textColor="@color/black"
                             android:textStyle="bold"
                             android:fontFamily="sans-serif-condensed"/>
@@ -167,12 +173,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingLeft="@dimen/x16"
-                            android:layout_marginBottom="@dimen/x2"/>
+                            android:layout_marginBottom="@dimen/x2"
+                            android:singleLine="true"
+                            android:ellipsize="marquee"/>
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/last_air_date"
+                            android:text="@string/lastAirDateStr"
                             android:textColor="@color/black"
                             android:textStyle="bold"
                             android:fontFamily="sans-serif-condensed"/>
@@ -182,7 +190,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingLeft="@dimen/x16"
-                            android:layout_marginBottom="@dimen/x2"/>
+                            android:layout_marginBottom="@dimen/x2"
+                            android:singleLine="true"
+                            android:ellipsize="marquee"/>
                     </LinearLayout>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
@@ -197,7 +207,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/description"
+                    android:text="@string/descriptionStr"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:fontFamily="sans-serif-condensed"
@@ -208,7 +218,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/x16S"
+                    android:textSize="@dimen/xs16"
                     android:fontFamily="sans-serif-condensed"
                     android:paddingLeft="@dimen/x16"
                     android:paddingTop="@dimen/x8"
@@ -235,13 +245,27 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/video"
+                    android:text="@string/videoStr"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:fontFamily="sans-serif-condensed"
                     android:paddingLeft="@dimen/x16"
                     android:paddingTop="@dimen/x8"
                     android:layout_marginBottom="@dimen/x8"/>
+                <RelativeLayout android:id="@+id/noTSEAtTvTrailer"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x220"
+                    android:visibility="gone">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="@string/nothingToShow"
+                        android:textColor="@color/grey"
+                        android:textAlignment="center"
+                        android:textSize="@dimen/xs22"
+                        android:fontFamily="cursive"/>
+                </RelativeLayout>
                 <android.support.v7.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -267,15 +291,29 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/creater"
+                    android:text="@string/creatorStr"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:fontFamily="sans-serif-condensed"
                     android:paddingLeft="@dimen/x16"
                     android:paddingTop="@dimen/x8"
                     android:layout_marginBottom="@dimen/x8"/>
+                <RelativeLayout android:id="@+id/noTSEAtTvCreator"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/x220"
+                    android:visibility="gone">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="@string/nothingToShow"
+                        android:textColor="@color/grey"
+                        android:textAlignment="center"
+                        android:textSize="@dimen/xs22"
+                        android:fontFamily="cursive"/>
+                </RelativeLayout>
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/createrRvAtTv"
+                    android:id="@+id/creatorRvAtTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>
@@ -302,6 +340,7 @@
                     android:textStyle="normal"
                     android:textColor="@color/black"
                     android:paddingTop="@dimen/x16"
+                    android:singleLine="true"
                     android:fontFamily="sans-serif-condensed"/>
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -309,7 +348,7 @@
                     android:orientation="vertical"
                     android:layout_gravity="center">
                     <RatingBar
-                        android:id="@+id/totaRatingBarAtTv"
+                        android:id="@+id/totalRatingBarAtTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="?android:attr/ratingBarStyleSmall"
@@ -320,7 +359,7 @@
                         android:id="@+id/ratingCountAtTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/x16S"
+                        android:textSize="@dimen/xs16"
                         android:layout_marginLeft="@dimen/x8"
                         android:layout_marginRight="@dimen/x16"
                         android:fontFamily="sans-serif-condensed"
@@ -332,11 +371,27 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/top_review"
+                android:text="@string/topReviewStr"
                 android:textAlignment="center"
                 android:textStyle="normal"
                 android:textSize="@dimen/xs22"
                 android:layout_marginBottom="@dimen/x8"/>
+
+            <RelativeLayout android:id="@+id/noTSEAtTvReview"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/x220"
+                android:layout_marginTop="@dimen/x4"
+                android:visibility="gone">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="@string/nothingToShow"
+                    android:textColor="@color/grey"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/xs22"
+                    android:fontFamily="cursive"/>
+            </RelativeLayout>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/reviewRvAtTv"
@@ -348,10 +403,10 @@
                 android:id="@+id/readAllReviewAtTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/review"
+                android:text="@string/reviewStr"
                 android:textAlignment="center"
-                android:textColor="@color/dark_green"
-                android:textSize="@dimen/x16S"
+                android:textColor="@color/darkGreen"
+                android:textSize="@dimen/xs16"
                 android:fontFamily="sans-serif-condensed"
                 android:paddingLeft="@dimen/x16"
                 android:paddingBottom="@dimen/x12"

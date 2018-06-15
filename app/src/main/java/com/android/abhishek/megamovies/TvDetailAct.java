@@ -13,7 +13,9 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.abhishek.megamovies.adapter.CreatorAdapter;
 import com.android.abhishek.megamovies.adapter.ReviewAdapter;
@@ -42,19 +44,19 @@ public class TvDetailAct extends AppCompatActivity {
     private String tvId;
     private TvDetail tvDetail;
 
-    @BindString(R.string.api_key)
+    @BindString(R.string.apiKey)
     String API_KEY;
-    @BindString(R.string.image_base_url)
+    @BindString(R.string.imageBaseUrl)
     String IMAGE_BASE_URL;
-    @BindString(R.string.empty)
+    @BindString(R.string.emptyString)
     String EMPTY;
-    @BindString(R.string.info_unavailable)
+    @BindString(R.string.infoUnavailable)
     String DATA_NOT_AVAILABLE;
-    @BindString(R.string.video_app_base_url)
+    @BindString(R.string.videoAppBaseUrl)
     String VIDEO_APP_BASE_URL;
-    @BindString(R.string.video_web_base_url)
+    @BindString(R.string.videoWebBaseUrl)
     String VIDEO_WEB_BASE_URL;
-    @BindString(R.string.append_query_tv)
+    @BindString(R.string.appendQueryTv)
     String APPEND_QUERY;
 
     @BindView(R.id.posterImageAtTv)
@@ -81,7 +83,7 @@ public class TvDetailAct extends AppCompatActivity {
     TextView overviewTv;
     @BindView(R.id.trailerRvAtTv)
     RecyclerView trailerRv;
-    @BindView(R.id.createrRvAtTv)
+    @BindView(R.id.creatorRvAtTv)
     RecyclerView creatorRv;
     @BindView(R.id.reviewRvAtTv)
     RecyclerView reviewRv;
@@ -89,12 +91,18 @@ public class TvDetailAct extends AppCompatActivity {
     TextView readAll;
     @BindView(R.id.toolBarAtTv)
     android.support.v7.widget.Toolbar toolbar;
-    @BindView(R.id.totaRatingBarAtTv)
+    @BindView(R.id.totalRatingBarAtTv)
     RatingBar totalRating;
     @BindView(R.id.ratingCountAtTv)
     TextView ratingCount;
     @BindView(R.id.ratingStrAtTv)
     TextView ratingStrTv;
+    @BindView(R.id.noTSEAtTvCreator)
+    RelativeLayout creatorError;
+    @BindView(R.id.noTSEAtTvReview)
+    RelativeLayout reviewError;
+    @BindView(R.id.noTSEAtTvTrailer)
+    RelativeLayout trailerError;
 
 
     @Override
@@ -115,12 +123,12 @@ public class TvDetailAct extends AppCompatActivity {
 
         Intent intent = getIntent();
         if(intent == null){
-            closeOnError();
+            closeOnError(getResources().getString(R.string.somethingWrong));
         }
 
-        tvId = intent.getStringExtra(getResources().getString(R.string.intent_id_passing));
-        if(tvId.isEmpty()){
-            closeOnError();
+        tvId = intent.getStringExtra(getResources().getString(R.string.intentPassingOne));
+        if(tvId==null){
+            closeOnError(getResources().getString(R.string.somethingWrong));
         }
 
         loadTvDetail();
@@ -147,7 +155,7 @@ public class TvDetailAct extends AppCompatActivity {
             public void onItemClick(View view, int position) {
                 String id = tvDetail.getTvCreatedByResults().get(position).getId();
                 Intent intent = new Intent(TvDetailAct.this,CastProfileAct.class);
-                intent.putExtra(getResources().getString(R.string.intent_id_passing),id);
+                intent.putExtra(getResources().getString(R.string.intentPassingOne),id);
                 startActivity(intent);
             }
         }));
@@ -156,7 +164,7 @@ public class TvDetailAct extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(TvDetailAct.this,ReviewAct.class);
-                intent.putExtra(getResources().getString(R.string.intent_id_passing),tvDetail.getReview());
+                intent.putExtra(getResources().getString(R.string.intentPassingOne),tvDetail.getReview());
                 startActivity(intent);
             }
         });
@@ -181,11 +189,6 @@ public class TvDetailAct extends AppCompatActivity {
     }
 
     private void loadTvDetail(){
-        if(API_KEY.isEmpty()){
-            closeOnError();
-            return;
-        }
-
         ApiInterface apiInterface = BuildUrl.getRetrofit(this).create(ApiInterface.class);
         retrofit2.Call<TvDetail> tvDetailCall = apiInterface.getTvDetail(tvId,API_KEY,APPEND_QUERY);
         tvDetailCall.enqueue(new Callback<TvDetail>() {
@@ -197,14 +200,14 @@ public class TvDetailAct extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<TvDetail> call, Throwable t) {
-                closeOnError();
+                closeOnError(getResources().getString(R.string.netproblem));
             }
         });
     }
 
     private void setTvDetail(){
         if(tvDetail == null){
-            closeOnError();
+            closeOnError(getResources().getString(R.string.somethingWrong));
         }
 
         String posterImageUrl = tvDetail.getBackdropPath();
@@ -229,12 +232,15 @@ public class TvDetailAct extends AppCompatActivity {
             }
         }
 
-        String movieName = tvDetail.getName().isEmpty()?DATA_NOT_AVAILABLE:tvDetail.getName();
-        String rating = tvDetail.getVoteAvg().isEmpty()?DATA_NOT_AVAILABLE:tvDetail.getVoteAvg();
-        String totalVote = tvDetail.getVoteCount().isEmpty()?DATA_NOT_AVAILABLE:tvDetail.getVoteCount();
-        String firstEpisode = tvDetail.getFirstAirDate().isEmpty()?DATA_NOT_AVAILABLE:tvDetail.getFirstAirDate();
-        String lastEpisode = tvDetail.getLastAirDate().isEmpty()?DATA_NOT_AVAILABLE:tvDetail.getLastAirDate();
-        String overView = tvDetail.getOverview().isEmpty()?DATA_NOT_AVAILABLE:tvDetail.getOverview();
+        String movieName = tvDetail.getName()==null?DATA_NOT_AVAILABLE:tvDetail.getName();
+        String rating = tvDetail.getVoteAvg()==null?DATA_NOT_AVAILABLE:tvDetail.getVoteAvg();
+        if(rating.length()>3){
+            rating = rating.substring(0,3);
+        }
+        String totalVote = tvDetail.getVoteCount()==null?DATA_NOT_AVAILABLE:tvDetail.getVoteCount();
+        String firstEpisode = tvDetail.getFirstAirDate()==null?DATA_NOT_AVAILABLE:tvDetail.getFirstAirDate();
+        String lastEpisode = tvDetail.getLastAirDate()==null?DATA_NOT_AVAILABLE:tvDetail.getLastAirDate();
+        String overView = tvDetail.getOverview()==null?DATA_NOT_AVAILABLE:tvDetail.getOverview();
 
         Picasso.get()
                 .load(IMAGE_BASE_URL+posterImageUrl)
@@ -262,10 +268,16 @@ public class TvDetailAct extends AppCompatActivity {
 
         trailerRv.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.HORIZONTAL));
         TrailerAdapter trailerAdapter = new TrailerAdapter(tvDetail.getVideos().getVideosResults());
+        if(tvDetail.getVideos().getVideosResults().size() == 0){
+            trailerError.setVisibility(View.VISIBLE);
+        }
         trailerRv.setAdapter(trailerAdapter);
 
         creatorRv.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
         CreatorAdapter creatorAdapter = new CreatorAdapter(tvDetail.getTvCreatedByResults());
+        if(tvDetail.getTvCreatedByResults().size() == 0){
+            creatorError.setVisibility(View.VISIBLE);
+        }
         creatorRv.setAdapter(creatorAdapter);
 
         reviewRv.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
@@ -278,6 +290,9 @@ public class TvDetailAct extends AppCompatActivity {
             movieReviewResultsArrayList.add(movieReviewResults.get(2));
             readAll.setVisibility(View.VISIBLE);
             reviewAdapter = new ReviewAdapter(movieReviewResultsArrayList);
+        }else if(movieReviewResults.size() == 0){
+            reviewError.setVisibility(View.VISIBLE);
+            return;
         }else {
             reviewAdapter = new ReviewAdapter(movieReviewResults);
         }
@@ -285,59 +300,64 @@ public class TvDetailAct extends AppCompatActivity {
     }
 
     private String changeFormatOfDate(String releaseDate){
-        String day = releaseDate.substring(8,10);
-        int month;
         try{
-            month = Integer.parseInt(releaseDate.substring(5,7));
-        }catch (ClassCastException e){
-            month = 0;
-        }
-        String year = releaseDate.substring(0,4);
-        String changedFormatDate = day;
-        switch (month){
-            case 1:
-                changedFormatDate += " Jan";
-                break;
-            case 2:
-                changedFormatDate += " Feb";
-                break;
-            case 3:
-                changedFormatDate += " Mar";
-                break;
-            case 4:
-                changedFormatDate += " Apr";
-                break;
-            case 5:
-                changedFormatDate += " May";
-                break;
-            case 6:
-                changedFormatDate += " June";
-                break;
-            case 7:
-                changedFormatDate += " July";
-                break;
-            case 8:
-                changedFormatDate += " Aug";
-                break;
-            case 9:
-                changedFormatDate += " Sept";
-                break;
-            case 10:
-                changedFormatDate += " Oct";
-                break;
-            case 11:
-                changedFormatDate += " Nov";
-                break;
-            case 12:
-                changedFormatDate += " Dec";
-                break;
-        }
+            String day = releaseDate.substring(8,10);
+            int month;
+            try{
+                month = Integer.parseInt(releaseDate.substring(5,7));
+            }catch (ClassCastException e){
+                month = 0;
+            }
+            String year = releaseDate.substring(0,4);
+            String changedFormatDate = day;
+            switch (month){
+                case 1:
+                    changedFormatDate += getResources().getString(R.string.jan);
+                    break;
+                case 2:
+                    changedFormatDate += getResources().getString(R.string.Feb);
+                    break;
+                case 3:
+                    changedFormatDate += getResources().getString(R.string.Mar);
+                    break;
+                case 4:
+                    changedFormatDate += getResources().getString(R.string.April);
+                    break;
+                case 5:
+                    changedFormatDate += getResources().getString(R.string.May);
+                    break;
+                case 6:
+                    changedFormatDate += getResources().getString(R.string.June);
+                    break;
+                case 7:
+                    changedFormatDate += getResources().getString(R.string.july);
+                    break;
+                case 8:
+                    changedFormatDate += getResources().getString(R.string.Aug);
+                    break;
+                case 9:
+                    changedFormatDate += getResources().getString(R.string.Sept);
+                    break;
+                case 10:
+                    changedFormatDate += getResources().getString(R.string.Oct);
+                    break;
+                case 11:
+                    changedFormatDate += getResources().getString(R.string.Nov);
+                    break;
+                case 12:
+                    changedFormatDate += getResources().getString(R.string.Dec);
+                    break;
+            }
 
-        changedFormatDate += " "+year;
-        return changedFormatDate;
+            changedFormatDate += " "+year;
+            return changedFormatDate;
+        }catch (Exception e){
+            return releaseDate;
+        }
     }
 
-    private void closeOnError(){
-
+    private void closeOnError(String message){
+        Toast.makeText(TvDetailAct.this,message,Toast.LENGTH_SHORT).show();
+        finish();
     }
 }

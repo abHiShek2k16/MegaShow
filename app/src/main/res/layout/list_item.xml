@@ -16,9 +16,9 @@
         <ImageView
             android:id="@+id/posterImageMovieList"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/main_poster_height"
+            android:layout_height="@dimen/x260"
             android:scaleType="fitXY"
-            android:contentDescription="@string/image_desc"/>
+            android:contentDescription="@string/imageDesc"/>
 
     </android.support.v7.widget.CardView>
 

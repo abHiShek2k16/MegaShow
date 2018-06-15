@@ -1,7 +1,10 @@
 package com.android.abhishek.megamovies.fragments;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.android.abhishek.megamovies.MovieDetailAct;
 import com.android.abhishek.megamovies.R;
@@ -32,17 +36,20 @@ import retrofit2.Response;
 
 public class MovieFragment extends Fragment {
 
+    //  network may gone while changing sort
+    //  setChecked menu item
+
     @BindView(R.id.movieFragmentRv) RecyclerView recyclerView;
     @BindView(R.id.movieFragmentPb) ProgressBar progressBar;
     @BindView(R.id.movieFragmentPreviousBtn) Button previousBtn;
     @BindView(R.id.movieFragmentNextBtn) Button nextBtn;
 
-    @BindString(R.string.api_key) String API_KEY;
-    @BindString(R.string.popular_movie) String POPULAR;
-    @BindString(R.string.top_rated_movie) String TOP_RATED;
-    @BindString(R.string.upcoming) String UPCOMING;
-    @BindString(R.string.now_playing) String NOW_PLAYING;
-    @BindString(R.string.now_playing) String SORT_BY;
+    @BindString(R.string.apiKey) String API_KEY;
+    @BindString(R.string.popularQ) String POPULAR;
+    @BindString(R.string.topRatedQ) String TOP_RATED;
+    @BindString(R.string.upcomingQ) String UPCOMING;
+    @BindString(R.string.nowPlayingQ) String NOW_PLAYING;
+    private String SORT_BY;
 
     private int NO_OF_IMAGE = 2;
     private int CURRENT_PAGE = 1;
@@ -64,6 +71,8 @@ public class MovieFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movie, container, false);
         ButterKnife.bind(this, view);
+        checkOrientation();
+        loadPreferences();
         return view;
     }
 
@@ -78,7 +87,7 @@ public class MovieFragment extends Fragment {
                     @Override
                     public void onItemClick(View view, int position) {
                         Intent intent = new Intent(getActivity(), MovieDetailAct.class);
-                        intent.putExtra(getResources().getString(R.string.intent_id_passing),movieList.getResults().get(position).getId());
+                        intent.putExtra(getResources().getString(R.string.intentPassingOne),movieList.getResults().get(position).getId());
                         startActivity(intent);
                     }
                 })
@@ -109,10 +118,6 @@ public class MovieFragment extends Fragment {
     public void loadMovies() {
         progressBar.setVisibility(View.VISIBLE);
 
-        if (API_KEY.isEmpty()) {
-            closeOnError();
-        }
-
         ApiInterface apiInterface = BuildUrl.getRetrofit(getActivity()).create(ApiInterface.class);
         retrofit2.Call<List> movieListCall;
 
@@ -135,7 +140,7 @@ public class MovieFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List> call, Throwable t) {
-                closeOnError();
+                closeOnError(getResources().getString(R.string.somethingWrong));
             }
         });
     }
@@ -144,7 +149,11 @@ public class MovieFragment extends Fragment {
 
         progressBar.setVisibility(View.GONE);
         TOTAL_PAGE = movieList.getTotalPages();
-
+        if(movieList.getResults() == null){
+            closeOnError(getResources().getString(R.string.somethingWrong));
+        }else if(movieList.getResults().size()==0){
+            closeOnError(getResources().getString(R.string.nothingToShow));
+        }
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), NO_OF_IMAGE));
         ListAdapter movieListAdapter = new ListAdapter(movieList.getResults());
         recyclerView.setAdapter(movieListAdapter);
@@ -162,14 +171,20 @@ public class MovieFragment extends Fragment {
         }
     }
 
-    public void closeOnError() {
-        progressBar.setVisibility(View.GONE);
-    }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.sort_by_movie,menu);
+        /*
+        if (SORT_BY.equals(POPULAR)) {
+            menu.getItem(R.id.popularMv).setChecked(true);
+        } else if(SORT_BY.equals(TOP_RATED)){
+            menu.getItem(R.id.mostRatedMv).setChecked(true);
+        }else if(SORT_BY.equals(UPCOMING)){
+            menu.getItem(R.id.upcomingMv).setChecked(true);
+        }else {
+            menu.getItem(R.id.nowPlayMv).setChecked(true);
+        }  */
     }
 
     @Override
@@ -214,5 +229,24 @@ public class MovieFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void checkOrientation(){
+        int configuration = this.getResources().getConfiguration().orientation;
+        if(configuration == Configuration.ORIENTATION_PORTRAIT){
+            NO_OF_IMAGE = 2;
+        }else{
+            NO_OF_IMAGE = 3;
+        }
+    }
+
+    private void loadPreferences(){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SORT_BY = sharedPreferences.getString(getResources().getString(R.string.movieSortPref),getResources().getString(R.string.popularQ));
+    }
+
+    public void closeOnError(String message) {
+        progressBar.setVisibility(View.GONE);
+        Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
     }
 }

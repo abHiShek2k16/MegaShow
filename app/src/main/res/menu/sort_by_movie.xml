@@ -2,32 +2,30 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group
-        android:checkableBehavior="single">
-
+    <group android:checkableBehavior="single">
         <item
             android:id="@+id/upcomingMv"
             android:orderInCategory="10"
-            android:title="@string/upcoming_str"
+            android:title="@string/upcomingStr"
             app:showAsAction="never|collapseActionView" />
 
         <item
             android:id="@+id/nowPlayMv"
             android:checked="true"
             android:orderInCategory="10"
-            android:title="@string/now_playing_str"
+            android:title="@string/nowPlayingStr"
             app:showAsAction="never|collapseActionView" />
 
         <item
             android:id="@+id/popularMv"
             android:orderInCategory="10"
-            android:title="@string/popular_str"
+            android:title="@string/popularStr"
             app:showAsAction="never|collapseActionView" />
 
         <item
             android:id="@+id/mostRatedMv"
             android:orderInCategory="10"
-            android:title="@string/top_rated_str"
+            android:title="@string/topRatedStr"
             app:showAsAction="never" />
     </group>
 </menu>

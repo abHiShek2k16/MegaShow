@@ -2,6 +2,7 @@ package com.android.abhishek.megamovies.model;
 
 public class EndPoint {
 
+    //        Non translatable String Used during Api Handling
     public static final String TOTAL_RESULTS = "total_results";
     public static final String TOTAL_PAGES = "total_pages";
     public static final String RESULTS = "results";

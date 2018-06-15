@@ -1,7 +1,10 @@
 package com.android.abhishek.megamovies;
 
 import android.content.ActivityNotFoundException;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -13,7 +16,9 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.abhishek.megamovies.adapter.MovieCastsAdapter;
 import com.android.abhishek.megamovies.adapter.ReviewAdapter;
@@ -42,19 +47,19 @@ public class MovieDetailAct extends AppCompatActivity {
     private String movieId;
     private MovieDetail movieDetail;
 
-    @BindString(R.string.api_key)
+    @BindString(R.string.apiKey)
     String API_KEY;
-    @BindString(R.string.image_base_url)
+    @BindString(R.string.imageBaseUrl)
     String IMAGE_BASE_URL;
-    @BindString(R.string.empty)
+    @BindString(R.string.emptyString)
     String EMPTY;
-    @BindString(R.string.info_unavailable)
+    @BindString(R.string.infoUnavailable)
     String DATA_NOT_AVAILABLE;
-    @BindString(R.string.video_app_base_url)
+    @BindString(R.string.videoAppBaseUrl)
     String VIDEO_APP_BASE_URL;
-    @BindString(R.string.video_web_base_url)
+    @BindString(R.string.videoWebBaseUrl)
     String VIDEO_WEB_BASE_URL;
-    @BindString(R.string.append_query_movie)
+    @BindString(R.string.appendQueryMv)
     String APPEND_QUERY;
 
     @BindView(R.id.posterImageAtMovieDetail)
@@ -87,12 +92,18 @@ public class MovieDetailAct extends AppCompatActivity {
     TextView readAll;
     @BindView(R.id.toolBarATMovieDetail)
     android.support.v7.widget.Toolbar toolbar;
-    @BindView(R.id.totaRatingBarAtMv)
+    @BindView(R.id.totalRatingBarAtMv)
     RatingBar totalRating;
     @BindView(R.id.ratingCountAtMv)
     TextView ratingCount;
     @BindView(R.id.ratingStrAtMv)
     TextView ratingStrTv;
+    @BindView(R.id.noTSEAtMvCasts)
+    RelativeLayout castsError;
+    @BindView(R.id.noTSEAtMvReview)
+    RelativeLayout reviewError;
+    @BindView(R.id.noTSEAtMvTrailer)
+    RelativeLayout trailerError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,16 +123,15 @@ public class MovieDetailAct extends AppCompatActivity {
 
         Intent intent = getIntent();
         if(intent == null){
-            closeOnError();
+            closeOnError(getResources().getString(R.string.somethingWrong));
         }
 
-        movieId = intent.getStringExtra(getResources().getString(R.string.intent_id_passing));
-        if(movieId.isEmpty()){
-            closeOnError();
+        movieId = intent.getStringExtra(getResources().getString(R.string.intentPassingOne));
+        if(movieId == null){
+            closeOnError(getResources().getString(R.string.somethingWrong));
         }
 
         loadMovieDetail();
-
         trailerRv.addOnItemTouchListener(
                 new RecyclerItemClickListener(this, trailerRv, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
@@ -144,7 +154,7 @@ public class MovieDetailAct extends AppCompatActivity {
             public void onItemClick(View view, int position) {
                 String id = movieDetail.getMovieCasts().getMovieCastsResults().get(position).getId();
                 Intent intent = new Intent(MovieDetailAct.this,CastProfileAct.class);
-                intent.putExtra(getResources().getString(R.string.intent_id_passing),id);
+                intent.putExtra(getResources().getString(R.string.intentPassingOne),id);
                 startActivity(intent);
             }
         }));
@@ -158,6 +168,7 @@ public class MovieDetailAct extends AppCompatActivity {
             @Override
             public void unLiked(LikeButton likeButton) {
                 likeButton.setLiked(false);
+                finish();
             }
         });
 
@@ -165,7 +176,7 @@ public class MovieDetailAct extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MovieDetailAct.this,ReviewAct.class);
-                intent.putExtra(getResources().getString(R.string.intent_id_passing),movieDetail.getMovieReview());
+                intent.putExtra(getResources().getString(R.string.intentPassingOne),movieDetail.getMovieReview());
                 startActivity(intent);
             }
         });
@@ -179,10 +190,6 @@ public class MovieDetailAct extends AppCompatActivity {
     }
 
     private void loadMovieDetail(){
-        if(API_KEY.isEmpty()){
-            closeOnError();
-            return;
-        }
 
         ApiInterface apiInterface = BuildUrl.getRetrofit(this).create(ApiInterface.class);
         retrofit2.Call<MovieDetail> movieDetailCall = apiInterface.getMovieDetail(movieId,API_KEY,APPEND_QUERY);
@@ -195,41 +202,55 @@ public class MovieDetailAct extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<MovieDetail> call, Throwable t) {
-                closeOnError();
+                closeOnError(getResources().getString(R.string.netproblem));
             }
         });
     }
 
     private void setMovieDetail(){
+
+        String posterImageUrl;
+        String movieLogo;
+        String productionName;
+        String length;
+        String movieName;
+        String rating;
+        String totalVote;
+        String releaseDate;
+        String overView;
+
+
         if(movieDetail == null){
-            return;
+            closeOnError(getResources().getString(R.string.somethingWrong));
         }
 
-        String posterImageUrl = movieDetail.getBackdropPath();
-        String movieLogo = movieDetail.getPosterPath();
+        posterImageUrl = movieDetail.getBackdropPath();
+        movieLogo = movieDetail.getPosterPath();
 
-        String productionName = EMPTY;
+        productionName = EMPTY;
         ArrayList<ProductionCompany> movieProductionCompanies = movieDetail.getProductionCompanies();
         for(int i=0;i<movieProductionCompanies.size();i++){
-            if(movieProductionCompanies.get(i).getLogoPath()!=null && movieProductionCompanies.get(i).getName()!=null){
+            if(movieProductionCompanies.get(i).getName()!=null){
                 productionName = "by "+movieDetail.getProductionCompanies().get(i).getName();
                 break;
             }
         }
 
-        String length = DATA_NOT_AVAILABLE;
         try{
             length = movieDetail.getRuntime().isEmpty() ? DATA_NOT_AVAILABLE
                     : String.valueOf(Integer.parseInt(movieDetail.getRuntime())/60)+"h "+String.valueOf(Integer.parseInt(movieDetail.getRuntime())%60)+"min";
         }catch (Exception e){
-
+            length = DATA_NOT_AVAILABLE;
         }
 
-        String movieName = movieDetail.getTitle().isEmpty()?DATA_NOT_AVAILABLE:movieDetail.getTitle();
-        String rating = movieDetail.getVoteAvg().isEmpty()?DATA_NOT_AVAILABLE:movieDetail.getVoteAvg();
-        String totalVote = movieDetail.getVoteCount().isEmpty()?DATA_NOT_AVAILABLE:movieDetail.getVoteCount();
-        String releaseDate = movieDetail.getReleaseDate().isEmpty()?DATA_NOT_AVAILABLE:movieDetail.getReleaseDate();
-        String overView = movieDetail.getOverview().isEmpty()?DATA_NOT_AVAILABLE:movieDetail.getOverview();
+        movieName = movieDetail.getTitle()==null?DATA_NOT_AVAILABLE:movieDetail.getTitle();
+        rating = movieDetail.getVoteAvg()==null?DATA_NOT_AVAILABLE:movieDetail.getVoteAvg();
+        if(rating.length()>3){
+            rating = rating.substring(0,3);
+        }
+        totalVote = movieDetail.getVoteCount()==null?DATA_NOT_AVAILABLE:movieDetail.getVoteCount();
+        releaseDate = movieDetail.getReleaseDate()==null?DATA_NOT_AVAILABLE:movieDetail.getReleaseDate();
+        overView = movieDetail.getOverview()==null?DATA_NOT_AVAILABLE:movieDetail.getOverview();
 
         Picasso.get()
                 .load(IMAGE_BASE_URL+posterImageUrl)
@@ -256,10 +277,16 @@ public class MovieDetailAct extends AppCompatActivity {
 
         trailerRv.setLayoutManager(new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.HORIZONTAL));
         TrailerAdapter trailerAdapter = new TrailerAdapter(movieDetail.getMovieVideos().getVideosResults());
+        if(movieDetail.getMovieVideos().getVideosResults().size() == 0){
+            trailerError.setVisibility(View.VISIBLE);
+        }
         trailerRv.setAdapter(trailerAdapter);
 
         castRv.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
         MovieCastsAdapter castsAdapter = new MovieCastsAdapter(movieDetail.getMovieCasts().getMovieCastsResults());
+        if(movieDetail.getMovieCasts().getMovieCastsResults().size() == 0){
+            castsError.setVisibility(View.VISIBLE);
+        }
         castRv.setAdapter(castsAdapter);
 
         reviewRv.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
@@ -272,66 +299,74 @@ public class MovieDetailAct extends AppCompatActivity {
             movieReviewResultsArrayList.add(movieReviewResults.get(2));
             readAll.setVisibility(View.VISIBLE);
             reviewAdapter = new ReviewAdapter(movieReviewResultsArrayList);
-        }else {
+        }else if(movieReviewResults.size()==0){
+            reviewError.setVisibility(View.VISIBLE);
+            return;
+        }else{
             reviewAdapter = new ReviewAdapter(movieReviewResults);
         }
         reviewRv.setAdapter(reviewAdapter);
     }
 
     private String changeFormatOfDate(String releaseDate){
-        String day = releaseDate.substring(8,10);
-        int month;
         try{
-            month = Integer.parseInt(releaseDate.substring(5,7));
-        }catch (ClassCastException e){
-            month = 0;
-        }
-        String year = releaseDate.substring(0,4);
-        String changedFormatDate = day;
-        switch (month){
-            case 1:
-                changedFormatDate += " Jan";
-                break;
-            case 2:
-                changedFormatDate += " Feb";
-                break;
-            case 3:
-                changedFormatDate += " Mar";
-                break;
-            case 4:
-                changedFormatDate += " Apr";
-                break;
-            case 5:
-                changedFormatDate += " May";
-                break;
-            case 6:
-                changedFormatDate += " June";
-                break;
-            case 7:
-                changedFormatDate += " July";
-                break;
-            case 8:
-                changedFormatDate += " Aug";
-                break;
-            case 9:
-                changedFormatDate += " Sept";
-                break;
-            case 10:
-                changedFormatDate += " Oct";
-                break;
-            case 11:
-                changedFormatDate += " Nov";
-                break;
-            case 12:
-                changedFormatDate += " Dec";
-                break;
-        }
+            String day = releaseDate.substring(8,10);
+            int month;
+            try{
+                month = Integer.parseInt(releaseDate.substring(5,7));
+            }catch (ClassCastException e){
+                month = 0;
+            }
+            String year = releaseDate.substring(0,4);
+            String changedFormatDate = day;
+            switch (month){
+                case 1:
+                    changedFormatDate += getResources().getString(R.string.jan);
+                    break;
+                case 2:
+                    changedFormatDate += getResources().getString(R.string.Feb);
+                    break;
+                case 3:
+                    changedFormatDate += getResources().getString(R.string.Mar);
+                    break;
+                case 4:
+                    changedFormatDate += getResources().getString(R.string.April);
+                    break;
+                case 5:
+                    changedFormatDate += getResources().getString(R.string.May);
+                    break;
+                case 6:
+                    changedFormatDate += getResources().getString(R.string.June);
+                    break;
+                case 7:
+                    changedFormatDate += getResources().getString(R.string.july);
+                    break;
+                case 8:
+                    changedFormatDate += getResources().getString(R.string.Aug);
+                    break;
+                case 9:
+                    changedFormatDate += getResources().getString(R.string.Sept);
+                    break;
+                case 10:
+                    changedFormatDate += getResources().getString(R.string.Oct);
+                    break;
+                case 11:
+                    changedFormatDate += getResources().getString(R.string.Nov);
+                    break;
+                case 12:
+                    changedFormatDate += getResources().getString(R.string.Dec);
+                    break;
+            }
 
-        changedFormatDate += " "+year;
-        return changedFormatDate;
+            changedFormatDate += " "+year;
+            return changedFormatDate;
+        }catch (Exception e){
+            return releaseDate;
+        }
     }
-    private void closeOnError(){
-
+    private void closeOnError(String message){
+        Toast.makeText(MovieDetailAct.this,message,Toast.LENGTH_SHORT).show();
+        finish();
     }
 
 }

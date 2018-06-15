@@ -2,7 +2,6 @@ package com.android.abhishek.megamovies.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +50,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewCust
             if(array.length<=100){
                 holder.reviewTv.setText(review);
             }else{
-                String reviewStr = review.substring(0,100)+"...";
+                String reviewStr = review.substring(0,100)+" ...";
                 holder.reviewTv.setText(reviewStr);
             }
         }
@@ -62,7 +61,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewCust
                 char[] array = review.toCharArray();
                 if(array.length>100){
                     if(flag){
-                        String reviewStr = review.substring(0,100)+"...";
+                        String reviewStr = review.substring(0,100)+" ...";
                         holder.reviewTv.setText(reviewStr);
                         flag = false;
                     }else {

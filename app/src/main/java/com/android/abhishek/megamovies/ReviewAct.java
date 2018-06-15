@@ -7,12 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import com.android.abhishek.megamovies.adapter.ReviewAdapter;
 import com.android.abhishek.megamovies.model.Review;
-import com.android.abhishek.megamovies.model.ReviewResults;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,7 +19,6 @@ public class ReviewAct extends AppCompatActivity {
 
     @BindView(R.id.reviewRvAtReview)
     RecyclerView recyclerView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +36,12 @@ public class ReviewAct extends AppCompatActivity {
 
         Intent intent = getIntent();
         if(intent == null){
-            closeOnError();
+            closeOnError(getResources().getString(R.string.somethingWrong));
         }
 
-        Review review = getIntent().getParcelableExtra(getResources().getString(R.string.intent_id_passing));
+        Review review = getIntent().getParcelableExtra(getResources().getString(R.string.intentPassingOne));
         if(review == null){
-            closeOnError();
+            closeOnError(getResources().getString(R.string.somethingWrong));
         }
         recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         ReviewAdapter reviewAdapter = new ReviewAdapter(review.getMovieReviewResults());
@@ -57,7 +54,7 @@ public class ReviewAct extends AppCompatActivity {
         return true;
     }
 
-    private void closeOnError(){
-
+    private void closeOnError(String message){
+        Toast.makeText(ReviewAct.this,message,Toast.LENGTH_SHORT).show();
     }
 }

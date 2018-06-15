@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/nav_header_height"
+    android:layout_height="@dimen/x176"
     android:background="@drawable/splash_grad"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
@@ -21,10 +21,10 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_below="@id/useLessFive"
-        android:text="@string/app_desc"
+        android:text="@string/appDescription"
         android:textColor="@color/white"
         android:fontFamily="cursive"
         android:textStyle="italic"
-        android:textSize="@dimen/x16S"/>
+        android:textSize="@dimen/xs16"/>
 
 </RelativeLayout>

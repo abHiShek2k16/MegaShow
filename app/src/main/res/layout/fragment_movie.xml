@@ -6,18 +6,48 @@
     tools:context=".fragments.MovieFragment">
 
     <ProgressBar
-        android:id="@+id/movieFragmentPb"
-        android:layout_width="@dimen/x48"
-        android:layout_height="@dimen/x32"
-        android:layout_centerHorizontal="true"/>
+            android:id="@+id/movieFragmentPb"
+            android:layout_width="@dimen/x48"
+            android:layout_height="@dimen/x32"
+            android:layout_centerHorizontal="true"/>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/movieFragmentRv"
+            android:id="@+id/movieFragmentRv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/movieFragmentPb"
+            android:layout_marginTop="@dimen/x4"
+            android:layout_marginBottom="@dimen/x48" />
+
+    <RelativeLayout
+        android:id="@+id/networkErrorAtMv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/movieFragmentPb"
-        android:layout_marginTop="@dimen/x4"
-        android:layout_marginBottom="@dimen/x48" />
+        android:layout_height="match_parent"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/useLessSix"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textAlignment="center"
+            android:text="@string/connectionError"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/xs22"
+            android:fontFamily="cursive"/>
+        <Button
+            android:id="@+id/retryBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tryAgain"
+            android:layout_below="@id/useLessSix"
+            android:layout_centerHorizontal="true"
+            android:background="@color/colorPrimaryDark"
+            android:textColor="@color/white"
+            android:layout_marginTop="@dimen/x12"
+            android:textSize="@dimen/xs12"
+            android:textAllCaps="false"
+            android:fontFamily="sans-serif-condensed"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,30 +63,29 @@
             android:id="@+id/movieFragmentPreviousBtn"
             android:layout_width="match_parent"
             android:layout_height="@dimen/x32"
-            android:text="@string/previous"
+            android:text="@string/previousStr"
             android:textColor="@color/black"
-            android:textSize="@dimen/x16S"
+            android:textSize="@dimen/xs16"
             android:fontFamily="sans-serif-condensed"
             android:layout_weight="1"
             android:background="@color/white"
             android:textAllCaps="false"
             android:layout_marginRight="@dimen/x4"
-            android:visibility="invisible"
-            android:elevation="@dimen/x4"/>
+            android:visibility="invisible" />
 
         <Button
             android:id="@+id/movieFragmentNextBtn"
             android:layout_width="match_parent"
             android:layout_height="@dimen/x32"
-            android:text="@string/next"
+            android:text="@string/nextStr"
             android:textColor="@color/white"
-            android:textSize="@dimen/x16S"
+            android:textSize="@dimen/xs16"
             android:fontFamily="sans-serif-condensed"
             android:layout_weight="1"
             android:background="@color/colorPrimary"
             android:textAllCaps="false"
             android:layout_marginLeft="@dimen/x4"
-            android:elevation="@dimen/x4"/>
+            android:visibility="invisible"/>
 
     </LinearLayout>
 </RelativeLayout>

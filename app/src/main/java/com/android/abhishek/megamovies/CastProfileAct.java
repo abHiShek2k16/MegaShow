@@ -1,12 +1,14 @@
 package com.android.abhishek.megamovies;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.android.abhishek.megamovies.model.MovieDetail;
 import com.android.abhishek.megamovies.model.PersonProfile;
 import com.android.abhishek.megamovies.network.BuildUrl;
 import com.android.abhishek.megamovies.utils.ApiInterface;
@@ -27,10 +29,10 @@ public class CastProfileAct extends AppCompatActivity {
     @BindView(R.id.profileBio) TextView bio;
     @BindView(R.id.profilePhoto) ImageView photo;
 
-    @BindString(R.string.api_key) String API_KEY;
-    @BindString(R.string.empty) String EMPTY;
-    @BindString(R.string.info_unavailable) String DATA_NOT_AVAILABLE;
-    @BindString(R.string.image_base_url) String IMAGE_BASE_URL;
+    @BindString(R.string.apiKey) String API_KEY;
+    @BindString(R.string.imageBaseUrl) String IMAGE_BASE_URL;
+    @BindString(R.string.emptyString) String EMPTY;
+    @BindString(R.string.infoUnavailable) String DATA_NOT_AVAILABLE;
 
     private String id;
     private PersonProfile personProfile;
@@ -42,25 +44,21 @@ public class CastProfileAct extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        networkStatus();
+
         Intent intent = getIntent();
         if(intent == null){
             closeOnError();
         }
 
-        id = intent.getStringExtra(getResources().getString(R.string.intent_id_passing));
-        if(id == null){
+        id = intent.getStringExtra(getResources().getString(R.string.intentPassingOne));
+        if(id == null) {
             closeOnError();
         }
-
         loadProfile();
     }
 
     private void loadProfile(){
-        if(API_KEY.isEmpty()){
-            closeOnError();
-            return;
-        }
-
         ApiInterface apiInterface = BuildUrl.getRetrofit(this).create(ApiInterface.class);
         final retrofit2.Call<PersonProfile> personProfileCall = apiInterface.getProfile(id,API_KEY);
         personProfileCall.enqueue(new Callback<PersonProfile>() {
@@ -102,59 +100,71 @@ public class CastProfileAct extends AppCompatActivity {
     }
 
     private String changeFormatOfDate(String releaseDate){
-        String day = releaseDate.substring(8,10);
-        int month;
         try{
-            month = Integer.parseInt(releaseDate.substring(5,7));
-        }catch (ClassCastException e){
-            month = 0;
-        }
-        String year = releaseDate.substring(0,4);
-        String changedFormatDate = day;
-        switch (month){
-            case 1:
-                changedFormatDate += " Jan";
-                break;
-            case 2:
-                changedFormatDate += " Feb";
-                break;
-            case 3:
-                changedFormatDate += " Mar";
-                break;
-            case 4:
-                changedFormatDate += " Apr";
-                break;
-            case 5:
-                changedFormatDate += " May";
-                break;
-            case 6:
-                changedFormatDate += " June";
-                break;
-            case 7:
-                changedFormatDate += " July";
-                break;
-            case 8:
-                changedFormatDate += " Aug";
-                break;
-            case 9:
-                changedFormatDate += " Sept";
-                break;
-            case 10:
-                changedFormatDate += " Oct";
-                break;
-            case 11:
-                changedFormatDate += " Nov";
-                break;
-            case 12:
-                changedFormatDate += " Dec";
-                break;
-        }
+            String day = releaseDate.substring(8,10);
+            int month;
+            try{
+                month = Integer.parseInt(releaseDate.substring(5,7));
+            }catch (ClassCastException e){
+                month = 0;
+            }
+            String year = releaseDate.substring(0,4);
+            String changedFormatDate = day;
+            switch (month){
+                case 1:
+                    changedFormatDate += getResources().getString(R.string.jan);
+                    break;
+                case 2:
+                    changedFormatDate += getResources().getString(R.string.Feb);
+                    break;
+                case 3:
+                    changedFormatDate += getResources().getString(R.string.Mar);
+                    break;
+                case 4:
+                    changedFormatDate += getResources().getString(R.string.April);
+                    break;
+                case 5:
+                    changedFormatDate += getResources().getString(R.string.May);
+                    break;
+                case 6:
+                    changedFormatDate += getResources().getString(R.string.June);
+                    break;
+                case 7:
+                    changedFormatDate += getResources().getString(R.string.july);
+                    break;
+                case 8:
+                    changedFormatDate += getResources().getString(R.string.Aug);
+                    break;
+                case 9:
+                    changedFormatDate += getResources().getString(R.string.Sept);
+                    break;
+                case 10:
+                    changedFormatDate += getResources().getString(R.string.Oct);
+                    break;
+                case 11:
+                    changedFormatDate += getResources().getString(R.string.Nov);
+                    break;
+                case 12:
+                    changedFormatDate += getResources().getString(R.string.Dec);
+                    break;
+            }
 
-        changedFormatDate += " "+year;
-        return changedFormatDate;
+            changedFormatDate += " "+year;
+            return changedFormatDate;
+        }catch (Exception e){
+            return releaseDate;
+        }
+    }
+
+    private void networkStatus(){
+        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(!(connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isAvailable() && connectivityManager.getActiveNetworkInfo().isConnected())){
+            closeOnError();
+        }
     }
 
     private void closeOnError(){
-
+        Toast.makeText(CastProfileAct.this,getResources().getString(R.string.netproblem),Toast.LENGTH_SHORT).show();
+        finish();
     }
 }

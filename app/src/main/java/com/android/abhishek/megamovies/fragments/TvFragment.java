@@ -2,7 +2,10 @@ package com.android.abhishek.megamovies.fragments;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -15,14 +18,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
-import com.android.abhishek.megamovies.MovieDetailAct;
 import com.android.abhishek.megamovies.R;
 import com.android.abhishek.megamovies.TvDetailAct;
 import com.android.abhishek.megamovies.adapter.ListAdapter;
 import com.android.abhishek.megamovies.listener.RecyclerItemClickListener;
 import com.android.abhishek.megamovies.model.List;
-import com.android.abhishek.megamovies.model.TvDetail;
 import com.android.abhishek.megamovies.network.BuildUrl;
 import com.android.abhishek.megamovies.utils.ApiInterface;
 
@@ -35,17 +37,21 @@ import retrofit2.Response;
 
 public class TvFragment extends Fragment {
 
+    //  network may gone while changing sort
+    //  setChecked menu item
+
     @BindView(R.id.tvFragmentPb) ProgressBar progressBar;
     @BindView(R.id.tvFragmentRv) RecyclerView recyclerView;
     @BindView(R.id.tvFragmentNextBtn) Button next;
     @BindView(R.id.tvFragmentPreviousBtn) Button previous;
 
-    @BindString(R.string.api_key) String API_KEY;
-    @BindString(R.string.popular_movie) String POPULAR;
-    @BindString(R.string.top_rated_movie) String TOP_RATED;
-    @BindString(R.string.on_the_air) String ON_THE_AIR;
-    @BindString(R.string.airing_today) String AIRING_TODAY;
-    @BindString(R.string.top_rated_movie) String SORT_BY;
+    @BindString(R.string.apiKey) String API_KEY;
+    @BindString(R.string.popularQ) String POPULAR;
+    @BindString(R.string.topRatedQ) String TOP_RATED;
+    @BindString(R.string.onTheAirQ) String ON_THE_AIR;
+    @BindString(R.string.airingTodayQ) String AIRING_TODAY;
+
+    private String SORT_BY;
 
     private int NO_OF_IMAGE = 2;
     private int CURRENT_PAGE = 1;
@@ -67,6 +73,8 @@ public class TvFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tv, container, false);
         ButterKnife.bind(this, view);
+        checkOrientation();
+        loadPreferences();
         return view;
     }
 
@@ -81,7 +89,7 @@ public class TvFragment extends Fragment {
                     @Override
                     public void onItemClick(View view, int position) {
                         Intent intent = new Intent(getActivity(), TvDetailAct.class);
-                        intent.putExtra(getResources().getString(R.string.intent_id_passing),tvList.getResults().get(position).getId());
+                        intent.putExtra(getResources().getString(R.string.intentPassingOne),tvList.getResults().get(position).getId());
                         startActivity(intent);
                     }
                 })
@@ -111,10 +119,6 @@ public class TvFragment extends Fragment {
     private void loadTv(){
         progressBar.setVisibility(View.VISIBLE);
 
-        if (API_KEY.isEmpty()) {
-            closeOnError();
-        }
-
         ApiInterface apiInterface = BuildUrl.getRetrofit(getActivity()).create(ApiInterface.class);
         retrofit2.Call<List> tvListCall;
         if(SORT_BY.equals(POPULAR)){
@@ -136,7 +140,7 @@ public class TvFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List> call, Throwable t) {
-                closeOnError();
+                closeOnError(getResources().getString(R.string.somethingWrong));
             }
         });
     }
@@ -145,6 +149,11 @@ public class TvFragment extends Fragment {
         progressBar.setVisibility(View.GONE);
         TOTAL_PAGE = tvList.getTotalPages();
 
+        if(tvList.getResults() == null){
+            closeOnError(getResources().getString(R.string.somethingWrong));
+        }else if(tvList.getResults().size() == 0){
+            closeOnError(getResources().getString(R.string.nothingToShow));
+        }
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), NO_OF_IMAGE));
         ListAdapter movieListAdapter = new ListAdapter(tvList.getResults());
         recyclerView.setAdapter(movieListAdapter);
@@ -161,10 +170,35 @@ public class TvFragment extends Fragment {
             previous.setVisibility(View.VISIBLE);
         }
     }
+
+    public void checkOrientation(){
+        int configuration = this.getResources().getConfiguration().orientation;
+        if(configuration == Configuration.ORIENTATION_PORTRAIT){
+            NO_OF_IMAGE = 2;
+        }else{
+            NO_OF_IMAGE = 3;
+        }
+    }
+
+    private void loadPreferences(){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SORT_BY = sharedPreferences.getString(getResources().getString(R.string.tvSortPref),getResources().getString(R.string.popularQ));
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.sort_by_tv,menu);
+
+       /* if(SORT_BY.equals(POPULAR)){
+            menu.getItem(R.id.popularTv).setChecked(true);
+        }else if(SORT_BY.equals(TOP_RATED)){
+            menu.getItem(R.id.mostRatedTv).setChecked(true);
+        }else if(SORT_BY.equals(ON_THE_AIR)){
+            menu.getItem(R.id.onTheAirTv).setChecked(true);
+        }else {
+            menu.getItem(R.id.airingTodayTv).setChecked(true);
+        }   */
     }
 
     @Override
@@ -211,7 +245,8 @@ public class TvFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    public void closeOnError() {
+    public void closeOnError(String message) {
         progressBar.setVisibility(View.GONE);
+        Toast.makeText(getActivity(),message,Toast.LENGTH_SHORT).show();
     }
 }
