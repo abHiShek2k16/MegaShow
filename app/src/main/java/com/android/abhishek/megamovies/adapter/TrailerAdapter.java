@@ -12,6 +12,7 @@ import com.android.abhishek.megamovies.model.VideosResults;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -19,9 +20,9 @@ import butterknife.ButterKnife;
 
 public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerCustomAdapter>{
 
-    private ArrayList<VideosResults> movieVideosResultsAl;
+    private List<VideosResults> movieVideosResultsAl;
 
-    public TrailerAdapter(ArrayList<VideosResults> movieVideosResultsAl) {
+    public TrailerAdapter(List<VideosResults> movieVideosResultsAl) {
         this.movieVideosResultsAl = movieVideosResultsAl;
     }
 

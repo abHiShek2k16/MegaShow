@@ -12,6 +12,7 @@ import com.android.abhishek.megamovies.model.ListResults;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -19,12 +20,10 @@ import butterknife.ButterKnife;
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.MovieListCustomAdapter>{
 
-    private ArrayList<ListResults> arrayList;
+    private List<ListResults> arrayList;
+    private String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 
-    @BindString(R.string.imageBaseUrl)
-    String IMAGE_BASE_URL;
-
-    public ListAdapter(ArrayList<ListResults> arrayList){
+    public ListAdapter(List<ListResults> arrayList){
         this.arrayList = arrayList;
     }
 
@@ -39,7 +38,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.MovieListCusto
     public void onBindViewHolder(@NonNull MovieListCustomAdapter holder, int position) {
         ListResults movieListDetail = arrayList.get(position);
         Picasso.get()
-                .load("https://image.tmdb.org/t/p/w500"+movieListDetail.getPosterPath())
+                .load(IMAGE_BASE_URL+movieListDetail.getPosterPath())
                 .placeholder(R.drawable.loading)
                 .error(R.drawable.error)
                 .into(holder.posterImage);

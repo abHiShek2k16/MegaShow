@@ -15,7 +15,7 @@
 
     <ListPreference android:key="@string/favSortPref"
         android:title="@string/favSortPrefStr"
-        android:defaultValue="@string/moviePref"
+        android:defaultValue="@string/movieQ"
         android:entryValues="@array/fav_sort_key"
         android:entries="@array/fav_sort_pref"/>
 

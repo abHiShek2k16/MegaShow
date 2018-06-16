@@ -31,7 +31,6 @@ public class CastProfileAct extends AppCompatActivity {
 
     @BindString(R.string.apiKey) String API_KEY;
     @BindString(R.string.imageBaseUrl) String IMAGE_BASE_URL;
-    @BindString(R.string.emptyString) String EMPTY;
     @BindString(R.string.infoUnavailable) String DATA_NOT_AVAILABLE;
 
     private String id;
@@ -43,17 +42,16 @@ public class CastProfileAct extends AppCompatActivity {
         setContentView(R.layout.activity_cast_profile);
 
         ButterKnife.bind(this);
-
         networkStatus();
 
         Intent intent = getIntent();
         if(intent == null){
-            closeOnError();
+            closeOnError(getResources().getString(R.string.somethingWrong));
         }
 
         id = intent.getStringExtra(getResources().getString(R.string.intentPassingOne));
         if(id == null) {
-            closeOnError();
+            closeOnError(getResources().getString(R.string.somethingWrong));
         }
         loadProfile();
     }
@@ -70,14 +68,14 @@ public class CastProfileAct extends AppCompatActivity {
 
            @Override
            public void onFailure(Call<PersonProfile> call, Throwable t) {
-                closeOnError();
+                closeOnError(t.getCause().toString());
            }
         });
     }
 
     private void setProfile(){
-        String nameStr = personProfile.getName()==null?EMPTY:personProfile.getName();
-        String yearStr = personProfile.getBirthday()==null?EMPTY:personProfile.getBirthday();
+        String nameStr = personProfile.getName()==null?"":personProfile.getName();
+        String yearStr = personProfile.getBirthday()==null?"":personProfile.getBirthday();
         String locationStr = personProfile.getBirthPlace()==null?DATA_NOT_AVAILABLE:personProfile.getBirthPlace();
         String bioStr;
         try{
@@ -159,12 +157,12 @@ public class CastProfileAct extends AppCompatActivity {
     private void networkStatus(){
         ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
         if(!(connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isAvailable() && connectivityManager.getActiveNetworkInfo().isConnected())){
-            closeOnError();
+            closeOnError(getResources().getString(R.string.netproblem));
         }
     }
 
-    private void closeOnError(){
-        Toast.makeText(CastProfileAct.this,getResources().getString(R.string.netproblem),Toast.LENGTH_SHORT).show();
+    private void closeOnError(String message){
+        Toast.makeText(CastProfileAct.this,message,Toast.LENGTH_SHORT).show();
         finish();
     }
 }

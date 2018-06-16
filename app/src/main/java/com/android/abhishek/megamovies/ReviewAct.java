@@ -17,8 +17,7 @@ import butterknife.ButterKnife;
 
 public class ReviewAct extends AppCompatActivity {
 
-    @BindView(R.id.reviewRvAtReview)
-    RecyclerView recyclerView;
+    @BindView(R.id.reviewRvAtReview) RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

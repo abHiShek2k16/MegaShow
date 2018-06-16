@@ -12,22 +12,17 @@ import com.android.abhishek.megamovies.R;
 import com.android.abhishek.megamovies.model.TvCreatedByResults;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
+import java.util.List;
 
-import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class CreatorAdapter extends RecyclerView.Adapter<CreatorAdapter.CreatorCustomAdapter>{
 
-    private ArrayList<TvCreatedByResults> tvCreatorResultsAl;
+    private List<TvCreatedByResults> tvCreatorResultsAl;
+    private String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 
-    @BindString(R.string.emptyString)
-    String EMPTY;
-    @BindString(R.string.imageBaseUrl)
-    String IMAGE_BASE_URL;
-
-    public CreatorAdapter(ArrayList<TvCreatedByResults> tvCreatorResultsAl) {
+    public CreatorAdapter(List<TvCreatedByResults> tvCreatorResultsAl) {
         this.tvCreatorResultsAl = tvCreatorResultsAl;
     }
 
@@ -45,11 +40,11 @@ public class CreatorAdapter extends RecyclerView.Adapter<CreatorAdapter.CreatorC
             return;
         }
         Picasso.get()
-                .load("https://image.tmdb.org/t/p/w500"+createdByResults.getProfilePath())
+                .load(IMAGE_BASE_URL+createdByResults.getProfilePath())
                 .placeholder(R.drawable.loading)
                 .error(R.drawable.error)
                 .into(holder.creatorIv);
-        String name = createdByResults.getName().isEmpty()?EMPTY:createdByResults.getName();
+        String name = createdByResults.getName().isEmpty()?"":createdByResults.getName();
         holder.nameTv.setText(name);
     }
 

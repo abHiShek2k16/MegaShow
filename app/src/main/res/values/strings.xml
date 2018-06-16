@@ -30,8 +30,10 @@
     <string name="favSortPref" translatable="false">sort_fav_by</string>
     <string name="shakePref" translatable="false">shake_feature_key</string>
     <string name="notificationPref" translatable="false">notification_feature_key</string>
-    <string name="tvPref" translatable="false">tv</string>
-    <string name="moviePref" translatable="false">movie</string>
+    <string name="tvQ" translatable="false">tv</string>
+    <string name="movieQ" translatable="false">movie</string>
+    <string name="currentPage" translatable="false">current_page</string>
+    <string name="currentFlag" translatable="false">current_flag</string>
 
     <!--    INTENT KEY  -->
     <string name="intentPassingOne" translatable="false">INTENT_STRING_ONE</string>
@@ -99,8 +101,7 @@
     <string name="infoUnavailable">Info UnAvailable</string>
     <string name="connectionError">No Internet Connection\nonly favourite list available while offline</string>
     <string name="netproblem">No Internet Connection</string>
-    <string name="noReviewFound">No Review Available</string>
-    <string name="noTrailerFound">No Any Trailer Available</string>
+    <string name="apiKeyProblem">Please Add Your Api Key</string>
     <string name="tryAgainLater">Please Try Again Later</string>
     <string name="tryAgain">Try Again</string>
     <string name="somethingWrong">Something went wrong Try again in few minutes</string>

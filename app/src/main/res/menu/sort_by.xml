@@ -5,26 +5,39 @@
     <group android:checkableBehavior="single">
 
         <item
-            android:id="@+id/onTheAirTv"
+            android:id="@+id/upcoming"
+            android:orderInCategory="10"
+            android:title="@string/upcomingStr"
+            app:showAsAction="never|collapseActionView" />
+
+        <item
+            android:id="@+id/nowPlay"
+            android:checked="true"
+            android:orderInCategory="10"
+            android:title="@string/nowPlayingStr"
+            app:showAsAction="never|collapseActionView" />
+
+        <item
+            android:id="@+id/onTheAir"
             android:orderInCategory="10"
             android:title="@string/onTheAirStr"
             app:showAsAction="never|collapseActionView" />
 
         <item
-            android:id="@+id/popularTv"
+            android:id="@+id/popular"
             android:checked="true"
             android:orderInCategory="10"
             android:title="@string/popularStr"
             app:showAsAction="never|collapseActionView" />
 
         <item
-            android:id="@+id/airingTodayTv"
+            android:id="@+id/airingToday"
             android:orderInCategory="10"
             android:title="@string/airingTodayStr"
             app:showAsAction="never|collapseActionView" />
 
         <item
-            android:id="@+id/mostRatedTv"
+            android:id="@+id/mostRated"
             android:orderInCategory="10"
             android:title="@string/topRatedStr"
             app:showAsAction="never" />

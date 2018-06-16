@@ -9,7 +9,7 @@ public class ListResults {
     @SerializedName(EndPoint.POSTER_PATH)
     private String posterPath;
 
-    public ListResults(String id, String posterPath){
+    public ListResults(String id, String posterPath) {
         this.id = id;
         this.posterPath = posterPath;
     }

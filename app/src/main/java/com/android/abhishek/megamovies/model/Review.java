@@ -5,13 +5,14 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
+import java.util.List;
+
 
 public class Review implements Parcelable{
     @SerializedName(EndPoint.RESULTS)
-    private ArrayList<ReviewResults> movieReviewResults;
+    private List<ReviewResults> movieReviewResults;
 
-    public Review(ArrayList<ReviewResults> movieReviewResults) {
+    public Review(List<ReviewResults> movieReviewResults) {
         this.movieReviewResults = movieReviewResults;
     }
 
@@ -31,7 +32,7 @@ public class Review implements Parcelable{
         }
     };
 
-    public ArrayList<ReviewResults> getMovieReviewResults() {
+    public List<ReviewResults> getMovieReviewResults() {
         return movieReviewResults;
     }
 

@@ -31,6 +31,7 @@ import com.like.OnLikeListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -214,15 +215,15 @@ public class TvDetailAct extends AppCompatActivity {
         String movieLogo = tvDetail.getPosterPath();
 
         String productionName = EMPTY;
-        ArrayList<ProductionCompany> movieProductionCompanies = tvDetail.getProductionCompanies();
+        List<ProductionCompany> movieProductionCompanies = tvDetail.getProductionCompanies();
         for(int i=0;i<movieProductionCompanies.size();i++){
-            if(movieProductionCompanies.get(i).getLogoPath()!=null && movieProductionCompanies.get(i).getName()!=null){
+            if(movieProductionCompanies.get(i).getName()!=null){
                 productionName = "by "+tvDetail.getProductionCompanies().get(i).getName();
                 break;
             }
         }
 
-        ArrayList<Integer> runTime = tvDetail.getRunTime();
+        List<Integer> runTime = tvDetail.getRunTime();
         String length = "";
         for(int i=0;i<runTime.size();i++){
             if(i==runTime.size()-1){
@@ -282,7 +283,7 @@ public class TvDetailAct extends AppCompatActivity {
 
         reviewRv.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         ReviewAdapter reviewAdapter;
-        ArrayList<ReviewResults> movieReviewResults = tvDetail.getReview().getMovieReviewResults();
+        List<ReviewResults> movieReviewResults = tvDetail.getReview().getMovieReviewResults();
         if(movieReviewResults.size()>3) {
             ArrayList<ReviewResults> movieReviewResultsArrayList = new ArrayList<>();
             movieReviewResultsArrayList.add(movieReviewResults.get(0));

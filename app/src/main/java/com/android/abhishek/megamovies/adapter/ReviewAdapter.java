@@ -12,16 +12,17 @@ import com.android.abhishek.megamovies.model.ReviewResults;
 import com.cooltechworks.views.WhatsAppTextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewCustomAdapter>{
 
-    private ArrayList<ReviewResults> movieReviewResultsAl;
+    private List<ReviewResults> movieReviewResultsAl;
     private boolean flag = false;
 
-    public ReviewAdapter(ArrayList<ReviewResults> movieReviewResultsAl) {
+    public ReviewAdapter(List<ReviewResults> movieReviewResultsAl) {
         this.movieReviewResultsAl = movieReviewResultsAl;
     }
 

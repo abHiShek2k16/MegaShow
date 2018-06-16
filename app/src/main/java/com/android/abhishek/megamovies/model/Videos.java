@@ -2,18 +2,18 @@ package com.android.abhishek.megamovies.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Videos {
 
     @SerializedName(EndPoint.RESULTS)
-    private ArrayList<VideosResults> movieVideosResults;
+    private List<VideosResults> movieVideosResults;
 
-    public Videos(ArrayList<VideosResults> movieVideosResults) {
+    public Videos(List<VideosResults> movieVideosResults) {
         this.movieVideosResults = movieVideosResults;
     }
 
-    public ArrayList<VideosResults> getVideosResults() {
+    public List<VideosResults> getVideosResults() {
         return movieVideosResults;
     }
 }

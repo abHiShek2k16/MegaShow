@@ -2,16 +2,16 @@ package com.android.abhishek.megamovies.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class List {
+public class ShowList {
 
     @SerializedName(EndPoint.TOTAL_PAGES)
     private int totalPages;
     @SerializedName(EndPoint.RESULTS)
-    private ArrayList<ListResults> results;
+    private java.util.List<ListResults> results;
 
-    public List(int totalPages, ArrayList<ListResults> results){
+    public ShowList(int totalPages, List<ListResults> results) {
         this.totalPages = totalPages;
         this.results = results;
     }
@@ -20,7 +20,7 @@ public class List {
         return totalPages;
     }
 
-    public ArrayList<ListResults> getResults() {
+    public List<ListResults> getResults() {
         return results;
     }
 }

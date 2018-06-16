@@ -27,8 +27,8 @@
     </array>
 
     <array name="fav_sort_key">
-        <item>@string/tvPref</item>
-        <item>@string/moviePref</item>
+        <item>@string/tvQ</item>
+        <item>@string/movieQ</item>
     </array>
     <array name="fav_sort_pref">
         <item>@string/tvStr</item>

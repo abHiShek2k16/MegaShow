@@ -1,17 +1,27 @@
 package com.android.abhishek.megamovies.model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
+import java.util.List;
 
+@Entity(tableName = "TvDetailTb")
 public class TvDetail {
 
+    @PrimaryKey @NonNull @SerializedName(EndPoint.ID)
+    private String movieId;
     @SerializedName(EndPoint.BACKDROP_PATH)
     private String backdropPath;
     @SerializedName(EndPoint.EPISODE_RUNTIME)
-    private ArrayList<Integer> runTime;
+    @Ignore
+    private List<Integer> runTime;
     @SerializedName(EndPoint.CREATED_BY)
-    private ArrayList<TvCreatedByResults> tvCreatedByResults;
+    @Ignore
+    private List<TvCreatedByResults> tvCreatedByResults;
     @SerializedName(EndPoint.FIRST_AIR_DATE)
     private String firstAirDate;
     @SerializedName(EndPoint.LAST_AIR_DATE)
@@ -30,18 +40,24 @@ public class TvDetail {
     private String voteAvg;
     @SerializedName(EndPoint.VOTE_COUNT)
     private String voteCount;
+    @Ignore
     @SerializedName(EndPoint.VIDEOS)
     private Videos videos;
+    @Ignore
     @SerializedName(EndPoint.REVIEW)
     private Review review;
+    @Ignore
     @SerializedName(EndPoint.PRODUCTION)
-    private ArrayList<ProductionCompany> productionCompanies;
+    private List<ProductionCompany> productionCompanies;
 
-    public TvDetail(String backdropPath, ArrayList<Integer> runTime, ArrayList<TvCreatedByResults> tvCreatedByResults, String firstAirDate, String lastAirDate, String name, String noOfEpisode, String noOfSeason, String overview, String posterPath, String voteAvg, String voteCount, Videos videos, Review review, ArrayList<ProductionCompany> productionCompanies) {
+    @Ignore
+    public TvDetail(String movieId, String backdropPath, List<Integer> runTime, List<TvCreatedByResults> tvCreatedByResults, String firstAirDate, String lastAirDate, String name, String noOfEpisode, String noOfSeason, String overview, String posterPath, String voteAvg, String voteCount, Videos videos, Review review, List<ProductionCompany> productionCompanies) {
+        this.movieId = movieId;
         this.backdropPath = backdropPath;
         this.runTime = runTime;
         this.tvCreatedByResults = tvCreatedByResults;
         this.firstAirDate = firstAirDate;
+        this.lastAirDate = lastAirDate;
         this.name = name;
         this.noOfEpisode = noOfEpisode;
         this.noOfSeason = noOfSeason;
@@ -52,18 +68,31 @@ public class TvDetail {
         this.videos = videos;
         this.review = review;
         this.productionCompanies = productionCompanies;
+    }
+
+    public TvDetail(String movieId, String backdropPath, String firstAirDate, String lastAirDate, String name, String noOfEpisode, String noOfSeason, String overview, String posterPath, String voteAvg, String voteCount) {
+        this.movieId = movieId;
+        this.backdropPath = backdropPath;
+        this.firstAirDate = firstAirDate;
         this.lastAirDate = lastAirDate;
+        this.name = name;
+        this.noOfEpisode = noOfEpisode;
+        this.noOfSeason = noOfSeason;
+        this.overview = overview;
+        this.posterPath = posterPath;
+        this.voteAvg = voteAvg;
+        this.voteCount = voteCount;
     }
 
     public String getBackdropPath() {
         return backdropPath;
     }
 
-    public ArrayList<Integer> getRunTime() {
+    public List<Integer> getRunTime() {
         return runTime;
     }
 
-    public ArrayList<TvCreatedByResults> getTvCreatedByResults() {
+    public List<TvCreatedByResults> getTvCreatedByResults() {
         return tvCreatedByResults;
     }
 
@@ -111,7 +140,11 @@ public class TvDetail {
         return review;
     }
 
-    public ArrayList<ProductionCompany> getProductionCompanies() {
+    public List<ProductionCompany> getProductionCompanies() {
         return productionCompanies;
+    }
+
+    public String getMovieId() {
+        return movieId;
     }
 }

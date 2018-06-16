@@ -13,6 +13,7 @@ import com.android.abhishek.megamovies.model.MovieCastsResult;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -20,12 +21,10 @@ import butterknife.ButterKnife;
 
 public class MovieCastsAdapter extends RecyclerView.Adapter<MovieCastsAdapter.CastsCustomAdapter>{
 
-    private ArrayList<MovieCastsResult> movieCastsResultsAl;
+    private List<MovieCastsResult> movieCastsResultsAl;
+    private String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 
-    @BindString(R.string.emptyString)
-    String EMPTY;
-
-    public MovieCastsAdapter(ArrayList<MovieCastsResult> movieCastsResultsAl) {
+    public MovieCastsAdapter(List<MovieCastsResult> movieCastsResultsAl) {
         this.movieCastsResultsAl = movieCastsResultsAl;
     }
 
@@ -43,12 +42,12 @@ public class MovieCastsAdapter extends RecyclerView.Adapter<MovieCastsAdapter.Ca
             return;
         }
         Picasso.get()
-                .load("https://image.tmdb.org/t/p/w500"+movieCastsResult.getProfilePath())
+                .load(IMAGE_BASE_URL+movieCastsResult.getProfilePath())
                 .placeholder(R.drawable.loading)
                 .error(R.drawable.error)
                 .into(holder.castIv);
-        String name = movieCastsResult.getName().isEmpty()?EMPTY:movieCastsResult.getName();
-        String character = movieCastsResult.getCharacter().isEmpty()?EMPTY:movieCastsResult.getCharacter();
+        String name = movieCastsResult.getName().isEmpty()?"":movieCastsResult.getName();
+        String character = movieCastsResult.getCharacter().isEmpty()?"":movieCastsResult.getCharacter();
         holder.nameTv.setText(name);
         holder.rollTv.setText(character);
     }

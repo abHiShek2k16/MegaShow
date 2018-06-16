@@ -3,17 +3,18 @@ package com.android.abhishek.megamovies.model;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MovieCasts {
 
     @SerializedName(EndPoint.CAST)
-    private ArrayList<MovieCastsResult> movieCastsResults;
+    private List<MovieCastsResult> movieCastsResults;
 
-    public MovieCasts(ArrayList<MovieCastsResult> movieCastsResults) {
+    public MovieCasts(List<MovieCastsResult> movieCastsResults) {
         this.movieCastsResults = movieCastsResults;
     }
 
-    public ArrayList<MovieCastsResult> getMovieCastsResults() {
+    public List<MovieCastsResult> getMovieCastsResults() {
         return movieCastsResults;
     }
 }

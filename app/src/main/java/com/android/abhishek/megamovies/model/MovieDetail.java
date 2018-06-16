@@ -1,20 +1,29 @@
 package com.android.abhishek.megamovies.model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
+import java.util.List;
 
+@Entity(tableName = "MovieDetailTb")
 public class MovieDetail {
 
     //  Detail Api
+    @PrimaryKey @NonNull @SerializedName(EndPoint.ID)
+    private String movieId;
     @SerializedName(EndPoint.BACKDROP_PATH)
     private String backdropPath;
     @SerializedName(EndPoint.OVERVIEW)
     private String overview;
     @SerializedName(EndPoint.POSTER_PATH)
     private String posterPath;
+    @Ignore
     @SerializedName(EndPoint.PRODUCTION)
-    private ArrayList<ProductionCompany> productionCompanies;
+    private List<ProductionCompany> productionCompanies;
     @SerializedName(EndPoint.RELEASE_DATE)
     private String releaseDate;
     @SerializedName(EndPoint.RUNTIME)
@@ -27,18 +36,23 @@ public class MovieDetail {
     private String voteCount;
 
     //  Videos
+    @Ignore
     @SerializedName(EndPoint.VIDEOS)
     private Videos movieVideos;
 
     //  Review
+    @Ignore
     @SerializedName(EndPoint.REVIEW)
     private Review movieReview;
 
     //  Casts
+    @Ignore
     @SerializedName(EndPoint.CASTS)
     private MovieCasts movieCasts;
 
-    public MovieDetail(String backdropPath, String overview, String posterPath, ArrayList<ProductionCompany> productionCompanies, String releaseDate, String runtime, String title, String voteAvg, String voteCount, Videos movieVideos, Review movieReview, MovieCasts movieCasts) {
+    @Ignore
+    public MovieDetail(@NonNull String movieId, String backdropPath, String overview, String posterPath, List<ProductionCompany> productionCompanies, String releaseDate, String runtime, String title, String voteAvg, String voteCount, Videos movieVideos, Review movieReview, MovieCasts movieCasts) {
+        this.movieId = movieId;
         this.backdropPath = backdropPath;
         this.overview = overview;
         this.posterPath = posterPath;
@@ -53,6 +67,18 @@ public class MovieDetail {
         this.movieCasts = movieCasts;
     }
 
+    public MovieDetail(String movieId, String backdropPath, String overview, String posterPath, String releaseDate, String runtime, String title, String voteAvg, String voteCount) {
+        this.movieId = movieId;
+        this.backdropPath = backdropPath;
+        this.overview = overview;
+        this.posterPath = posterPath;
+        this.releaseDate = releaseDate;
+        this.runtime = runtime;
+        this.title = title;
+        this.voteAvg = voteAvg;
+        this.voteCount = voteCount;
+    }
+
     public String getBackdropPath() {
         return backdropPath;
     }
@@ -65,7 +91,7 @@ public class MovieDetail {
         return posterPath;
     }
 
-    public ArrayList<ProductionCompany> getProductionCompanies() {
+    public List<ProductionCompany> getProductionCompanies() {
         return productionCompanies;
     }
 
@@ -99,5 +125,9 @@ public class MovieDetail {
 
     public MovieCasts getMovieCasts() {
         return movieCasts;
+    }
+
+    public String getMovieId() {
+        return movieId;
     }
 }
