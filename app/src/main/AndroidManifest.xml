@@ -44,6 +44,7 @@
         <activity android:name=".SettingActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".ListAct"/>
+
     </application>
 
 </manifest>

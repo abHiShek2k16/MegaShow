@@ -57,7 +57,7 @@ public class CastProfileAct extends AppCompatActivity {
     }
 
     private void loadProfile(){
-        ApiInterface apiInterface = BuildUrl.getRetrofit(this).create(ApiInterface.class);
+        ApiInterface apiInterface = BuildUrl.getRetrofit().create(ApiInterface.class);
         final retrofit2.Call<PersonProfile> personProfileCall = apiInterface.getProfile(id,API_KEY);
         personProfileCall.enqueue(new Callback<PersonProfile>() {
            @Override

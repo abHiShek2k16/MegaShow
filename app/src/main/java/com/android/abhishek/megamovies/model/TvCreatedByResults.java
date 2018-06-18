@@ -10,8 +10,6 @@ import com.google.gson.annotations.SerializedName;
 @Entity(tableName = "TvCreatorByTb")
 public class TvCreatedByResults {
 
-    @PrimaryKey
-    @NonNull
     @SerializedName(EndPoint.ID)
     private String id;
     @SerializedName(EndPoint.NAME)
@@ -19,6 +17,8 @@ public class TvCreatedByResults {
     @SerializedName(EndPoint.PROFILE_PATH)
     private String profilePath;
     private String movieId;
+    @PrimaryKey(autoGenerate = true)
+    private int key;
 
     @Ignore
     public TvCreatedByResults(String id, String name, String profilePath) {
@@ -27,11 +27,12 @@ public class TvCreatedByResults {
         this.profilePath = profilePath;
     }
 
-    public TvCreatedByResults(String id, String name, String profilePath, String movieId) {
+    public TvCreatedByResults(String id, String name, String profilePath, String movieId, int key) {
         this.id = id;
         this.name = name;
         this.profilePath = profilePath;
         this.movieId = movieId;
+        this.key = key;
     }
 
     public String getId() {
@@ -48,5 +49,9 @@ public class TvCreatedByResults {
 
     public String getProfilePath() {
         return profilePath;
+    }
+
+    public int getKey() {
+        return key;
     }
 }

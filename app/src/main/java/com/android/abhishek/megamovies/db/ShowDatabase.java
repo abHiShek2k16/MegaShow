@@ -17,7 +17,7 @@ import com.android.abhishek.megamovies.model.VideosResults;
 public abstract class ShowDatabase extends RoomDatabase{
 
     private static final Object LOCK = new Object();
-    private static final String DATABASE_NAME = "SHOW_DATABASE";
+    private static final String DATABASE_NAME = "SHOW_DATABASE";    //  Non translatable Db Name
     private static ShowDatabase showDatabase;
 
     public static ShowDatabase getShowDatabase(Context context){
@@ -26,7 +26,6 @@ public abstract class ShowDatabase extends RoomDatabase{
                 showDatabase = Room.databaseBuilder(context.getApplicationContext(),
                         ShowDatabase.class,
                         ShowDatabase.DATABASE_NAME)
-                        .allowMainThreadQueries()
                         .build();
             }
         }

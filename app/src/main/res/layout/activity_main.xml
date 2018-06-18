@@ -27,41 +27,34 @@
 
         </android.support.design.widget.AppBarLayout>
 
-       <include layout="@layout/show_list_layout" />
-
         <RelativeLayout
-            android:id="@+id/errorLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
+            android:layout_height="match_parent">
+            <FrameLayout
+                android:id="@+id/fragmentLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
             <TextView
-                android:id="@+id/errorText"
-                android:layout_width="wrap_content"
+                android:id="@+id/noInternetBack"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/connectionError"
-                android:layout_centerInParent="true"
-                android:textColor="@color/grey"
-                android:textAlignment="center"
-                android:textSize="@dimen/xs22"
-                android:textAllCaps="false"
-                android:textStyle="italic"
-                android:fontFamily="cursive"/>
-            <Button
-                android:id="@+id/retryBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/xs16"
-                android:text="@string/tryAgain"
-                android:background="@drawable/retry_background"
-                android:textStyle="normal"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@id/errorText"
-                android:textAllCaps="false"
+                android:layout_alignParentBottom="true"
+                android:background="@color/colorPrimary"
+                android:text="@string/netproblem"
                 android:textColor="@color/white"
-                android:layout_marginTop="@dimen/x16"/>
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-condensed"
+                android:textSize="@dimen/xs12"
+                android:paddingLeft="@dimen/x16"
+                android:drawableRight="@drawable/baseline_refresh_white_18dp"
+                android:paddingRight="@dimen/x16"
+                android:paddingTop="@dimen/x2"
+                android:paddingBottom="@dimen/x4"
+                android:visibility="gone"/>
         </RelativeLayout>
 
     </LinearLayout>
+
 
     <android.support.design.widget.NavigationView
         android:id="@+id/navView"

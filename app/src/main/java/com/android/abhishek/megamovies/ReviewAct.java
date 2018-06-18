@@ -55,5 +55,6 @@ public class ReviewAct extends AppCompatActivity {
 
     private void closeOnError(String message){
         Toast.makeText(ReviewAct.this,message,Toast.LENGTH_SHORT).show();
+        finish();
     }
 }

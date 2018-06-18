@@ -1,12 +1,14 @@
 package com.android.abhishek.megamovies;
 
-import android.content.ActivityNotFoundException;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,6 +24,7 @@ import android.widget.Toast;
 import com.android.abhishek.megamovies.adapter.MovieCastsAdapter;
 import com.android.abhishek.megamovies.adapter.ReviewAdapter;
 import com.android.abhishek.megamovies.adapter.TrailerAdapter;
+import com.android.abhishek.megamovies.db.DbExecutor;
 import com.android.abhishek.megamovies.db.ShowDatabase;
 import com.android.abhishek.megamovies.listener.RecyclerItemClickListener;
 import com.android.abhishek.megamovies.model.MovieCastsResult;
@@ -29,22 +32,19 @@ import com.android.abhishek.megamovies.model.MovieDetail;
 import com.android.abhishek.megamovies.model.ProductionCompany;
 import com.android.abhishek.megamovies.model.ReviewResults;
 import com.android.abhishek.megamovies.model.VideosResults;
-import com.android.abhishek.megamovies.network.BuildUrl;
-import com.android.abhishek.megamovies.utils.ApiInterface;
+import com.android.abhishek.megamovies.viewModel.MovieDetailDVM;
+import com.android.abhishek.megamovies.viewModel.MovieDetailAVM;
+import com.android.abhishek.megamovies.viewModel.VMF;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MovieDetailAct extends AppCompatActivity {
     //  xml view
@@ -94,7 +94,7 @@ public class MovieDetailAct extends AppCompatActivity {
     private List<MovieCastsResult> movieCasts;
 
     private MovieDetail movieDetail;
-    private ShowDatabase showDatabase;
+    private boolean isExist = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,20 +122,8 @@ public class MovieDetailAct extends AppCompatActivity {
             closeOnError(getResources().getString(R.string.somethingWrong));
         }
 
-        showDatabase = ShowDatabase.getShowDatabase(getApplicationContext());
+        isExistInDb();
 
-        if(isExistInDb() && networkStatus()){
-            loadFromApi();
-            likeButton.setLiked(true);
-        }else if(isExistInDb() && !networkStatus()){
-            loadFromDb();
-            likeButton.setLiked(true);
-        }else if(!isExistInDb() && networkStatus()){
-            loadFromApi();
-            likeButton.setLiked(false);
-        }else {
-            closeOnError(getResources().getString(R.string.netproblem));
-        }
 
         trailerRv.addOnItemTouchListener(
                 new RecyclerItemClickListener(this, trailerRv, new RecyclerItemClickListener.OnItemClickListener() {
@@ -195,74 +183,67 @@ public class MovieDetailAct extends AppCompatActivity {
 
     private void loadFromDb(){
         ShowDatabase showDatabase = ShowDatabase.getShowDatabase(getApplicationContext());
-        try{
-            movieDetail = showDatabase.showDao().getMovieDetail(movieId);
-        }catch (Exception e){}
-        try{
-            productionName = "by "+showDatabase.showDao().getProductionCompany(movieId).getName()==null?"":showDatabase.showDao().getProductionCompany(movieId).getName();
-        }catch (Exception e){}
-        try{
-            movieCasts = showDatabase.showDao().getMovieCast(movieId);
-        }catch (Exception e){}
-        try{
-            videos = showDatabase.showDao().getVideos(movieId);
-        }catch (Exception e){}
-        setVariableFromDb();
-        setView();
-    }
-
-    private void setVariableFromDb(){
-        posterImageUrl = IMAGE_BASE_URL+movieDetail.getBackdropPath();
-        movieLogo = IMAGE_BASE_URL+movieDetail.getPosterPath();
-        length = movieDetail.getRuntime()==null?DATA_NOT_AVAILABLE:movieDetail.getRuntime();
-        movieName = movieDetail.getTitle()==null?DATA_NOT_AVAILABLE:movieDetail.getTitle();
-        rating = movieDetail.getVoteAvg()==null?DATA_NOT_AVAILABLE:movieDetail.getVoteAvg();
-        totalVote = movieDetail.getVoteCount()==null?DATA_NOT_AVAILABLE:movieDetail.getVoteCount();
-        releaseDate = movieDetail.getReleaseDate()==null?DATA_NOT_AVAILABLE:movieDetail.getReleaseDate();
-        overView = movieDetail.getOverview()==null?DATA_NOT_AVAILABLE:movieDetail.getOverview();
-    }
-
-    private void loadFromApi(){
-        ApiInterface apiInterface = BuildUrl.getRetrofit(this).create(ApiInterface.class);
-        retrofit2.Call<MovieDetail> movieDetailCall = apiInterface.getMovieDetail(movieId,API_KEY,APPEND_QUERY);
-        movieDetailCall.enqueue(new Callback<MovieDetail>() {
+        VMF movieDetailVMF = new VMF(showDatabase,movieId);
+        final MovieDetailDVM movieDetailVM = ViewModelProviders.of(this,movieDetailVMF).get(MovieDetailDVM.class);
+        movieDetailVM.getProductionName().observe(this, new Observer<ProductionCompany>() {
             @Override
-            public void onResponse(Call<MovieDetail> call, Response<MovieDetail> response) {
-                movieDetail = response.body();
-                if(movieDetail == null){
-                    closeOnError(getResources().getString(R.string.somethingWrong));
+            public void onChanged(@Nullable ProductionCompany productionCompany) {
+                movieDetailVM.getProductionName().removeObserver(this);
+                if(productionCompany != null){
+                    productionName = productionCompany.getName();
                 }
-                setVariableFromApi();
-                setView();
             }
-
+        });
+        movieDetailVM.getMovieCasts().observe(this, new Observer<List<MovieCastsResult>>() {
             @Override
-            public void onFailure(Call<MovieDetail> call, Throwable t) {
-                closeOnError(getResources().getString(R.string.netproblem));
+            public void onChanged(@Nullable List<MovieCastsResult> movieCastsResults) {
+                movieDetailVM.getMovieCasts().removeObserver(this);
+                movieCasts = movieCastsResults;
+            }
+        });
+        movieDetailVM.getVideos().observe(this, new Observer<List<VideosResults>>() {
+            @Override
+            public void onChanged(@Nullable List<VideosResults> videosResults) {
+                movieDetailVM.getVideos().removeObserver(this);
+                videos = videosResults;
+                setVariable();
+                setView();
             }
         });
     }
 
-    private void setVariableFromApi(){
-        posterImageUrl = IMAGE_BASE_URL+movieDetail.getBackdropPath();
-        movieLogo = IMAGE_BASE_URL+movieDetail.getPosterPath();
-        productionName = "by "+(movieDetail.getProductionCompanies().get(0).getName()==null?DATA_NOT_AVAILABLE:movieDetail.getProductionCompanies().get(0).getName());
-        try{
-            length = movieDetail.getRuntime().isEmpty() ? DATA_NOT_AVAILABLE : String.valueOf(Integer.parseInt(movieDetail.getRuntime())/60)+"h "+String.valueOf(Integer.parseInt(movieDetail.getRuntime())%60)+"min";
-        }catch (Exception e){
+    private void loadFromApi(){
+        MovieDetailAVM movieDetailVM = ViewModelProviders.of(this).get(MovieDetailAVM.class);
+        movieDetailVM.getMovieDetailFromApi(movieId,API_KEY,APPEND_QUERY).observe(this, new Observer<MovieDetail>() {
+            @Override
+            public void onChanged(@Nullable MovieDetail mD) {
+                movieDetail = mD;
+                setVariable();
+                videos = movieDetail.getMovieVideos().getVideosResults();
+                movieCasts = movieDetail.getMovieCasts().getMovieCastsResults();
+                reviews = movieDetail.getMovieReview().getMovieReviewResults();
+                productionName = "by "+movieDetail.getProductionCompanies().get(0).getName();
+                setView();
+            }
+        });
+    }
+
+    private void setVariable() {
+        posterImageUrl = IMAGE_BASE_URL + movieDetail.getBackdropPath();
+        movieLogo = IMAGE_BASE_URL + movieDetail.getPosterPath();
+        try {
+            length = movieDetail.getRuntime().isEmpty() ? DATA_NOT_AVAILABLE : String.valueOf(Integer.parseInt(movieDetail.getRuntime()) / 60) + "h " + String.valueOf(Integer.parseInt(movieDetail.getRuntime()) % 60) + "min";
+        } catch (Exception e) {
             length = DATA_NOT_AVAILABLE;
         }
-        movieName = movieDetail.getTitle()==null?DATA_NOT_AVAILABLE:movieDetail.getTitle();
-        rating = movieDetail.getVoteAvg()==null?DATA_NOT_AVAILABLE:movieDetail.getVoteAvg();
-        if(rating.length()>3){
-            rating = rating.substring(0,3);
+        movieName = movieDetail.getTitle() == null ? DATA_NOT_AVAILABLE : movieDetail.getTitle();
+        rating = movieDetail.getVoteAvg() == null ? DATA_NOT_AVAILABLE : movieDetail.getVoteAvg();
+        if (rating.length() > 3) {
+            rating = rating.substring(0, 3);
         }
-        totalVote = movieDetail.getVoteCount()==null?DATA_NOT_AVAILABLE:movieDetail.getVoteCount();
-        releaseDate = movieDetail.getReleaseDate()==null?DATA_NOT_AVAILABLE:movieDetail.getReleaseDate();
-        overView = movieDetail.getOverview()==null?DATA_NOT_AVAILABLE:movieDetail.getOverview();
-        videos = movieDetail.getMovieVideos().getVideosResults();
-        movieCasts = movieDetail.getMovieCasts().getMovieCastsResults();
-        reviews = movieDetail.getMovieReview().getMovieReviewResults();
+        totalVote = movieDetail.getVoteCount() == null ? DATA_NOT_AVAILABLE : movieDetail.getVoteCount();
+        releaseDate = movieDetail.getReleaseDate() == null ? DATA_NOT_AVAILABLE : movieDetail.getReleaseDate();
+        overView = movieDetail.getOverview() == null ? DATA_NOT_AVAILABLE : movieDetail.getOverview();
     }
 
     private void setView(){
@@ -340,37 +321,84 @@ public class MovieDetailAct extends AppCompatActivity {
 
     private void addToDb(){
         try{
-            showDatabase.showDao().addMovieDetail(movieDetail);
-            for(int i=0;i<movieCasts.size();i++){
-                showDatabase.showDao().addMovieCast(new MovieCastsResult(movieCasts.get(i).getCharacter(),movieCasts.get(i).getName(),movieCasts.get(i).getProfilePath(),movieCasts.get(i).getId(),movieId,movieCasts.get(i).getKey()));
-            }
-            showDatabase.showDao().addProductionCompany(new ProductionCompany(movieDetail.getProductionCompanies().get(0).getName(),movieId,movieDetail.getProductionCompanies().get(0).getId()));
-            for(int i=0;i<videos.size();i++){
-                showDatabase.showDao().addVideos(new VideosResults(movieId,videos.get(i).getVideoKey()));
-            }
-            likeButton.setLiked(true);
+            final ShowDatabase showDatabase = ShowDatabase.getShowDatabase(getApplicationContext());
+            DbExecutor.getDbExecutor().getBackgroundIo().execute(new Runnable() {
+                @Override
+                public void run() {
+                    showDatabase.showDao().addMovieDetail(movieDetail);
+                    for(int i=0;i<movieCasts.size();i++){
+                        showDatabase.showDao().addMovieCast(new MovieCastsResult(movieCasts.get(i).getCharacter(),movieCasts.get(i).getName(),movieCasts.get(i).getProfilePath(),movieCasts.get(i).getId(),movieId,movieCasts.get(i).getKey()));
+                    }
+                    try{
+                        showDatabase.showDao().addProductionCompany(new ProductionCompany(productionName,movieId));
+                    }catch (Exception e){}
+                    for(int i=0;i<videos.size();i++){
+                        showDatabase.showDao().addVideos(new VideosResults(movieId,videos.get(i).getVideoKey()));
+                    }
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            likeButton.setLiked(true);
+                        }
+                    });
+                }
+            });
         }catch (Exception e){}
     }
 
     private void removeFromDb(){
         try {
-            showDatabase.showDao().removeMovieDetail(movieDetail);
-            for (int i = 0; i < movieCasts.size(); i++) {
-                showDatabase.showDao().removeMovieCast(new MovieCastsResult(movieCasts.get(i).getCharacter(), movieCasts.get(i).getName(), movieCasts.get(i).getProfilePath(), movieCasts.get(i).getId(), movieId,movieCasts.get(i).getKey()));
-            }
-            showDatabase.showDao().removeProductionCompany(new ProductionCompany(movieDetail.getProductionCompanies().get(0).getName(), movieId, movieDetail.getProductionCompanies().get(0).getId()));
-            for (int i = 0; i < videos.size(); i++) {
-                showDatabase.showDao().removeVideos(new VideosResults(movieId, videos.get(i).getVideoKey()));
-            }
-            likeButton.setLiked(false);
+            final ShowDatabase showDatabase = ShowDatabase.getShowDatabase(getApplicationContext());
+            DbExecutor.getDbExecutor().getBackgroundIo().execute(new Runnable() {
+                @Override
+                public void run() {
+                    showDatabase.showDao().removeMovieDetail(movieDetail);
+                    for (int i = 0; i < movieCasts.size(); i++) {
+                        showDatabase.showDao().removeMovieCast(new MovieCastsResult(movieCasts.get(i).getCharacter(), movieCasts.get(i).getName(), movieCasts.get(i).getProfilePath(), movieCasts.get(i).getId(), movieId,movieCasts.get(i).getKey()));
+                    }
+                    try{
+                        showDatabase.showDao().removeProductionCompany(new ProductionCompany(productionName, movieId));
+                    }catch (Exception e){}
+                    for (int i = 0; i < videos.size(); i++) {
+                        showDatabase.showDao().removeVideos(new VideosResults(movieId, videos.get(i).getVideoKey()));
+                    }
+                }
+            });
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    likeButton.setLiked(false);
+                }
+            });
         }catch (Exception e){}
     }
 
     private boolean isExistInDb(){
-        if(showDatabase.showDao().getMovieDetail(movieId) == null){
-            return false;
-        }
-        return true;
+        ShowDatabase showDatabase = ShowDatabase.getShowDatabase(getApplicationContext());
+        VMF movieDetailVMF = new VMF(showDatabase,movieId);
+        final MovieDetailDVM movieDetailVM = ViewModelProviders.of(this,movieDetailVMF).get(MovieDetailDVM.class);
+        movieDetailVM.getMovieDetail().observe(this, new Observer<MovieDetail>() {
+            @Override
+            public void onChanged(@Nullable MovieDetail mD) {
+                if(mD == null){
+                    likeButton.setLiked(false);
+                    isExist = false;
+                }else{
+                    movieDetail = mD;
+                    likeButton.setLiked(true);
+                    isExist = true;
+                }
+                if(networkStatus()){
+                    loadFromApi();
+                }else if(!networkStatus() && isExist){
+                    loadFromDb();
+                }else if(!networkStatus() && !isExist){
+                    closeOnError(getResources().getString(R.string.netproblem));
+                }
+            }
+        });
+        return isExist;
     }
 
     private String changeFormatOfDate(String releaseDate){
