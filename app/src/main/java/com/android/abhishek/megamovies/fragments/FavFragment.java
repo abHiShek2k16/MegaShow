@@ -1,6 +1,5 @@
 package com.android.abhishek.megamovies.fragments;
 
-
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -13,14 +12,16 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.android.abhishek.megamovies.MovieDetailAct;
 import com.android.abhishek.megamovies.R;
@@ -38,13 +39,13 @@ import java.util.List;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class FavFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener{
     //  Xml View
     @BindView(R.id.fragmentRvAtFav) RecyclerView recyclerView;
     @BindView(R.id.fragmentPbAtFav) ProgressBar progressBar;
     @BindView(R.id.errorLayoutAtFav) RelativeLayout errorLayout;
+    private ImageView menu;
 
     //  Sort Feature
     @BindString(R.string.movieQ) String MOVIE;
@@ -65,25 +66,29 @@ public class FavFragment extends Fragment implements SharedPreferences.OnSharedP
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        loadPreferences();
-        if(savedInstanceState != null){
-            if(savedInstanceState.containsKey(favSortKey)){
-                FAV_SORT_BY = savedInstanceState.getString(favSortKey);
-            }
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(favSortKey,FAV_SORT_BY);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fav, container, false);
         ButterKnife.bind(this,view);
+        loadPreferences();
+
+        if(savedInstanceState != null){
+            if(savedInstanceState.containsKey(favSortKey)){
+                FAV_SORT_BY = savedInstanceState.getString(favSortKey);
+            }
+
+        }
+        menu = getActivity().findViewById(R.id.menuBtn);
+        registerForContextMenu(menu);
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(favSortKey,FAV_SORT_BY);
     }
 
     @Override
@@ -107,6 +112,13 @@ public class FavFragment extends Fragment implements SharedPreferences.OnSharedP
                 }
             }
         }));
+
+        menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getActivity(),getResources().getString(R.string.pressLong),Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void checkOrientation(){
@@ -169,20 +181,26 @@ public class FavFragment extends Fragment implements SharedPreferences.OnSharedP
 
     private void showError(){
         progressBar.setVisibility(View.GONE);
-        errorLayout.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
+        errorLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
-        inflater.inflate(R.menu.fav_sort_by,menu);
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        MenuInflater menuInflater = getActivity().getMenuInflater();
+        menuInflater.inflate(R.menu.fav_sort_by,menu);
+
+        MenuItem mv = menu.findItem(R.id.movie);
+        MenuItem tv = menu.findItem(R.id.tv);
+        if(FAV_SORT_BY.equalsIgnoreCase(MOVIE)){
+            mv.setChecked(true);
+        }else{
+            tv.setChecked(true);
+        }
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
+    public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.movie :
                 item.setChecked(true);
@@ -196,7 +214,7 @@ public class FavFragment extends Fragment implements SharedPreferences.OnSharedP
                 return true;
         }
 
-        return super.onOptionsItemSelected(item);
+        return super.onContextItemSelected(item);
     }
 
     @Override
@@ -212,9 +230,4 @@ public class FavFragment extends Fragment implements SharedPreferences.OnSharedP
         PreferenceManager.getDefaultSharedPreferences(getContext()).unregisterOnSharedPreferenceChangeListener(this);
     }
 
-    @OnClick(R.id.retryAtFav)
-    void refresh(){
-        errorLayout.setVisibility(View.GONE);
-        loadFav();
-    }
 }

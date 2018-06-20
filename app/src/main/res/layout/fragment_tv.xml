@@ -5,21 +5,65 @@
     android:layout_height="match_parent"
     tools:context=".fragments.TvFragment">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/fragmentRvAtTv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/x4"
-        android:layout_marginBottom="@dimen/x4" />
-
     <ProgressBar
         android:id="@+id/fragmentPbAtTv"
         android:layout_width="@dimen/x22"
         android:layout_height="@dimen/x22"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/fragmentRvAtMv"
         android:visibility="gone"
         android:layout_marginBottom="@dimen/x12"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fragmentRvAtTv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/x4"
+        android:layout_marginBottom="@dimen/x4"
+        android:layout_below="@id/fragmentPbAtTv"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x48"
+        android:orientation="horizontal"
+        android:background="@color/white"
+        android:layout_alignParentBottom="true"
+        android:padding="@dimen/x4">
+        <Button
+            android:id="@+id/previousAtTv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/previousStr"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:layout_marginRight="@dimen/x4"
+            android:visibility="invisible"/>
+        <TextView
+            android:id="@+id/showPageNoAtTv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:textAlignment="center"
+            android:textSize="@dimen/xs16"
+            android:paddingTop="@dimen/x8"
+            android:paddingLeft="@dimen/x4"
+            android:paddingRight="@dimen/x4"
+            android:textColor="@color/black"
+            android:fontFamily="sans-serif-condensed"
+            android:layout_weight="1"/>
+        <Button
+            android:id="@+id/nextAtTv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/nextStr"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:layout_marginLeft="@dimen/x4"
+            android:visibility="invisible"/>
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/errorLayoutAtTv"
@@ -32,21 +76,23 @@
             android:layout_centerInParent="true"
             android:textColor="@color/grey"
             android:textAlignment="center"
-            android:text="@string/nothingToShow"
+            android:text="@string/connectionError"
             android:textSize="@dimen/xs22"
             android:textAllCaps="false"
             android:textStyle="italic"
             android:fontFamily="cursive"
             android:id="@+id/useLessSix"/>
-        <ImageButton
+        <Button
             android:id="@+id/retryAtTv"
-            android:layout_width="@dimen/x48"
-            android:layout_height="@dimen/x48"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/baseline_refresh_black_18dp"
-            android:background="@color/white"
-            android:layout_above="@id/useLessSix"
-            android:layout_marginBottom="@dimen/x4"/>
+            android:background="@drawable/retry_background"
+            android:layout_below="@id/useLessSix"
+            android:layout_marginTop="@dimen/x8"
+            android:text="@string/tryAgain"
+            android:textColor="@color/white"
+            android:textAllCaps="false"/>
     </RelativeLayout>
 
 </RelativeLayout>

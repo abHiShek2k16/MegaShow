@@ -19,11 +19,11 @@ import butterknife.ButterKnife;
 
 public class CreatorAdapter extends RecyclerView.Adapter<CreatorAdapter.CreatorCustomAdapter>{
 
-    private List<TvCreatedByResults> tvCreatorResultsAl;
-    private String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
+    private final List<TvCreatedByResults> tvCreatorResults;
+    private final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 
-    public CreatorAdapter(List<TvCreatedByResults> tvCreatorResultsAl) {
-        this.tvCreatorResultsAl = tvCreatorResultsAl;
+    public CreatorAdapter(List<TvCreatedByResults> tvCreatorResults) {
+        this.tvCreatorResults = tvCreatorResults;
     }
 
     @NonNull
@@ -35,7 +35,7 @@ public class CreatorAdapter extends RecyclerView.Adapter<CreatorAdapter.CreatorC
 
     @Override
     public void onBindViewHolder(@NonNull CreatorCustomAdapter holder, int position) {
-        TvCreatedByResults createdByResults = tvCreatorResultsAl.get(position);
+        TvCreatedByResults createdByResults = tvCreatorResults.get(position);
         if(createdByResults == null){
             return;
         }
@@ -50,15 +50,15 @@ public class CreatorAdapter extends RecyclerView.Adapter<CreatorAdapter.CreatorC
 
     @Override
     public int getItemCount() {
-        return tvCreatorResultsAl.size();
+        return tvCreatorResults.size();
     }
 
     public class CreatorCustomAdapter extends RecyclerView.ViewHolder{
-        @BindView(R.id.creatorIv)
-        ImageView creatorIv;
-        @BindView(R.id.TvOneCreator)
-        TextView nameTv;
-        public CreatorCustomAdapter(View itemView) {
+
+        @BindView(R.id.creatorIv) ImageView creatorIv;
+        @BindView(R.id.TvOneCreator) TextView nameTv;
+
+        protected CreatorCustomAdapter(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
         }

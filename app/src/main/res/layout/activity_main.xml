@@ -22,39 +22,39 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolBarAtMainAct"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary" />
+                android:layout_height="@dimen/x48"
+                android:background="?attr/colorPrimary">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/toolBarText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textSize="@dimen/xs18"
+                        android:textColor="@color/white"
+                        android:text="@string/movieStr"
+                        android:fontFamily="sans-serif-condensed"
+                        android:paddingTop="@dimen/x12"/>
+                    <ImageView
+                        android:id="@+id/menuBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/baseline_sort_white_24dpx"
+                        android:paddingRight="@dimen/x16"
+                        android:layout_alignParentRight="true"
+                        android:contentDescription="@string/imageDesc"/>
+                </RelativeLayout>
+            </android.support.v7.widget.Toolbar>
 
         </android.support.design.widget.AppBarLayout>
 
-        <RelativeLayout
+        <FrameLayout
+            android:id="@+id/fragmentLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <FrameLayout
-                android:id="@+id/fragmentLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-            <TextView
-                android:id="@+id/noInternetBack"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:background="@color/colorPrimary"
-                android:text="@string/netproblem"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:fontFamily="sans-serif-condensed"
-                android:textSize="@dimen/xs12"
-                android:paddingLeft="@dimen/x16"
-                android:drawableRight="@drawable/baseline_refresh_white_18dp"
-                android:paddingRight="@dimen/x16"
-                android:paddingTop="@dimen/x2"
-                android:paddingBottom="@dimen/x4"
-                android:visibility="gone"/>
-        </RelativeLayout>
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
-
 
     <android.support.design.widget.NavigationView
         android:id="@+id/navView"
@@ -67,4 +67,5 @@
         app:itemIconTint="@color/colorPrimaryDark"
         app:itemTextColor="@color/colorPrimary"
         app:menu="@menu/activity_main_drawer" />
+
 </android.support.v4.widget.DrawerLayout>

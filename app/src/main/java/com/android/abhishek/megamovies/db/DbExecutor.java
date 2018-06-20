@@ -1,6 +1,5 @@
 package com.android.abhishek.megamovies.db;
 
-
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 

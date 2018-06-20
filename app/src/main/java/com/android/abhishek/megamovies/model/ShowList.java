@@ -16,6 +16,9 @@ public class ShowList {
         this.results = results;
     }
 
+    public ShowList() {
+    }
+
     public int getTotalPages() {
         return totalPages;
     }

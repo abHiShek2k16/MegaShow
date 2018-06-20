@@ -33,12 +33,10 @@ import com.android.abhishek.megamovies.model.ReviewResults;
 import com.android.abhishek.megamovies.model.TvCreatedByResults;
 import com.android.abhishek.megamovies.model.TvDetail;
 import com.android.abhishek.megamovies.model.VideosResults;
-import com.android.abhishek.megamovies.network.BuildUrl;
-import com.android.abhishek.megamovies.utils.ApiInterface;
-import com.android.abhishek.megamovies.viewModel.TvDetailAVM;
-import com.android.abhishek.megamovies.viewModel.TvDetailDVM;
-import com.android.abhishek.megamovies.viewModel.TvVMF;
-import com.android.abhishek.megamovies.viewModel.VMF;
+import com.android.abhishek.megamovies.viewModel.TvDetailApiVM;
+import com.android.abhishek.megamovies.viewModel.TvDetailDbVM;
+import com.android.abhishek.megamovies.viewModel.TvViewModelFactory;
+import com.android.abhishek.megamovies.viewModel.MovieViewModelFactory;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 import com.squareup.picasso.NetworkPolicy;
@@ -49,41 +47,39 @@ import java.util.List;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class TvDetailAct extends AppCompatActivity {
-    @BindString(R.string.apiKey) String API_KEY;
-    @BindString(R.string.imageBaseUrl) String IMAGE_BASE_URL;
-    @BindString(R.string.emptyString) String EMPTY;
-    @BindString(R.string.infoUnavailable) String DATA_NOT_AVAILABLE;
-    @BindString(R.string.videoAppBaseUrl) String VIDEO_APP_BASE_URL;
-    @BindString(R.string.videoWebBaseUrl) String VIDEO_WEB_BASE_URL;
-    @BindString(R.string.appendQueryTv) String APPEND_QUERY;
 
+    @BindView(R.id.toolBarAtTv) android.support.v7.widget.Toolbar toolbar;
     @BindView(R.id.posterImageAtTv) ImageView posterImageIv;
+    @BindView(R.id.logoIvAtTv) ImageView tvLogoIv;
     @BindView(R.id.movieNameAtTv) TextView tvNameTv;
     @BindView(R.id.productionNameAtTv) TextView productionNameTv;
-    @BindView(R.id.tvFavBtn) LikeButton likeButton;
-    @BindView(R.id.logoIvAtTv) ImageView tvLogoIv;
     @BindView(R.id.lengthTvAtTv) TextView lengthTv;
     @BindView(R.id.ratingTvAtTv) TextView ratingTv;
     @BindView(R.id.totalVoteTvAtTv) TextView totalVoteTv;
     @BindView(R.id.firstDateAtTv) TextView firstEpisodeDateTv;
     @BindView(R.id.lastDateAtTv) TextView lastEpisodeDateTv;
     @BindView(R.id.overviewAtTv) TextView overviewTv;
+    @BindView(R.id.readAllReviewAtTv) TextView readAll;
+    @BindView(R.id.ratingCountAtTv) TextView ratingCount;
+    @BindView(R.id.ratingStrAtTv) TextView ratingStrTv;
+    @BindView(R.id.tvFavBtn) LikeButton likeButton;
+    @BindView(R.id.totalRatingBarAtTv) RatingBar totalRating;
     @BindView(R.id.trailerRvAtTv) RecyclerView trailerRv;
     @BindView(R.id.creatorRvAtTv) RecyclerView creatorRv;
     @BindView(R.id.reviewRvAtTv) RecyclerView reviewRv;
-    @BindView(R.id.readAllReviewAtTv) TextView readAll;
-    @BindView(R.id.toolBarAtTv) android.support.v7.widget.Toolbar toolbar;
-    @BindView(R.id.totalRatingBarAtTv) RatingBar totalRating;
-    @BindView(R.id.ratingCountAtTv) TextView ratingCount;
-    @BindView(R.id.ratingStrAtTv) TextView ratingStrTv;
     @BindView(R.id.noTSEAtTvCreator) RelativeLayout creatorError;
     @BindView(R.id.noTSEAtTvReview) RelativeLayout reviewError;
     @BindView(R.id.noTSEAtTvTrailer) RelativeLayout trailerError;
+
+    @BindString(R.string.apiKey) String API_KEY;
+    @BindString(R.string.imageBaseUrl) String IMAGE_BASE_URL;
+    @BindString(R.string.infoUnavailable) String DATA_NOT_AVAILABLE;
+    @BindString(R.string.videoAppBaseUrl) String VIDEO_APP_BASE_URL;
+    @BindString(R.string.videoWebBaseUrl) String VIDEO_WEB_BASE_URL;
+    @BindString(R.string.appendQueryTv) String APPEND_QUERY;
+
 
     private String posterImageUrl = "";
     private String tvLogo = "";
@@ -187,28 +183,30 @@ public class TvDetailAct extends AppCompatActivity {
     }
 
     private void loadFromApi(){
-        TvDetailAVM tvDetailAVM = ViewModelProviders.of(this).get(TvDetailAVM.class);
-        tvDetailAVM.getTvDetailFromApi(tvId,API_KEY,APPEND_QUERY).observe(this, new Observer<TvDetail>() {
+        TvDetailApiVM tvDetailApiVM = ViewModelProviders.of(this).get(TvDetailApiVM.class);
+        tvDetailApiVM.getTvDetailFromApi(tvId,API_KEY,APPEND_QUERY).observe(this, new Observer<TvDetail>() {
             @Override
             public void onChanged(@Nullable TvDetail tD) {
                 tvDetail = tD;
-                videos = tD.getVideos().getVideosResults();
-                reviews = tD.getReview().getMovieReviewResults();
-                tvCreator = tD.getTvCreatedByResults();
-                productionName = "by "+tD.getProductionCompanies().get(0).getName();
-                tvCreator = tvDetail.getTvCreatedByResults();
-                videos = tvDetail.getVideos().getVideosResults();
-                reviews = tvDetail.getReview().getMovieReviewResults();
-                setVariable();
-                setView();
+                if(tD != null){
+                    videos = tD.getVideos()!=null?tD.getVideos().getVideosResults():null;
+                    reviews = tD.getReview()!=null?tD.getReview().getMovieReviewResults():null;
+                    tvCreator = tD.getTvCreatedByResults();
+                    productionName = "by "+(tD.getProductionCompanies()!=null&&tD.getProductionCompanies().size()>0?tD.getProductionCompanies().get(0).getName():DATA_NOT_AVAILABLE);
+                    length = String.valueOf(tD.getRunTime().get(0))!=null&&tD.getRunTime().size()>0?String.valueOf(tD.getRunTime().get(0))+" min":DATA_NOT_AVAILABLE;
+                    setVariable();
+                    setView();
+                }else{
+                    closeOnError(getResources().getString(R.string.somethingWrong));
+                }
             }
         });
     }
 
     private void loadFromDb(){
         ShowDatabase showDatabase = ShowDatabase.getShowDatabase(getApplicationContext());
-        VMF vmf = new VMF(showDatabase,tvId);
-        final TvDetailDVM tvDetailVM = ViewModelProviders.of(this,vmf).get(TvDetailDVM.class);
+        MovieViewModelFactory movieViewModelFactory = new MovieViewModelFactory(showDatabase,tvId);
+        final TvDetailDbVM tvDetailVM = ViewModelProviders.of(this, movieViewModelFactory).get(TvDetailDbVM.class);
         tvDetailVM.getProductionName().observe(this, new Observer<ProductionCompany>() {
             @Override
             public void onChanged(@Nullable ProductionCompany productionCompany) {
@@ -230,6 +228,7 @@ public class TvDetailAct extends AppCompatActivity {
             public void onChanged(@Nullable List<VideosResults> videosResults) {
                 tvDetailVM.getVideos().removeObserver(this);
                 videos = videosResults;
+                length = DATA_NOT_AVAILABLE;
                 setVariable();
                 setView();
             }
@@ -280,7 +279,7 @@ public class TvDetailAct extends AppCompatActivity {
 
         tvNameTv.setText(tvName);
         productionNameTv.setText(productionName);
-      //  lengthTv.setText(length+" min");
+        lengthTv.setText(length);
         ratingTv.setText(rating+" / 10");
         totalVoteTv.setText(totalVote);
         firstEpisodeDateTv.setText(changeFormatOfDate(firstEpisode));
@@ -310,7 +309,6 @@ public class TvDetailAct extends AppCompatActivity {
         ReviewAdapter reviewAdapter;
         if(reviews == null || reviews.size()==0){
             reviewError.setVisibility(View.VISIBLE);
-            return;
         }else if(reviews.size()>3) {
             reviewError.setVisibility(View.GONE);
             List<ReviewResults> movieReviewResultsArrayList = reviews.subList(0,3);
@@ -322,68 +320,91 @@ public class TvDetailAct extends AppCompatActivity {
             reviewAdapter = new ReviewAdapter(reviews);
             reviewRv.setAdapter(reviewAdapter);
         }
+        likeButton.setEnabled(true);
     }
 
     private void addToDb(){
-        try{
-            final ShowDatabase showDatabase = ShowDatabase.getShowDatabase(getApplicationContext());
-            DbExecutor.getDbExecutor().getBackgroundIo().execute(new Runnable() {
-                @Override
-                public void run() {
+        final ShowDatabase showDatabase = ShowDatabase.getShowDatabase(getApplicationContext());
+        DbExecutor.getDbExecutor().getBackgroundIo().execute(new Runnable() {
+            @Override
+            public void run() {
+                if(tvDetail != null){
                     showDatabase.showDao().addTvDetail(tvDetail);
-                    for(int i=0;i<tvCreator.size();i++){
-                        showDatabase.showDao().addTvCreator(new TvCreatedByResults(tvCreator.get(i).getId(),tvCreator.get(i).getName(),tvCreator.get(i).getProfilePath(),tvId,tvCreator.get(i).getKey()));
-                    }
-                    try{
-                        showDatabase.showDao().addProductionCompany(new ProductionCompany(productionName,tvId));
-                    }catch (Exception e){}
-                    for(int i=0;i<videos.size();i++){
-                        showDatabase.showDao().addVideos(new VideosResults(tvId,videos.get(i).getVideoKey()));
-                    }
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            likeButton.setLiked(true);
-                        }
-                    });
                 }
-            });
-        }catch (Exception e){}
+
+                if(productionName != null && tvId != null){
+                    showDatabase.showDao().addProductionCompany(new ProductionCompany(productionName,tvId));
+                }
+
+                if(tvCreator != null){
+                    for(int i=0;i<tvCreator.size();i++){
+                        if(validateCreator(tvCreator.get(i))){
+                            showDatabase.showDao().addTvCreator(new TvCreatedByResults(tvCreator.get(i).getId(),tvCreator.get(i).getName(),tvCreator.get(i).getProfilePath(),tvId,tvCreator.get(i).getKey()));
+                        }
+                    }
+                }
+
+                if(videos != null){
+                    for(int i=0;i<videos.size();i++){
+                        if(validateVideos(videos.get(i))){
+                            showDatabase.showDao().addVideos(new VideosResults(tvId,videos.get(i).getVideoKey()));
+                        }
+                    }
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        likeButton.setLiked(true);
+                    }
+                });
+            }
+        });
     }
 
     private void removeFromDb(){
-        try{
-            final ShowDatabase showDatabase = ShowDatabase.getShowDatabase(getApplicationContext());
-            DbExecutor.getDbExecutor().getBackgroundIo().execute(new Runnable() {
-                @Override
-                public void run() {
+        final ShowDatabase showDatabase = ShowDatabase.getShowDatabase(getApplicationContext());
+        DbExecutor.getDbExecutor().getBackgroundIo().execute(new Runnable() {
+            @Override
+            public void run() {
+                if(tvDetail != null){
                     showDatabase.showDao().removeTvDetail(tvDetail);
-                    for(int i=0;i<tvCreator.size();i++){
-                        showDatabase.showDao().removeTvCreator(new TvCreatedByResults(tvCreator.get(i).getId(),tvCreator.get(i).getName(),tvCreator.get(i).getProfilePath(),tvId,tvCreator.get(i).getKey()));
-                    }
-                    try{
-                        showDatabase.showDao().removeProductionCompany(new ProductionCompany(productionName,tvId));
-                    }catch (Exception e){}
-                    for(int i=0;i<videos.size();i++){
-                        showDatabase.showDao().removeVideos(new VideosResults(tvId,videos.get(i).getVideoKey()));
-                    }
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            likeButton.setLiked(false);
-                        }
-                    });
                 }
-            });
-        }catch (Exception e){}
+
+                if(productionName != null && tvId != null){
+                    showDatabase.showDao().removeProductionCompany(new ProductionCompany(productionName,tvId));
+                }
+
+                if(tvCreator != null){
+                    for(int i=0;i<tvCreator.size();i++){
+                        if(validateCreator(tvCreator.get(i))){
+                            showDatabase.showDao().removeTvCreator(new TvCreatedByResults(tvCreator.get(i).getId(),tvCreator.get(i).getName(),tvCreator.get(i).getProfilePath(),tvId,tvCreator.get(i).getKey()));
+                        }
+                    }
+                }
+
+                if(videos != null){
+                    for(int i=0;i<videos.size();i++){
+                        if(validateVideos(videos.get(i))){
+                            showDatabase.showDao().removeVideos(new VideosResults(tvId,videos.get(i).getVideoKey()));
+                        }
+                    }
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        likeButton.setLiked(false);
+                    }
+                });
+            }
+        });
     }
 
     private boolean isExistInDb(){
         ShowDatabase showDatabase = ShowDatabase.getShowDatabase(getApplicationContext());
-        TvVMF vmf = new TvVMF(showDatabase,tvId);
-        final TvDetailDVM tvDetailVM = ViewModelProviders.of(this,vmf).get(TvDetailDVM.class);
+        TvViewModelFactory vmf = new TvViewModelFactory(showDatabase,tvId);
+        final TvDetailDbVM tvDetailVM = ViewModelProviders.of(this,vmf).get(TvDetailDbVM.class);
         tvDetailVM.getTvDetail().observe(this, new Observer<TvDetail>() {
             @Override
             public void onChanged(@Nullable TvDetail tD) {
@@ -400,7 +421,7 @@ public class TvDetailAct extends AppCompatActivity {
                 }else if(!networkStatus() && isExist){
                     loadFromDb();
                 }else if(!networkStatus() && !isExist){
-                    closeOnError(getResources().getString(R.string.netproblem));
+                    closeOnError(getResources().getString(R.string.netProblem));
                 }
             }
         });
@@ -470,6 +491,20 @@ public class TvDetailAct extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    private boolean validateCreator(TvCreatedByResults tvCreatedByResult){
+        if(tvCreatedByResult.getName() != null && tvCreatedByResult.getProfilePath() != null && tvCreatedByResult.getId() != null && tvId != null) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean validateVideos(VideosResults videos){
+        if(tvId != null && videos.getVideoKey() != null){
+            return true;
+        }
+        return false;
     }
 
     private void closeOnError(String message){

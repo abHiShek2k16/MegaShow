@@ -7,11 +7,9 @@
     <string name="apiKey" translatable="false"></string>
 
     <!--    API BASE URL    -->
-    <string name="apiBaseUrl" translatable="false">https://api.themoviedb.org/3/</string>
     <string name="imageBaseUrl" translatable="false">https://image.tmdb.org/t/p/w500</string>
     <string name="videoWebBaseUrl" translatable="false">http://www.youtube.com/watch?v=</string>
     <string name="videoAppBaseUrl" translatable="false">vnd.youtube:</string>
-    <string name="trailerImageBaseUrl" translatable="false">https://img.youtube.com/vi/</string>
 
     <!--    API QUERY   -->
     <string name="popularQ" translatable="false">popular</string>
@@ -22,7 +20,6 @@
     <string name="airingTodayQ" translatable="false">airing_today</string>
     <string name="appendQueryMv" translatable="false">videos,reviews,casts</string>
     <string name="appendQueryTv" translatable="false">videos,reviews</string>
-    <string name="trailerQ" translatable="false">/0.jpg</string>
 
     <!--    PREFERENCE KEY  -->
     <string name="movieSortPref" translatable="false">sort_movie_by</string>
@@ -33,7 +30,6 @@
     <string name="tvQ" translatable="false">tv</string>
     <string name="movieQ" translatable="false">movie</string>
     <string name="currentPage" translatable="false">current_page</string>
-    <string name="currentFlag" translatable="false">current_flag</string>
 
     <!--    INTENT KEY  -->
     <string name="intentPassingOne" translatable="false">INTENT_STRING_ONE</string>
@@ -50,7 +46,6 @@
     <string name="communicateStr">Communicate</string>
     <string name="popularStr">Popular</string>
     <string name="topRatedStr">Top Rated</string>
-    <string name="latestStr">Latest</string>
     <string name="upcomingStr">Upcoming</string>
     <string name="nowPlayingStr">Now Playing</string>
     <string name="onTheAirStr">On The Air</string>
@@ -98,24 +93,16 @@
     <string name="Dec"> Dec</string>
 
     <!--    Error   -->
+    <string name="pressLong">Press Long to Change Sort Feature</string>
     <string name="infoUnavailable">Info UnAvailable</string>
     <string name="connectionError">No Internet Connection\nonly favourite list available while offline</string>
-    <string name="netproblem">No Internet Connection</string>
+    <string name="netProblem">No Internet Connection</string>
     <string name="apiKeyProblem">Please Add Your Api Key</string>
-    <string name="tryAgainLater">Please Try Again Later</string>
     <string name="tryAgain">Try Again</string>
     <string name="somethingWrong">Something went wrong Try again in few minutes</string>
     <string name="nothingToShow">Nothing To Show Here</string>
-    <string name="emptyString"></string>
 
     <!--    NAVIGATION DRAWER   -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

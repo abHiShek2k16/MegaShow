@@ -11,26 +11,18 @@ import com.android.abhishek.megamovies.model.VideosResults;
 
 import java.util.List;
 
-public class TvDetailDVM extends ViewModel {
+public class TvDetailDbVM extends ViewModel {
 
     private LiveData<TvDetail> tvDetail;
     private LiveData<ProductionCompany> productionName;
     private LiveData<List<TvCreatedByResults>> tvCreator;
     private LiveData<List<VideosResults>> videos;
 
-    public TvDetailDVM(ShowDatabase showDatabase, String movieId) {
-        try{
-            tvDetail = showDatabase.showDao().getTvDetail(movieId);
-        }catch (Exception e){}
-        try{
-            productionName = showDatabase.showDao().getProductionCompany(movieId);
-        }catch (Exception e){}
-        try{
-            tvCreator = showDatabase.showDao().getTvCreator(movieId);
-        }catch (Exception e){}
-        try{
-            videos = showDatabase.showDao().getVideos(movieId);
-        }catch (Exception e){}
+    public TvDetailDbVM(ShowDatabase showDatabase, String tvId) {
+        tvDetail = showDatabase.showDao().getTvDetail(tvId);
+        productionName = showDatabase.showDao().getProductionCompany(tvId);
+        tvCreator = showDatabase.showDao().getTvCreator(tvId);
+        videos = showDatabase.showDao().getVideos(tvId);
     }
 
     public LiveData<TvDetail> getTvDetail() {

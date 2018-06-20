@@ -3,7 +3,6 @@ package com.android.abhishek.megamovies.model;
 public class EndPoint {
 
     //        Non translatable String Used during Api Handling
-    public static final String TOTAL_RESULTS = "total_results";
     public static final String TOTAL_PAGES = "total_pages";
     public static final String RESULTS = "results";
     public static final String VOTE_COUNT = "vote_count";
@@ -23,13 +22,10 @@ public class EndPoint {
     public static final String PROFILE_PATH = "profile_path";
 
     public static final String RELEASE_DATE = "release_date";
-    public static final String ADULT = "adult";
     public static final String RUNTIME = "runtime";
-    public static final String STATUS = "status";
     public static final String CASTS = "casts";
     public static final String CAST = "cast";
     public static final String CHARACTER = "character";
-    public static final String LOGO_PATH = "logo_path";
 
     public static final String EPISODE_RUNTIME = "episode_run_time";
     public static final String FIRST_AIR_DATE = "first_air_date";

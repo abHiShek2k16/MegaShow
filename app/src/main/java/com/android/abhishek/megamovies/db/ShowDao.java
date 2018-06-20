@@ -9,7 +9,6 @@ import android.arch.persistence.room.Query;
 import com.android.abhishek.megamovies.model.MovieCastsResult;
 import com.android.abhishek.megamovies.model.MovieDetail;
 import com.android.abhishek.megamovies.model.ProductionCompany;
-import com.android.abhishek.megamovies.model.ReviewResults;
 import com.android.abhishek.megamovies.model.TvCreatedByResults;
 import com.android.abhishek.megamovies.model.TvDetail;
 import com.android.abhishek.megamovies.model.VideosResults;
@@ -66,5 +65,4 @@ public interface ShowDao {
     void addVideos(VideosResults videosResults);
     @Delete
     void removeVideos(VideosResults videosResults);
-
 }

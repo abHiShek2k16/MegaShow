@@ -51,6 +51,10 @@ public class MovieDetail {
     private MovieCasts movieCasts;
 
     @Ignore
+    public MovieDetail() {
+    }
+
+    @Ignore
     public MovieDetail(@NonNull String movieId, String backdropPath, String overview, String posterPath, List<ProductionCompany> productionCompanies, String releaseDate, String runtime, String title, String voteAvg, String voteCount, Videos movieVideos, Review movieReview, MovieCasts movieCasts) {
         this.movieId = movieId;
         this.backdropPath = backdropPath;

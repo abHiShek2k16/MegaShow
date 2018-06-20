@@ -8,7 +8,6 @@ import android.content.Context;
 import com.android.abhishek.megamovies.model.MovieCastsResult;
 import com.android.abhishek.megamovies.model.MovieDetail;
 import com.android.abhishek.megamovies.model.ProductionCompany;
-import com.android.abhishek.megamovies.model.ReviewResults;
 import com.android.abhishek.megamovies.model.TvCreatedByResults;
 import com.android.abhishek.megamovies.model.TvDetail;
 import com.android.abhishek.megamovies.model.VideosResults;

@@ -2,6 +2,7 @@
     <!--    Font Size   -->
     <dimen name="xs12">12sp</dimen>
     <dimen name="xs16">16sp</dimen>
+    <dimen name="xs18">18sp</dimen>
     <dimen name="xs22">22sp</dimen>
     <dimen name="xs32">32sp</dimen>
     <dimen name="xs64">64sp</dimen>
@@ -23,5 +24,4 @@
     <dimen name="x220">220dp</dimen>
     <dimen name="x256">256dp</dimen>
     <dimen name="x260">260dp</dimen>
-    <dimen name="x350">350dp</dimen>
 </resources>

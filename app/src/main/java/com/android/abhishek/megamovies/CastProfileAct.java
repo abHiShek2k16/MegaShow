@@ -1,8 +1,11 @@
 package com.android.abhishek.megamovies;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -10,18 +13,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.abhishek.megamovies.model.PersonProfile;
-import com.android.abhishek.megamovies.network.BuildUrl;
-import com.android.abhishek.megamovies.utils.ApiInterface;
+import com.android.abhishek.megamovies.viewModel.ProfileVM;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class CastProfileAct extends AppCompatActivity {
+
+    //  Make a new  view model
 
     @BindView(R.id.profileName) TextView name;
     @BindView(R.id.profileYear) TextView year;
@@ -57,19 +58,14 @@ public class CastProfileAct extends AppCompatActivity {
     }
 
     private void loadProfile(){
-        ApiInterface apiInterface = BuildUrl.getRetrofit().create(ApiInterface.class);
-        final retrofit2.Call<PersonProfile> personProfileCall = apiInterface.getProfile(id,API_KEY);
-        personProfileCall.enqueue(new Callback<PersonProfile>() {
-           @Override
-           public void onResponse(Call<PersonProfile> call, Response<PersonProfile> response) {
-               personProfile = response.body();
-               setProfile();
-           }
-
-           @Override
-           public void onFailure(Call<PersonProfile> call, Throwable t) {
-                closeOnError(t.getCause().toString());
-           }
+        final ProfileVM profileVm = ViewModelProviders.of(this).get(ProfileVM.class);
+        profileVm.getPersonProfile(API_KEY,id).observe(this, new Observer<PersonProfile>() {
+            @Override
+            public void onChanged(@Nullable PersonProfile personProf) {
+                profileVm.getPersonProfile(API_KEY,id).removeObserver(this);
+                personProfile  = personProf;
+                setProfile();
+            }
         });
     }
 
@@ -157,7 +153,7 @@ public class CastProfileAct extends AppCompatActivity {
     private void networkStatus(){
         ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
         if(!(connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isAvailable() && connectivityManager.getActiveNetworkInfo().isConnected())){
-            closeOnError(getResources().getString(R.string.netproblem));
+            closeOnError(getResources().getString(R.string.netProblem));
         }
     }
 

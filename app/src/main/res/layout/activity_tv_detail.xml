@@ -38,8 +38,11 @@
                     android:textSize="@dimen/xs22"
                     android:textStyle="bold"
                     android:layout_below="@id/posterImageAtTv"
+                    android:singleLine="true"
+                    android:ellipsize="marquee"
                     android:paddingTop="@dimen/x8"
-                    android:paddingLeft="@dimen/x16"/>
+                    android:paddingLeft="@dimen/x16"
+                    android:paddingRight="@dimen/x32"/>
                 <TextView
                     android:id="@+id/productionNameAtTv"
                     android:layout_width="match_parent"
@@ -65,7 +68,7 @@
                     app:circle_end_color="@color/colorPrimary"
                     app:icon_size="@dimen/x32"
                     app:anim_scale_factor="2"
-                    app:is_enabled="true" />
+                    app:is_enabled="false" />
             </RelativeLayout>
 
             <android.support.v7.widget.CardView
@@ -77,125 +80,125 @@
                 app:cardUseCompatPadding="true"
                 android:background="@color/grey">
                 <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="@dimen/x12"
-                app:cardElevation="@dimen/x12"
-                app:cardPreventCornerOverlap="true"
-                app:cardUseCompatPadding="true">
-                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingLeft="@dimen/x12"
-                    android:paddingRight="@dimen/x16"
-                    android:paddingTop="@dimen/x16">
-
-                    <ImageView
-                        android:id="@+id/logoIvAtTv"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/x220"
-                        android:layout_weight="1"
-                        android:scaleType="fitXY"
-                        android:contentDescription="@string/imageDesc"
-                        android:layout_marginBottom="@dimen/x12"/>
-
+                    app:cardCornerRadius="@dimen/x12"
+                    app:cardElevation="@dimen/x12"
+                    app:cardPreventCornerOverlap="true"
+                    app:cardUseCompatPadding="true">
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:paddingLeft="@dimen/x32"
-                        android:paddingRight="@dimen/x12"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/x12"
+                        android:paddingRight="@dimen/x16"
                         android:paddingTop="@dimen/x16">
 
-                        <TextView
+                        <ImageView
+                            android:id="@+id/logoIvAtTv"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/runtimeStr"
-                            android:textColor="@color/black"
-                            android:textStyle="bold"
-                            android:fontFamily="sans-serif-condensed"/>
+                            android:layout_height="@dimen/x220"
+                            android:layout_weight="1"
+                            android:scaleType="fitXY"
+                            android:contentDescription="@string/imageDesc"
+                            android:layout_marginBottom="@dimen/x12"/>
 
-                        <TextView
-                            android:id="@+id/lengthTvAtTv"
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="@dimen/x16"
-                            android:layout_marginBottom="@dimen/x2"
-                            android:singleLine="true"
-                            android:ellipsize="marquee"/>
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:paddingLeft="@dimen/x32"
+                            android:paddingRight="@dimen/x12"
+                            android:paddingTop="@dimen/x16">
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/ratingStr"
-                            android:textColor="@color/black"
-                            android:textStyle="bold"
-                            android:fontFamily="sans-serif-condensed"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/runtimeStr"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:fontFamily="sans-serif-condensed"/>
 
-                        <TextView
-                            android:id="@+id/ratingTvAtTv"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="@dimen/x16"
-                            android:layout_marginBottom="@dimen/x2"
-                            android:singleLine="true"
-                            android:ellipsize="marquee"/>
+                            <TextView
+                                android:id="@+id/lengthTvAtTv"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="@dimen/x16"
+                                android:layout_marginBottom="@dimen/x2"
+                                android:singleLine="true"
+                                android:ellipsize="marquee"/>
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/totalRatingStr"
-                            android:textColor="@color/black"
-                            android:textStyle="bold"
-                            android:fontFamily="sans-serif-condensed"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/ratingStr"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:fontFamily="sans-serif-condensed"/>
 
-                        <TextView
-                            android:id="@+id/totalVoteTvAtTv"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="@dimen/x16"
-                            android:layout_marginBottom="@dimen/x2"
-                            android:singleLine="true"
-                            android:ellipsize="marquee"/>
+                            <TextView
+                                android:id="@+id/ratingTvAtTv"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="@dimen/x16"
+                                android:layout_marginBottom="@dimen/x2"
+                                android:singleLine="true"
+                                android:ellipsize="marquee"/>
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/firstAirDateStr"
-                            android:textColor="@color/black"
-                            android:textStyle="bold"
-                            android:fontFamily="sans-serif-condensed"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/totalRatingStr"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:fontFamily="sans-serif-condensed"/>
 
-                        <TextView
-                            android:id="@+id/firstDateAtTv"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="@dimen/x16"
-                            android:layout_marginBottom="@dimen/x2"
-                            android:singleLine="true"
-                            android:ellipsize="marquee"/>
+                            <TextView
+                                android:id="@+id/totalVoteTvAtTv"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="@dimen/x16"
+                                android:layout_marginBottom="@dimen/x2"
+                                android:singleLine="true"
+                                android:ellipsize="marquee"/>
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/lastAirDateStr"
-                            android:textColor="@color/black"
-                            android:textStyle="bold"
-                            android:fontFamily="sans-serif-condensed"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/firstAirDateStr"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:fontFamily="sans-serif-condensed"/>
 
-                        <TextView
-                            android:id="@+id/lastDateAtTv"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="@dimen/x16"
-                            android:layout_marginBottom="@dimen/x2"
-                            android:singleLine="true"
-                            android:ellipsize="marquee"/>
+                            <TextView
+                                android:id="@+id/firstDateAtTv"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="@dimen/x16"
+                                android:layout_marginBottom="@dimen/x2"
+                                android:singleLine="true"
+                                android:ellipsize="marquee"/>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/lastAirDateStr"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:fontFamily="sans-serif-condensed"/>
+
+                            <TextView
+                                android:id="@+id/lastDateAtTv"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="@dimen/x16"
+                                android:layout_marginBottom="@dimen/x2"
+                                android:singleLine="true"
+                                android:ellipsize="marquee"/>
+                        </LinearLayout>
                     </LinearLayout>
-                </LinearLayout>
-            </android.support.v7.widget.CardView>
+                </android.support.v7.widget.CardView>
             </android.support.v7.widget.CardView>
 
             <LinearLayout
@@ -352,7 +355,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="?android:attr/ratingBarStyleSmall"
-                        android:numStars="5"
+                        android:numStars="10"
                         android:paddingLeft="@dimen/x8"
                         android:paddingRight="@dimen/x16"/>
                     <TextView

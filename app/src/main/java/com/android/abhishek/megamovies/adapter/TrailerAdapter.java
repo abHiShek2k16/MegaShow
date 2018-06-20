@@ -11,19 +11,17 @@ import com.android.abhishek.megamovies.R;
 import com.android.abhishek.megamovies.model.VideosResults;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerCustomAdapter>{
 
-    private List<VideosResults> movieVideosResultsAl;
+    private final List<VideosResults> videosResults;
 
-    public TrailerAdapter(List<VideosResults> movieVideosResultsAl) {
-        this.movieVideosResultsAl = movieVideosResultsAl;
+    public TrailerAdapter(List<VideosResults> videosResults) {
+        this.videosResults = videosResults;
     }
 
     @NonNull
@@ -35,12 +33,12 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerC
 
     @Override
     public void onBindViewHolder(@NonNull TrailerCustomAdapter holder, int position) {
-        VideosResults movieVideosResults = movieVideosResultsAl.get(position);
-        if(movieVideosResults == null){
+        VideosResults videosResults = this.videosResults.get(position);
+        if(videosResults == null){
             return;
         }
         Picasso.get()
-                .load("https://img.youtube.com/vi/"+movieVideosResults.getVideoKey()+"/0.jpg")
+                .load("https://img.youtube.com/vi/"+videosResults.getVideoKey()+"/0.jpg")
                 .placeholder(R.drawable.loading)
                 .error(R.drawable.error)
                 .into(holder.trailerIv);
@@ -48,13 +46,13 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerC
 
     @Override
     public int getItemCount() {
-        return movieVideosResultsAl.size();
+        return videosResults.size();
     }
 
     public class TrailerCustomAdapter extends RecyclerView.ViewHolder{
         @BindView(R.id.trailerImage)
         ImageView trailerIv;
-        public TrailerCustomAdapter(View itemView) {
+        protected TrailerCustomAdapter(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
         }

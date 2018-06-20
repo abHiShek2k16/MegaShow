@@ -11,7 +11,6 @@ import com.android.abhishek.megamovies.R;
 import com.android.abhishek.megamovies.model.ReviewResults;
 import com.cooltechworks.views.WhatsAppTextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -19,11 +18,11 @@ import butterknife.ButterKnife;
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewCustomAdapter>{
 
-    private List<ReviewResults> movieReviewResultsAl;
+    private List<ReviewResults> reviewResults;
     private boolean flag = false;
 
-    public ReviewAdapter(List<ReviewResults> movieReviewResultsAl) {
-        this.movieReviewResultsAl = movieReviewResultsAl;
+    public ReviewAdapter(List<ReviewResults> reviewResults) {
+        this.reviewResults = reviewResults;
     }
 
     @NonNull
@@ -35,17 +34,17 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewCust
 
     @Override
     public void onBindViewHolder(@NonNull final ReviewCustomAdapter holder, int position) {
-        ReviewResults movieReviewResults = movieReviewResultsAl.get(position);
-        if(movieReviewResults == null){
+        ReviewResults reviewResults = this.reviewResults.get(position);
+        if(reviewResults == null){
             return;
         }
-        String name = movieReviewResults.getAuthor();
+        String name = reviewResults.getAuthor()==null?"":reviewResults.getAuthor();
         if(!name.isEmpty()){
             name = name.substring(0,1).toUpperCase() + name.substring(1);
             holder.authorNameTv.setText(name);
             holder.circleTv.setText(name.substring(0, 1));
         }
-        final String review = movieReviewResults.getContent();
+        final String review = reviewResults.getContent();
         if(!review.isEmpty()){
             char[] array = review.toCharArray();
             if(array.length<=100){
@@ -76,7 +75,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewCust
 
     @Override
     public int getItemCount() {
-        return movieReviewResultsAl.size();
+        return reviewResults.size();
     }
 
     public class ReviewCustomAdapter extends RecyclerView.ViewHolder{
@@ -86,7 +85,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewCust
         TextView authorNameTv;
         @BindView(R.id.reviewTv)
         WhatsAppTextView reviewTv;
-        public ReviewCustomAdapter(View itemView) {
+        protected ReviewCustomAdapter(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
         }
