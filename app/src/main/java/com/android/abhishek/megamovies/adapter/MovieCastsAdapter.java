@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.abhishek.megamovies.R;
+import com.android.abhishek.megamovies.model.EndPoint;
 import com.android.abhishek.megamovies.model.MovieCastsResult;
 import com.squareup.picasso.Picasso;
 
@@ -20,7 +21,7 @@ import butterknife.ButterKnife;
 public class MovieCastsAdapter extends RecyclerView.Adapter<MovieCastsAdapter.CastsCustomAdapter>{
 
     private List<MovieCastsResult> movieCastsResults;
-    private String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
+    private String IMAGE_BASE_URL = EndPoint.IMAGE_BASE_URL;
 
     public MovieCastsAdapter(List<MovieCastsResult> movieCastsResults) {
         this.movieCastsResults = movieCastsResults;

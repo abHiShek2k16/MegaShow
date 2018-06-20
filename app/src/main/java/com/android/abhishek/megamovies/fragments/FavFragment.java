@@ -57,6 +57,7 @@ public class FavFragment extends Fragment implements SharedPreferences.OnSharedP
 
     private int NO_OF_IMAGE = 2;
     private List<ListResults> resultList;
+    private Toast toast;
 
     public FavFragment() {
 
@@ -116,7 +117,12 @@ public class FavFragment extends Fragment implements SharedPreferences.OnSharedP
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(),getResources().getString(R.string.pressLong),Toast.LENGTH_SHORT).show();
+                if(toast != null){
+                    toast.cancel();
+                }
+                toast = Toast.makeText(getActivity(),getResources().getString(R.string.pressLong),Toast.LENGTH_SHORT);
+                toast.show();
+
             }
         });
     }

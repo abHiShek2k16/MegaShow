@@ -74,6 +74,7 @@ public class MoviesFragment extends Fragment implements SharedPreferences.OnShar
     private int TOTAL_PAGE = 1;
     private List<ListResults> listResults;
     private ShowList tempShowList = new ShowList();
+    private Toast toast;
 
     public MoviesFragment() {
 
@@ -131,7 +132,11 @@ public class MoviesFragment extends Fragment implements SharedPreferences.OnShar
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(),getResources().getString(R.string.pressLong),Toast.LENGTH_SHORT).show();
+                if(toast != null){
+                    toast.cancel();
+                }
+                toast = Toast.makeText(getActivity(),getResources().getString(R.string.pressLong),Toast.LENGTH_SHORT);
+                toast.show();
             }
         });
 

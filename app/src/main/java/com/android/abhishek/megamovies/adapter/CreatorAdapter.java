@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.abhishek.megamovies.R;
+import com.android.abhishek.megamovies.model.EndPoint;
 import com.android.abhishek.megamovies.model.TvCreatedByResults;
 import com.squareup.picasso.Picasso;
 
@@ -20,7 +21,7 @@ import butterknife.ButterKnife;
 public class CreatorAdapter extends RecyclerView.Adapter<CreatorAdapter.CreatorCustomAdapter>{
 
     private final List<TvCreatedByResults> tvCreatorResults;
-    private final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
+    private final String IMAGE_BASE_URL = EndPoint.IMAGE_BASE_URL;
 
     public CreatorAdapter(List<TvCreatedByResults> tvCreatorResults) {
         this.tvCreatorResults = tvCreatorResults;

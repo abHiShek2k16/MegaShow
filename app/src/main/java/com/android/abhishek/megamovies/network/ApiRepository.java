@@ -1,4 +1,4 @@
-package com.android.abhishek.megamovies.repository;
+package com.android.abhishek.megamovies.network;
 
 import android.arch.lifecycle.MutableLiveData;
 
@@ -6,8 +6,6 @@ import com.android.abhishek.megamovies.model.MovieDetail;
 import com.android.abhishek.megamovies.model.PersonProfile;
 import com.android.abhishek.megamovies.model.ShowList;
 import com.android.abhishek.megamovies.model.TvDetail;
-import com.android.abhishek.megamovies.network.BuildUrl;
-import com.android.abhishek.megamovies.utils.ApiInterface;
 
 import retrofit2.Call;
 import retrofit2.Callback;

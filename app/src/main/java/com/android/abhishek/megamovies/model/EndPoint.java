@@ -54,4 +54,7 @@ public class EndPoint {
     public static final String ID_QUERY = "id";
     public static final String PAGE_QUERY = "page";
     public static final String APPEND_TO_RESPONSE = "append_to_response";
+
+    public static final String BASE_URL = "https://api.themoviedb.org/3/";
+    public static final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 }

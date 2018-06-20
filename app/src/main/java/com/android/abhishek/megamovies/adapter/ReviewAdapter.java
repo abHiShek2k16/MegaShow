@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewCustomAdapter>{
 
     private List<ReviewResults> reviewResults;
-    private boolean flag = false;
+    private boolean flag = false;       //  for the expand and collapse state of review
 
     public ReviewAdapter(List<ReviewResults> reviewResults) {
         this.reviewResults = reviewResults;
@@ -45,6 +45,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewCust
             holder.circleTv.setText(name.substring(0, 1));
         }
         final String review = reviewResults.getContent();
+        //  Cutting the review if it's length more than 100 char
         if(!review.isEmpty()){
             char[] array = review.toCharArray();
             if(array.length<=100){

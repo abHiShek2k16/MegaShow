@@ -22,8 +22,6 @@ import butterknife.ButterKnife;
 
 public class CastProfileAct extends AppCompatActivity {
 
-    //  Make a new  view model
-
     @BindView(R.id.profileName) TextView name;
     @BindView(R.id.profileYear) TextView year;
     @BindView(R.id.profileLocation) TextView location;
@@ -36,6 +34,7 @@ public class CastProfileAct extends AppCompatActivity {
 
     private String id;
     private PersonProfile personProfile;
+    private Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,7 +157,11 @@ public class CastProfileAct extends AppCompatActivity {
     }
 
     private void closeOnError(String message){
-        Toast.makeText(CastProfileAct.this,message,Toast.LENGTH_SHORT).show();
+        if(toast != null){
+            toast.cancel();
+        }
+        toast = Toast.makeText(CastProfileAct.this,message,Toast.LENGTH_SHORT);
+        toast.show();
         finish();
     }
 }

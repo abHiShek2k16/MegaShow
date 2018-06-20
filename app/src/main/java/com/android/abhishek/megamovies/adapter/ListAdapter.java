@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.android.abhishek.megamovies.R;
+import com.android.abhishek.megamovies.model.EndPoint;
 import com.android.abhishek.megamovies.model.ListResults;
 import com.squareup.picasso.Picasso;
 
@@ -19,7 +20,7 @@ import butterknife.ButterKnife;
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.MovieListCustomAdapter>{
 
     private final List<ListResults> list;
-    private final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
+    private final String IMAGE_BASE_URL = EndPoint.IMAGE_BASE_URL;
 
     public ListAdapter(List<ListResults> list){
         this.list = list;

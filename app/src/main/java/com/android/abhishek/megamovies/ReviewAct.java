@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 public class ReviewAct extends AppCompatActivity {
 
     @BindView(R.id.reviewRvAtReview) RecyclerView recyclerView;
+    private Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,10 @@ public class ReviewAct extends AppCompatActivity {
         if(review == null){
             closeOnError(getResources().getString(R.string.somethingWrong));
         }
+        String movieName = getIntent().getStringExtra(getResources().getString(R.string.intentPassingTwo));
+        if(movieName != null){
+            getSupportActionBar().setTitle(movieName);
+        }
         recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         ReviewAdapter reviewAdapter = new ReviewAdapter(review.getMovieReviewResults());
         recyclerView.setAdapter(reviewAdapter);
@@ -54,7 +59,11 @@ public class ReviewAct extends AppCompatActivity {
     }
 
     private void closeOnError(String message){
-        Toast.makeText(ReviewAct.this,message,Toast.LENGTH_SHORT).show();
+        if(toast != null){
+            toast.cancel();
+        }
+        toast = Toast.makeText(ReviewAct.this,message,Toast.LENGTH_SHORT);
+        toast.show();
         finish();
     }
 }

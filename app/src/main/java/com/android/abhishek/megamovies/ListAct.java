@@ -24,17 +24,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /*  To Do
-    2)  Remove the base url of image to end point
-    3)  Remove the page 2 of 200 text from tv and movie fragment to place holder text
     6)  Adding video share feature
-    7)  Adding search features
-    8)  Hide previous toast before showing new one
-    9)  loadFromDb problem race condition in detail activity
-    10) Adding comment
-    11) Adding title in review activity
-    12) Changing the profile layout
     13) Adding animation
-    14) Adding by
  */
 
 public class ListAct extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -46,6 +37,8 @@ public class ListAct extends AppCompatActivity implements NavigationView.OnNavig
 
     //  Api key
     @BindString(R.string.apiKey) String API_KEY;
+
+    private Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +59,7 @@ public class ListAct extends AppCompatActivity implements NavigationView.OnNavig
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
-        outState.putString(API_KEY,API_KEY);        //      to be changed
+        outState.putString(API_KEY,API_KEY);
     }
 
     @Override
@@ -119,7 +112,11 @@ public class ListAct extends AppCompatActivity implements NavigationView.OnNavig
 
     private void checkApiKey(){
         if(API_KEY == null || API_KEY.isEmpty()){
-            Toast.makeText(ListAct.this,getResources().getString(R.string.apiKeyProblem),Toast.LENGTH_SHORT).show();
+            if(toast != null){
+                toast.cancel();
+            }
+            toast = Toast.makeText(ListAct.this,getResources().getString(R.string.apiKeyProblem),Toast.LENGTH_SHORT);
+            toast.show();
         }
     }
 

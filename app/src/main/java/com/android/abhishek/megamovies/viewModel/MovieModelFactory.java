@@ -6,12 +6,12 @@ import android.support.annotation.NonNull;
 
 import com.android.abhishek.megamovies.db.ShowDatabase;
 
-public class MovieViewModelFactory extends ViewModelProvider.NewInstanceFactory {
+public class MovieModelFactory extends ViewModelProvider.NewInstanceFactory {
 
     private final ShowDatabase showDatabase;
     private final String Id;
 
-    public MovieViewModelFactory(ShowDatabase showDatabase, String movieId) {
+    public MovieModelFactory(ShowDatabase showDatabase, String movieId) {
         this.showDatabase = showDatabase;
         this.Id = movieId;
     }

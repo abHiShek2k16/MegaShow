@@ -5,7 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
 import com.android.abhishek.megamovies.model.PersonProfile;
-import com.android.abhishek.megamovies.repository.ApiRepository;
+import com.android.abhishek.megamovies.network.ApiRepository;
 
 public class ProfileVM extends ViewModel {
 

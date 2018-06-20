@@ -1,5 +1,7 @@
 package com.android.abhishek.megamovies;
 
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ActivityNotFoundException;
@@ -36,7 +38,7 @@ import com.android.abhishek.megamovies.model.VideosResults;
 import com.android.abhishek.megamovies.viewModel.TvDetailApiVM;
 import com.android.abhishek.megamovies.viewModel.TvDetailDbVM;
 import com.android.abhishek.megamovies.viewModel.TvViewModelFactory;
-import com.android.abhishek.megamovies.viewModel.MovieViewModelFactory;
+import com.android.abhishek.megamovies.viewModel.MovieModelFactory;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 import com.squareup.picasso.NetworkPolicy;
@@ -49,7 +51,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class TvDetailAct extends AppCompatActivity {
-
+    //  Xml View
     @BindView(R.id.toolBarAtTv) android.support.v7.widget.Toolbar toolbar;
     @BindView(R.id.posterImageAtTv) ImageView posterImageIv;
     @BindView(R.id.logoIvAtTv) ImageView tvLogoIv;
@@ -73,6 +75,7 @@ public class TvDetailAct extends AppCompatActivity {
     @BindView(R.id.noTSEAtTvReview) RelativeLayout reviewError;
     @BindView(R.id.noTSEAtTvTrailer) RelativeLayout trailerError;
 
+    //  Constant String
     @BindString(R.string.apiKey) String API_KEY;
     @BindString(R.string.imageBaseUrl) String IMAGE_BASE_URL;
     @BindString(R.string.infoUnavailable) String DATA_NOT_AVAILABLE;
@@ -80,7 +83,7 @@ public class TvDetailAct extends AppCompatActivity {
     @BindString(R.string.videoWebBaseUrl) String VIDEO_WEB_BASE_URL;
     @BindString(R.string.appendQueryTv) String APPEND_QUERY;
 
-
+    //  Temp Variable
     private String posterImageUrl = "";
     private String tvLogo = "";
     private String productionName;
@@ -94,6 +97,7 @@ public class TvDetailAct extends AppCompatActivity {
     private List<VideosResults> videos;
     private List<ReviewResults> reviews;
     private List<TvCreatedByResults> tvCreator;
+    private Toast toast;
 
     private String tvId;
     private TvDetail tvDetail;
@@ -159,6 +163,7 @@ public class TvDetailAct extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(TvDetailAct.this,ReviewAct.class);
                 intent.putExtra(getResources().getString(R.string.intentPassingOne),tvDetail.getReview());
+                intent.putExtra(getResources().getString(R.string.intentPassingTwo),tvDetail.getName());
                 startActivity(intent);
             }
         });
@@ -204,33 +209,45 @@ public class TvDetailAct extends AppCompatActivity {
     }
 
     private void loadFromDb(){
-        ShowDatabase showDatabase = ShowDatabase.getShowDatabase(getApplicationContext());
-        MovieViewModelFactory movieViewModelFactory = new MovieViewModelFactory(showDatabase,tvId);
-        final TvDetailDbVM tvDetailVM = ViewModelProviders.of(this, movieViewModelFactory).get(TvDetailDbVM.class);
-        tvDetailVM.getProductionName().observe(this, new Observer<ProductionCompany>() {
+        final LifecycleOwner owner = this;
+        DbExecutor.getDbExecutor().getBackgroundIo().execute(new Runnable() {
             @Override
-            public void onChanged(@Nullable ProductionCompany productionCompany) {
-                tvDetailVM.getProductionName().removeObserver(this);
-                if(productionCompany != null){
-                    productionName = productionCompany.getName();
-                }
-            }
-        });
-        tvDetailVM.getTvCreator().observe(this, new Observer<List<TvCreatedByResults>>() {
-            @Override
-            public void onChanged(@Nullable List<TvCreatedByResults> tvCreatedByResult) {
-                tvDetailVM.getTvCreator().removeObserver(this);
-                tvCreator = tvCreatedByResult;
-            }
-        });
-        tvDetailVM.getVideos().observe(this, new Observer<List<VideosResults>>() {
-            @Override
-            public void onChanged(@Nullable List<VideosResults> videosResults) {
-                tvDetailVM.getVideos().removeObserver(this);
-                videos = videosResults;
-                length = DATA_NOT_AVAILABLE;
-                setVariable();
-                setView();
+            public void run() {
+                ShowDatabase showDatabase = ShowDatabase.getShowDatabase(getApplicationContext());
+                MovieModelFactory movieModelFactory = new MovieModelFactory(showDatabase,tvId);
+                final TvDetailDbVM tvDetailVM = ViewModelProviders.of(TvDetailAct.this, movieModelFactory).get(TvDetailDbVM.class);
+                tvDetailVM.getProductionName().observe(owner, new Observer<ProductionCompany>() {
+                    @Override
+                    public void onChanged(@Nullable ProductionCompany productionCompany) {
+                        tvDetailVM.getProductionName().removeObserver(this);
+                        if(productionCompany != null){
+                            productionName = productionCompany.getName();
+                        }
+                    }
+                });
+                tvDetailVM.getTvCreator().observe(owner, new Observer<List<TvCreatedByResults>>() {
+                    @Override
+                    public void onChanged(@Nullable List<TvCreatedByResults> tvCreatedByResult) {
+                        tvDetailVM.getTvCreator().removeObserver(this);
+                        tvCreator = tvCreatedByResult;
+                    }
+                });
+                tvDetailVM.getVideos().observe(owner, new Observer<List<VideosResults>>() {
+                    @Override
+                    public void onChanged(@Nullable List<VideosResults> videosResults) {
+                        tvDetailVM.getVideos().removeObserver(this);
+                        videos = videosResults;
+                        length = DATA_NOT_AVAILABLE;
+                    }
+                });
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setVariable();
+                        setView();
+                    }
+                });
             }
         });
     }
@@ -238,7 +255,6 @@ public class TvDetailAct extends AppCompatActivity {
     private void setVariable(){
         posterImageUrl = IMAGE_BASE_URL + tvDetail.getBackdropPath();
         tvLogo = IMAGE_BASE_URL + tvDetail.getPosterPath();
-        //  length = String.valueOf(tvDetail.getRunTime().get(0));
         tvName = tvDetail.getName()==null?DATA_NOT_AVAILABLE:tvDetail.getName();
         rating = tvDetail.getVoteAvg()==null?DATA_NOT_AVAILABLE:tvDetail.getVoteAvg();
         if(rating.length()>3){
@@ -508,7 +524,11 @@ public class TvDetailAct extends AppCompatActivity {
     }
 
     private void closeOnError(String message){
-        Toast.makeText(TvDetailAct.this,message,Toast.LENGTH_SHORT).show();
+        if(toast != null){
+            toast.cancel();
+        }
+        toast = Toast.makeText(TvDetailAct.this,message,Toast.LENGTH_SHORT);
+        toast.show();
         finish();
     }
 }

@@ -1,4 +1,4 @@
-package com.android.abhishek.megamovies.utils;
+package com.android.abhishek.megamovies.network;
 
 import com.android.abhishek.megamovies.model.EndPoint;
 import com.android.abhishek.megamovies.model.ShowList;
