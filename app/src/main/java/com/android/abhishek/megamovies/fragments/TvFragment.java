@@ -64,11 +64,13 @@ public class TvFragment extends Fragment implements SharedPreferences.OnSharedPr
     @BindString(R.string.currentPage) String currentPageKey;
 
     private int NO_OF_IMAGE = 2;
-    private int CURRENT_PAGE = 1;
-    private int TOTAL_PAGE = 1;
+    private int currentPage = 1;
+    private int previousPage = 1;
+    private int totalPage = 1;
     private ShowList tvListObj;
     private ShowList tempShowList = new ShowList();
     private Toast toast;
+    private boolean flag = true;
 
     public TvFragment() {
 
@@ -88,11 +90,13 @@ public class TvFragment extends Fragment implements SharedPreferences.OnSharedPr
 
         if(savedInstanceState != null){
             if(savedInstanceState.containsKey(currentPageKey)){
-                CURRENT_PAGE = savedInstanceState.getInt(currentPageKey);
+                currentPage = savedInstanceState.getInt(currentPageKey);
+                previousPage = currentPage;
             }
             if(savedInstanceState.containsKey(tvSortKey)){
                 TV_SORT_BY = savedInstanceState.getString(tvSortKey);
             }
+            flag = false;
         }
 
         menu = getActivity().findViewById(R.id.menuBtn);
@@ -104,7 +108,7 @@ public class TvFragment extends Fragment implements SharedPreferences.OnSharedPr
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(tvSortKey,TV_SORT_BY);
-        outState.putInt(currentPageKey,CURRENT_PAGE);
+        outState.putInt(currentPageKey, currentPage);
     }
 
     @Override
@@ -135,7 +139,7 @@ public class TvFragment extends Fragment implements SharedPreferences.OnSharedPr
         });
     }
 
-    public void checkOrientation(){
+    private void checkOrientation(){
         int configuration = this.getResources().getConfiguration().orientation;
         if(configuration == Configuration.ORIENTATION_PORTRAIT){
             NO_OF_IMAGE = 2;
@@ -151,14 +155,14 @@ public class TvFragment extends Fragment implements SharedPreferences.OnSharedPr
     }
 
     private void loadTv(){
-        if(!networkStatus()){
+        if(!networkStatus()&&flag){
             showError();
             return;
         }
         progressBar.setVisibility(View.VISIBLE);
         if(TV_SORT_BY.equals(POPULAR)){
             TvListVM tvViewModel = ViewModelProviders.of(this).get(TvListVM.class);
-            tvViewModel.getPopularTvList(API_KEY,CURRENT_PAGE).observe(this, new Observer<ShowList>() {
+            tvViewModel.getPopularTvList(API_KEY, currentPage,previousPage).observe(this, new Observer<ShowList>() {
                 @Override
                 public void onChanged(@Nullable ShowList showList) {
                     if(tempShowList.equals(showList)){
@@ -171,7 +175,7 @@ public class TvFragment extends Fragment implements SharedPreferences.OnSharedPr
             });
         }else if(TV_SORT_BY.equals(TOP_RATED)){
             TvListVM tvViewModel = ViewModelProviders.of(this).get(TvListVM.class);
-            tvViewModel.getTopRatedTvList(API_KEY,CURRENT_PAGE).observe(this, new Observer<ShowList>() {
+            tvViewModel.getTopRatedTvList(API_KEY, currentPage,previousPage).observe(this, new Observer<ShowList>() {
                 @Override
                 public void onChanged(@Nullable ShowList showList) {
                     if(tempShowList.equals(showList)){
@@ -184,7 +188,7 @@ public class TvFragment extends Fragment implements SharedPreferences.OnSharedPr
             });
         }else if(TV_SORT_BY.equals(ON_THE_AIR)){
             TvListVM tvViewModel = ViewModelProviders.of(this).get(TvListVM.class);
-            tvViewModel.getOnTheAirTvList(API_KEY,CURRENT_PAGE).observe(this, new Observer<ShowList>() {
+            tvViewModel.getOnTheAirTvList(API_KEY, currentPage,previousPage).observe(this, new Observer<ShowList>() {
                 @Override
                 public void onChanged(@Nullable ShowList showList) {
                     if(tempShowList.equals(showList)){
@@ -197,7 +201,7 @@ public class TvFragment extends Fragment implements SharedPreferences.OnSharedPr
             });
         }else {
             TvListVM tvViewModel = ViewModelProviders.of(this).get(TvListVM.class);
-            tvViewModel.getAiringTodayTvList(API_KEY,CURRENT_PAGE).observe(this, new Observer<ShowList>() {
+            tvViewModel.getAiringTodayTvList(API_KEY, currentPage,previousPage).observe(this, new Observer<ShowList>() {
                 @Override
                 public void onChanged(@Nullable ShowList showList) {
                     if(tempShowList.equals(showList)){
@@ -215,12 +219,17 @@ public class TvFragment extends Fragment implements SharedPreferences.OnSharedPr
         if(showList == null || showList.getResults().size()==0){
             showError();
         }
+
         progressBar.setVisibility(View.GONE);
         errorLayout.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
+
         tvListObj = showList;
-        TOTAL_PAGE = showList.getTotalPages();
+        totalPage = showList.getTotalPages();
+        previousPage = currentPage;
+
         doPagination();
+
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), NO_OF_IMAGE));
         ListAdapter movieListAdapter = new ListAdapter(showList.getResults());
         recyclerView.setAdapter(movieListAdapter);
@@ -237,10 +246,7 @@ public class TvFragment extends Fragment implements SharedPreferences.OnSharedPr
 
     private boolean networkStatus(){
         ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        if(!(connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isAvailable() && connectivityManager.getActiveNetworkInfo().isConnected())){
-            return false;
-        }
-        return true;
+        return connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isAvailable() && connectivityManager.getActiveNetworkInfo().isConnected();
     }
 
     @Override
@@ -312,28 +318,30 @@ public class TvFragment extends Fragment implements SharedPreferences.OnSharedPr
     }
     @OnClick(R.id.nextAtTv)
     void loadNext(){
-        CURRENT_PAGE++;
+        currentPage++;
+        flag = true;
         loadTv();
     }
     @OnClick(R.id.previousAtTv)
     void loadPrv(){
-        CURRENT_PAGE--;
+        currentPage--;
+        flag = true;
         loadTv();
     }
 
     private void doPagination(){
-        if(CURRENT_PAGE == 1){
+        if(currentPage == 1){
             previous.setVisibility(View.GONE);
-        }else if(CURRENT_PAGE >1){
+        }else if(currentPage >1){
             previous.setVisibility(View.VISIBLE);
         }
 
-        if(CURRENT_PAGE >= TOTAL_PAGE){
+        if(currentPage >= totalPage){
             next.setVisibility(View.GONE);
-        }else if(CURRENT_PAGE < TOTAL_PAGE){
+        }else if(currentPage < totalPage){
             next.setVisibility(View.VISIBLE);
         }
         pageText.setVisibility(View.VISIBLE);
-        pageText.setText("Page "+CURRENT_PAGE+" of "+TOTAL_PAGE);
+        pageText.setText("Page "+ currentPage +" of "+ totalPage);
     }
 }

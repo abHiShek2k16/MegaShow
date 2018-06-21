@@ -17,7 +17,7 @@ public class ReviewResults implements Parcelable{
         this.content = content;
     }
 
-    protected ReviewResults(Parcel in) {
+    private ReviewResults(Parcel in) {
         author = in.readString();
         content = in.readString();
     }

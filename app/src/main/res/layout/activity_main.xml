@@ -6,7 +6,7 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+    android:fitsSystemWindows="false"
     tools:openDrawer="start">
 
     <LinearLayout
@@ -23,7 +23,7 @@
                 android:id="@+id/toolBarAtMainAct"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/x48"
-                android:background="?attr/colorPrimary">
+                android:background="@color/colorPrimary">
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
@@ -40,7 +40,7 @@
                         android:id="@+id/menuBtn"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:src="@drawable/baseline_sort_white_24dpx"
+                        android:src="@drawable/sort_icon_white"
                         android:paddingRight="@dimen/x16"
                         android:layout_alignParentRight="true"
                         android:contentDescription="@string/imageDesc"/>
@@ -60,11 +60,11 @@
         android:id="@+id/navView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
+        android:layout_gravity="left"
         android:animateLayoutChanges="true"
         android:background="@color/white"
         app:headerLayout="@layout/nav_header_main"
-        app:itemIconTint="@color/colorPrimaryDark"
+        app:itemIconTint="@color/colorAccent"
         app:itemTextColor="@color/colorPrimary"
         app:menu="@menu/activity_main_drawer" />
 

@@ -20,7 +20,6 @@ import butterknife.ButterKnife;
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.MovieListCustomAdapter>{
 
     private final List<ListResults> list;
-    private final String IMAGE_BASE_URL = EndPoint.IMAGE_BASE_URL;
 
     public ListAdapter(List<ListResults> list){
         this.list = list;
@@ -36,10 +35,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.MovieListCusto
     @Override
     public void onBindViewHolder(@NonNull MovieListCustomAdapter holder, int position) {
         ListResults movieListDetail = list.get(position);
+        String IMAGE_BASE_URL = EndPoint.IMAGE_BASE_URL;
         Picasso.get()
-                .load(IMAGE_BASE_URL+movieListDetail.getPosterPath())
-                .placeholder(R.drawable.loading)
-                .error(R.drawable.error)
+                .load(IMAGE_BASE_URL +movieListDetail.getPosterPath())
+                .placeholder(R.drawable.loading_place_holder)
+                .error(R.drawable.error_place_holder)
                 .into(holder.posterImage);
     }
 
@@ -52,7 +52,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.MovieListCusto
 
         @BindView(R.id.posterImageMovieList)
         ImageView posterImage;
-        protected MovieListCustomAdapter(View itemView) {
+        MovieListCustomAdapter(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
         }

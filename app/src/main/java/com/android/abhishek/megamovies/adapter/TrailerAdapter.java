@@ -39,8 +39,8 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerC
         }
         Picasso.get()
                 .load("https://img.youtube.com/vi/"+videosResults.getVideoKey()+"/0.jpg")
-                .placeholder(R.drawable.loading)
-                .error(R.drawable.error)
+                .placeholder(R.drawable.loading_place_holder)
+                .error(R.drawable.error_place_holder)
                 .into(holder.trailerIv);
     }
 
@@ -52,7 +52,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerC
     public class TrailerCustomAdapter extends RecyclerView.ViewHolder{
         @BindView(R.id.trailerImage)
         ImageView trailerIv;
-        protected TrailerCustomAdapter(View itemView) {
+        TrailerCustomAdapter(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
         }

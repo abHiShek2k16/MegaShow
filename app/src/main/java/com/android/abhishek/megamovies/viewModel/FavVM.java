@@ -13,8 +13,8 @@ import java.util.List;
 
 public class FavVM extends AndroidViewModel {
 
-    private LiveData<List<MovieDetail>> movieDetailList;
-    private LiveData<List<TvDetail>> tvDetailList;
+    private final LiveData<List<MovieDetail>> movieDetailList;
+    private final LiveData<List<TvDetail>> tvDetailList;
 
     public FavVM(@NonNull Application application) {
         super(application);

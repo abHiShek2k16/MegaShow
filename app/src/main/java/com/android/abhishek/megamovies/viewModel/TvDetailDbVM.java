@@ -14,30 +14,12 @@ import java.util.List;
 public class TvDetailDbVM extends ViewModel {
 
     private LiveData<TvDetail> tvDetail;
-    private LiveData<ProductionCompany> productionName;
-    private LiveData<List<TvCreatedByResults>> tvCreator;
-    private LiveData<List<VideosResults>> videos;
 
     public TvDetailDbVM(ShowDatabase showDatabase, String tvId) {
         tvDetail = showDatabase.showDao().getTvDetail(tvId);
-        productionName = showDatabase.showDao().getProductionCompany(tvId);
-        tvCreator = showDatabase.showDao().getTvCreator(tvId);
-        videos = showDatabase.showDao().getVideos(tvId);
     }
 
     public LiveData<TvDetail> getTvDetail() {
         return tvDetail;
-    }
-
-    public LiveData<ProductionCompany> getProductionName() {
-        return productionName;
-    }
-
-    public LiveData<List<TvCreatedByResults>> getTvCreator() {
-        return tvCreator;
-    }
-
-    public LiveData<List<VideosResults>> getVideos() {
-        return videos;
     }
 }

@@ -3,6 +3,7 @@ package com.android.abhishek.megamovies;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.design.widget.NavigationView;
@@ -24,8 +25,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /*  To Do
-    6)  Adding video share feature
-    13) Adding animation
+
+    1)  Exit back button invisible
+    2)  Adding video share feature
+    3)  work on ui
+    4)  creating new xml layout for landscape in detail
+    5)  Adding animation
+
+    6)  while loading net gone problem
+    7)  rotating the screen after dislike while online close the activity
+
  */
 
 public class ListAct extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -142,7 +151,9 @@ public class ListAct extends AppCompatActivity implements NavigationView.OnNavig
     private void rateApp(){
         Uri uri = Uri.parse("market://details?id=" + this.getPackageName());
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+        if(Build.VERSION.SDK_INT >= 21){
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+        }
         try {
             startActivity(intent);
         } catch (ActivityNotFoundException e) {

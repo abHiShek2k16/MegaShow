@@ -14,47 +14,33 @@ public class MovieListVM extends ViewModel {
     private MutableLiveData<ShowList> upcomingMovieList;
     private MutableLiveData<ShowList> nowPlayingMovieList;
 
-    private MutableLiveData<Integer> currentPage = new MutableLiveData<>();
     private ApiRepository apiRepository = new ApiRepository();
 
-    public LiveData<ShowList> getPopularMoviesList(String API_KEY, int CURRENT_PAGE) {
-        if (popularMovieList == null) {
-            popularMovieList = apiRepository.loadPopularMovies(API_KEY,CURRENT_PAGE);
-        }else if(!currentPage.equals(CURRENT_PAGE)){
-            popularMovieList = apiRepository.loadPopularMovies(API_KEY,CURRENT_PAGE);
+    public LiveData<ShowList> getPopularMoviesList(String API_KEY, int currentPage,int previousPage) {
+        if (popularMovieList == null || currentPage != previousPage) {
+            popularMovieList = apiRepository.loadPopularMovies(API_KEY,currentPage);
         }
-        currentPage.setValue(CURRENT_PAGE);
         return popularMovieList;
     }
 
-    public LiveData<ShowList> getTopRatedMoviesList(String API_KEY,int CURRENT_PAGE) {
-        if (topRatedMovieList == null) {
-            topRatedMovieList = apiRepository.loadTopRatedMovies(API_KEY,CURRENT_PAGE);
-
-        }else if(!currentPage.equals(CURRENT_PAGE)){
-            topRatedMovieList = apiRepository.loadTopRatedMovies(API_KEY,CURRENT_PAGE);
+    public LiveData<ShowList> getTopRatedMoviesList(String API_KEY,int currentPage,int previousPage) {
+        if (topRatedMovieList == null || currentPage != previousPage) {
+            topRatedMovieList = apiRepository.loadTopRatedMovies(API_KEY,currentPage);
         }
-        currentPage.setValue(CURRENT_PAGE);
         return topRatedMovieList;
     }
 
-    public LiveData<ShowList> getUpcomingMoviesList(String API_KEY,int CURRENT_PAGE) {
-        if (upcomingMovieList == null) {
-            upcomingMovieList = apiRepository.loadUpcomingMovies(API_KEY,CURRENT_PAGE);
-        }else if(!currentPage.equals(CURRENT_PAGE)){
-            upcomingMovieList = apiRepository.loadUpcomingMovies(API_KEY,CURRENT_PAGE);
+    public LiveData<ShowList> getUpcomingMoviesList(String API_KEY,int currentPage,int previousPage) {
+        if (upcomingMovieList == null || currentPage != previousPage) {
+            upcomingMovieList = apiRepository.loadUpcomingMovies(API_KEY, currentPage);
         }
-        currentPage.setValue(CURRENT_PAGE);
         return upcomingMovieList;
     }
 
-    public LiveData<ShowList> getNowPlayingMoviesList(String API_KEY,int CURRENT_PAGE) {
-        if (nowPlayingMovieList == null) {
-            nowPlayingMovieList = apiRepository.loadNowPlayingMovies(API_KEY,CURRENT_PAGE);
-        }else if(!currentPage.equals(CURRENT_PAGE)){
-            nowPlayingMovieList = apiRepository.loadNowPlayingMovies(API_KEY,CURRENT_PAGE);
+    public LiveData<ShowList> getNowPlayingMoviesList(String API_KEY,int currentPage,int previousPage) {
+        if (nowPlayingMovieList == null || currentPage != previousPage) {
+            nowPlayingMovieList = apiRepository.loadNowPlayingMovies(API_KEY,currentPage);
         }
-        currentPage.setValue(CURRENT_PAGE);
         return nowPlayingMovieList;
     }
 

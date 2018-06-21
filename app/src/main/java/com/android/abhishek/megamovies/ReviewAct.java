@@ -27,7 +27,7 @@ public class ReviewAct extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        final Drawable upArrow = getResources().getDrawable(R.drawable.baseline_arrow_back_white_24);
+        final Drawable upArrow = getResources().getDrawable(R.drawable.arrow_back);
         upArrow.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

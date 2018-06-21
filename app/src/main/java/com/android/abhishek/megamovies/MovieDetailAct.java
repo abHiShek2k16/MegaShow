@@ -1,7 +1,5 @@
 package com.android.abhishek.megamovies;
 
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -106,7 +104,7 @@ public class MovieDetailAct extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        final Drawable upArrow = getResources().getDrawable(R.drawable.baseline_arrow_back_white_24);
+        final Drawable upArrow = getResources().getDrawable(R.drawable.arrow_back);
         upArrow.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
 
         setSupportActionBar(toolbar);
@@ -185,44 +183,21 @@ public class MovieDetailAct extends AppCompatActivity {
     }
 
     private void loadFromDb(){
-        final LifecycleOwner lifecycle = this;
+        final ShowDatabase showDatabase = ShowDatabase.getShowDatabase(getApplicationContext());
         DbExecutor.getDbExecutor().getBackgroundIo().execute(new Runnable() {
             @Override
             public void run() {
-                ShowDatabase showDatabase = ShowDatabase.getShowDatabase(getApplicationContext());
-                MovieModelFactory movieDetailMovieModelFactory = new MovieModelFactory(showDatabase,movieId);
-                final MovieDetailDbVM movieDetailVM = ViewModelProviders.of(MovieDetailAct.this, movieDetailMovieModelFactory).get(MovieDetailDbVM.class);
-                movieDetailVM.getProductionName().observe(lifecycle, new Observer<ProductionCompany>() {
-                    @Override
-                    public void onChanged(@Nullable ProductionCompany productionCompany) {
-                        movieDetailVM.getProductionName().removeObserver(this);
-                        if(productionCompany != null){
-                            productionName = productionCompany.getName();
-                        }
-                    }
-                });
-                movieDetailVM.getMovieCasts().observe(lifecycle, new Observer<List<MovieCastsResult>>() {
-                    @Override
-                    public void onChanged(@Nullable List<MovieCastsResult> movieCastsResults) {
-                        movieDetailVM.getMovieCasts().removeObserver(this);
-                        movieCasts = movieCastsResults;
-                    }
-                });
-                movieDetailVM.getVideos().observe(lifecycle, new Observer<List<VideosResults>>() {
-                    @Override
-                    public void onChanged(@Nullable List<VideosResults> videosResults) {
-                        movieDetailVM.getVideos().removeObserver(this);
-                        videos = videosResults;
-                    }
-                });
+               productionName = showDatabase.showDao().getProductionCompany(movieId)==null?"":showDatabase.showDao().getProductionCompany(movieId).getName();
+               videos = showDatabase.showDao().getVideos(movieId);
+               movieCasts = showDatabase.showDao().getMovieCast(movieId);
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        setVariable();
-                        setView();
-                    }
-                });
+               runOnUiThread(new Runnable() {
+                   @Override
+                   public void run() {
+                       setVariable();
+                       setView();
+                   }
+               });
             }
         });
     }
@@ -269,26 +244,26 @@ public class MovieDetailAct extends AppCompatActivity {
         if(networkStatus()){
             Picasso.get()
                     .load(posterImageUrl)
-                    .placeholder(R.drawable.loading)
-                    .error(R.drawable.error)
+                    .placeholder(R.drawable.loading_place_holder)
+                    .error(R.drawable.error_place_holder)
                     .into(posterImageIv);
             Picasso.get()
                     .load(movieLogo)
-                    .placeholder(R.drawable.loading)
-                    .error(R.drawable.error)
+                    .placeholder(R.drawable.loading_place_holder)
+                    .error(R.drawable.error_place_holder)
                     .into(movieLogoIv);
         }else{
             Picasso.get()
                     .load(posterImageUrl)
                     .networkPolicy(NetworkPolicy.OFFLINE)
-                    .placeholder(R.drawable.loading)
-                    .error(R.drawable.error)
+                    .placeholder(R.drawable.loading_place_holder)
+                    .error(R.drawable.error_place_holder)
                     .into(posterImageIv);
             Picasso.get()
                     .load(movieLogo)
                     .networkPolicy(NetworkPolicy.OFFLINE)
-                    .placeholder(R.drawable.loading)
-                    .error(R.drawable.error)
+                    .placeholder(R.drawable.loading_place_holder)
+                    .error(R.drawable.error_place_holder)
                     .into(movieLogoIv);
         }
 
@@ -360,7 +335,9 @@ public class MovieDetailAct extends AppCompatActivity {
                 if(videos != null){
                     for(int i=0;i<videos.size();i++){
                         if(validateVideos(videos.get(i))){
-                            showDatabase.showDao().addVideos(new VideosResults(movieId,videos.get(i).getVideoKey()));
+                            try{
+                                showDatabase.showDao().addVideos(new VideosResults(movieId,videos.get(i).getVideoKey()));
+                            }catch (Exception e){}
                         }
                     }
                 }
@@ -496,24 +473,15 @@ public class MovieDetailAct extends AppCompatActivity {
 
     private boolean networkStatus(){
         ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-        if(!(connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isAvailable() && connectivityManager.getActiveNetworkInfo().isConnected())){
-            return false;
-        }
-        return true;
+        return connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isAvailable() && connectivityManager.getActiveNetworkInfo().isConnected();
     }
 
     private boolean validateCast(MovieCastsResult movieCasts){
-        if(movieCasts.getCharacter() != null && movieCasts.getName()!=null && movieCasts.getProfilePath()!=null && movieCasts.getId()!=null && movieId!=null) {
-            return true;
-        }
-        return false;
+        return movieCasts.getCharacter() != null && movieCasts.getName() != null && movieCasts.getProfilePath() != null && movieCasts.getId() != null && movieId != null;
     }
 
     private boolean validateVideos(VideosResults videos){
-        if(movieId != null && videos.getVideoKey() != null){
-            return true;
-        }
-        return false;
+        return movieId != null && videos.getVideoKey() != null;
     }
 
     private void closeOnError(String message){
@@ -521,7 +489,7 @@ public class MovieDetailAct extends AppCompatActivity {
             toast.cancel();
         }
         toast = Toast.makeText(MovieDetailAct.this,message,Toast.LENGTH_SHORT);
-        toast.cancel();
+        toast.show();
         finish();
     }
 }

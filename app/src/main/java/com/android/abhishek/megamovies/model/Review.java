@@ -16,7 +16,7 @@ public class Review implements Parcelable{
         this.movieReviewResults = movieReviewResults;
     }
 
-    protected Review(Parcel in) {
+    private Review(Parcel in) {
         movieReviewResults = in.createTypedArrayList(ReviewResults.CREATOR);
     }
 

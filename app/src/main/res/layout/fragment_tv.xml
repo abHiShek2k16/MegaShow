@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/x4"
-        android:layout_marginBottom="@dimen/x4"
+        android:layout_marginBottom="@dimen/x48"
         android:layout_below="@id/fragmentPbAtTv"/>
 
     <LinearLayout
@@ -87,7 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/retry_background"
+            android:background="@color/colorPrimary"
             android:layout_below="@id/useLessSix"
             android:layout_marginTop="@dimen/x8"
             android:text="@string/tryAgain"

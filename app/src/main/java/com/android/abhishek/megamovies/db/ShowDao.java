@@ -39,28 +39,28 @@ public interface ShowDao {
     void removeTvDetail(TvDetail tvDetail);
 
     @Query("SELECT * FROM MovieCastTb WHERE movieId = :movieId")
-    LiveData<List<MovieCastsResult>> getMovieCast(String movieId);
+    List<MovieCastsResult> getMovieCast(String movieId);
     @Insert
     void addMovieCast(MovieCastsResult movieCastsResult);
     @Delete
     void removeMovieCast(MovieCastsResult movieCastsResult);
 
     @Query("SELECT * FROM TvCreatorByTb WHERE movieId = :movieId")
-    LiveData<List<TvCreatedByResults>> getTvCreator(String movieId);
+    List<TvCreatedByResults> getTvCreator(String movieId);
     @Insert
     void addTvCreator(TvCreatedByResults tvCreatedByResults);
     @Delete
     void removeTvCreator(TvCreatedByResults tvCreatedByResults);
 
     @Query("SELECT * FROM ProductionCompanyTb WHERE movieId = :movieId")
-    LiveData<ProductionCompany> getProductionCompany(String movieId);
+    ProductionCompany getProductionCompany(String movieId);
     @Insert
     void addProductionCompany(ProductionCompany productionCompany);
     @Delete
     void removeProductionCompany(ProductionCompany productionCompany);
 
     @Query("SELECT * FROM VideosTb WHERE movieId = :movieId")
-    LiveData<List<VideosResults>> getVideos(String movieId);
+    List<VideosResults> getVideos(String movieId);
     @Insert
     void addVideos(VideosResults videosResults);
     @Delete

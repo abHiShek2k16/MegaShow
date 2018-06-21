@@ -5,7 +5,7 @@ import com.android.abhishek.megamovies.model.EndPoint;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class BuildUrl {
+class BuildUrl {
 
     private static Retrofit retrofit = null;
     private static final String BASE_URL = EndPoint.BASE_URL;   //  Non translatable Base Url

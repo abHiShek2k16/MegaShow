@@ -11,7 +11,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-public interface ApiInterface {
+interface ApiInterface {
 
     @GET(EndPoint.UPCOMING_URL)
     Call<ShowList> getUpcomingMovies(@Query(EndPoint.API_QUERY) String apiKey, @Query(EndPoint.PAGE_QUERY) int page);

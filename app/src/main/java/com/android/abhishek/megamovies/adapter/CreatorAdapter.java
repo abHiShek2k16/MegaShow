@@ -21,7 +21,6 @@ import butterknife.ButterKnife;
 public class CreatorAdapter extends RecyclerView.Adapter<CreatorAdapter.CreatorCustomAdapter>{
 
     private final List<TvCreatedByResults> tvCreatorResults;
-    private final String IMAGE_BASE_URL = EndPoint.IMAGE_BASE_URL;
 
     public CreatorAdapter(List<TvCreatedByResults> tvCreatorResults) {
         this.tvCreatorResults = tvCreatorResults;
@@ -40,10 +39,11 @@ public class CreatorAdapter extends RecyclerView.Adapter<CreatorAdapter.CreatorC
         if(createdByResults == null){
             return;
         }
+        String IMAGE_BASE_URL = EndPoint.IMAGE_BASE_URL;
         Picasso.get()
-                .load(IMAGE_BASE_URL+createdByResults.getProfilePath())
-                .placeholder(R.drawable.loading)
-                .error(R.drawable.error)
+                .load(IMAGE_BASE_URL +createdByResults.getProfilePath())
+                .placeholder(R.drawable.loading_place_holder)
+                .error(R.drawable.error_place_holder)
                 .into(holder.creatorIv);
         String name = createdByResults.getName().isEmpty()?"":createdByResults.getName();
         holder.nameTv.setText(name);
@@ -59,7 +59,7 @@ public class CreatorAdapter extends RecyclerView.Adapter<CreatorAdapter.CreatorC
         @BindView(R.id.creatorIv) ImageView creatorIv;
         @BindView(R.id.TvOneCreator) TextView nameTv;
 
-        protected CreatorCustomAdapter(View itemView) {
+        CreatorCustomAdapter(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
         }

@@ -20,8 +20,7 @@ import butterknife.ButterKnife;
 
 public class MovieCastsAdapter extends RecyclerView.Adapter<MovieCastsAdapter.CastsCustomAdapter>{
 
-    private List<MovieCastsResult> movieCastsResults;
-    private String IMAGE_BASE_URL = EndPoint.IMAGE_BASE_URL;
+    private final List<MovieCastsResult> movieCastsResults;
 
     public MovieCastsAdapter(List<MovieCastsResult> movieCastsResults) {
         this.movieCastsResults = movieCastsResults;
@@ -40,10 +39,11 @@ public class MovieCastsAdapter extends RecyclerView.Adapter<MovieCastsAdapter.Ca
         if(movieCastsResult == null){
             return;
         }
+        String IMAGE_BASE_URL = EndPoint.IMAGE_BASE_URL;
         Picasso.get()
-                .load(IMAGE_BASE_URL+movieCastsResult.getProfilePath())
-                .placeholder(R.drawable.loading)
-                .error(R.drawable.error)
+                .load(IMAGE_BASE_URL +movieCastsResult.getProfilePath())
+                .placeholder(R.drawable.loading_place_holder)
+                .error(R.drawable.error_place_holder)
                 .into(holder.castIv);
         String name = movieCastsResult.getName()==null?"":movieCastsResult.getName();
         String character = movieCastsResult.getCharacter()==null?"":movieCastsResult.getCharacter();
@@ -63,7 +63,7 @@ public class MovieCastsAdapter extends RecyclerView.Adapter<MovieCastsAdapter.Ca
         TextView rollTv;
         @BindView(R.id.TvTwoCast)
         TextView nameTv;
-        protected CastsCustomAdapter(View itemView) {
+        CastsCustomAdapter(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
         }

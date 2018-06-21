@@ -24,4 +24,5 @@
     <dimen name="x220">220dp</dimen>
     <dimen name="x256">256dp</dimen>
     <dimen name="x260">260dp</dimen>
+    <dimen name="x280">280dp</dimen>
 </resources>

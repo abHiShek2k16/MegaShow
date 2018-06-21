@@ -70,11 +70,13 @@ public class MoviesFragment extends Fragment implements SharedPreferences.OnShar
 
     //  Temporary Variables
     private int NO_OF_IMAGE = 2;
-    private int CURRENT_PAGE = 1;
-    private int TOTAL_PAGE = 1;
+    private int currentPage = 1;
+    private int previousPage = 1;
+    private int totalPage = 1;
     private List<ListResults> listResults;
     private ShowList tempShowList = new ShowList();
     private Toast toast;
+    private boolean flag = true;
 
     public MoviesFragment() {
 
@@ -97,8 +99,10 @@ public class MoviesFragment extends Fragment implements SharedPreferences.OnShar
                 MOVIE_SORT_BY = savedInstanceState.getString(movieSortKey);
             }
             if(savedInstanceState.containsKey(currentPageKey)){
-                CURRENT_PAGE = savedInstanceState.getInt(currentPageKey);
+                currentPage = savedInstanceState.getInt(currentPageKey);
+                previousPage = currentPage;
             }
+            flag = false;
         }
 
         menu = getActivity().findViewById(R.id.menuBtn);
@@ -110,7 +114,7 @@ public class MoviesFragment extends Fragment implements SharedPreferences.OnShar
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(movieSortKey,MOVIE_SORT_BY);
-        outState.putInt(currentPageKey,CURRENT_PAGE);
+        outState.putInt(currentPageKey, currentPage);
     }
 
     @Override
@@ -142,7 +146,7 @@ public class MoviesFragment extends Fragment implements SharedPreferences.OnShar
 
     }
 
-    public void checkOrientation(){
+    private void checkOrientation(){
         int configuration = this.getResources().getConfiguration().orientation;
         if(configuration == Configuration.ORIENTATION_PORTRAIT){
             NO_OF_IMAGE = 2;
@@ -158,14 +162,14 @@ public class MoviesFragment extends Fragment implements SharedPreferences.OnShar
     }
 
     private void loadMovies(){
-        if(!networkStatus()){
+        if(!networkStatus()&&flag){
             showError();
             return;
         }
         progressBar.setVisibility(View.VISIBLE);
         if (MOVIE_SORT_BY.equals(POPULAR)) {
             MovieListVM moviesViewModel = ViewModelProviders.of(this).get(MovieListVM.class);
-            moviesViewModel.getPopularMoviesList(API_KEY,CURRENT_PAGE).observe(this, new Observer<ShowList>() {
+            moviesViewModel.getPopularMoviesList(API_KEY, currentPage,previousPage).observe(this, new Observer<ShowList>() {
                 @Override
                 public void onChanged(@Nullable ShowList showList) {
                     if(tempShowList.equals(showList)){
@@ -179,7 +183,7 @@ public class MoviesFragment extends Fragment implements SharedPreferences.OnShar
             });
         } else if(MOVIE_SORT_BY.equals(TOP_RATED)){
             MovieListVM moviesViewModel = ViewModelProviders.of(this).get(MovieListVM.class);
-            moviesViewModel.getTopRatedMoviesList(API_KEY,CURRENT_PAGE).observe(this, new Observer<ShowList>() {
+            moviesViewModel.getTopRatedMoviesList(API_KEY, currentPage,previousPage).observe(this, new Observer<ShowList>() {
                 @Override
                 public void onChanged(@Nullable ShowList showList) {
                     if(tempShowList.equals(showList)){
@@ -192,7 +196,7 @@ public class MoviesFragment extends Fragment implements SharedPreferences.OnShar
             });
         }else if(MOVIE_SORT_BY.equals(UPCOMING)){
             MovieListVM moviesViewModel = ViewModelProviders.of(this).get(MovieListVM.class);
-            moviesViewModel.getUpcomingMoviesList(API_KEY,CURRENT_PAGE).observe(this, new Observer<ShowList>() {
+            moviesViewModel.getUpcomingMoviesList(API_KEY, currentPage,previousPage).observe(this, new Observer<ShowList>() {
                 @Override
                 public void onChanged(@Nullable ShowList showList) {
                     if(tempShowList.equals(showList)){
@@ -205,7 +209,7 @@ public class MoviesFragment extends Fragment implements SharedPreferences.OnShar
             });
         }else {
             MovieListVM moviesViewModel = ViewModelProviders.of(this).get(MovieListVM.class);
-            moviesViewModel.getNowPlayingMoviesList(API_KEY,CURRENT_PAGE).observe(this, new Observer<ShowList>() {
+            moviesViewModel.getNowPlayingMoviesList(API_KEY, currentPage,previousPage).observe(this, new Observer<ShowList>() {
                 @Override
                 public void onChanged(@Nullable ShowList showList) {
                     if(tempShowList.equals(showList)){
@@ -227,9 +231,13 @@ public class MoviesFragment extends Fragment implements SharedPreferences.OnShar
         progressBar.setVisibility(View.GONE);
         errorLayout.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
-        TOTAL_PAGE = showList.getTotalPages();
-        doPagination();
+
+        totalPage = showList.getTotalPages();
         listResults = showList.getResults();
+        previousPage = currentPage;
+
+        doPagination();
+
         ListAdapter movieListAdapter = new ListAdapter(listResults);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), NO_OF_IMAGE));
         recyclerView.setAdapter(movieListAdapter);
@@ -246,11 +254,7 @@ public class MoviesFragment extends Fragment implements SharedPreferences.OnShar
 
     private boolean networkStatus(){
         ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        if((connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isAvailable() && connectivityManager.getActiveNetworkInfo().isConnected())){
-            return true;
-        }else{
-            return false;
-        }
+        return (connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isAvailable() && connectivityManager.getActiveNetworkInfo().isConnected());
     }
 
     @Override
@@ -323,28 +327,30 @@ public class MoviesFragment extends Fragment implements SharedPreferences.OnShar
     }
     @OnClick(R.id.nextAtMv)
     void loadNext(){
-        CURRENT_PAGE++;
+        currentPage++;
+        flag = true;
         loadMovies();
     }
     @OnClick(R.id.previousAtMv)
     void loadPrv(){
-        CURRENT_PAGE--;
+        currentPage--;
+        flag = true;
         loadMovies();
     }
 
     private void doPagination(){
-        if(CURRENT_PAGE == 1){
+        if(currentPage == 1){
             previous.setVisibility(View.GONE);
-        }else if(CURRENT_PAGE >1){
+        }else if(currentPage >1){
             previous.setVisibility(View.VISIBLE);
         }
 
-        if(CURRENT_PAGE >= TOTAL_PAGE){
+        if(currentPage >= totalPage){
             next.setVisibility(View.GONE);
-        }else if(CURRENT_PAGE < TOTAL_PAGE){
+        }else if(currentPage < totalPage){
             next.setVisibility(View.VISIBLE);
         }
         pageText.setVisibility(View.VISIBLE);
-        pageText.setText("Page "+CURRENT_PAGE+" of "+TOTAL_PAGE);
+        pageText.setText("Page "+ currentPage +" of "+ totalPage);
     }
 }

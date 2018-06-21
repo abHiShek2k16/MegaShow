@@ -26,7 +26,6 @@
     <string name="tvSortPref" translatable="false">sort_tv_by</string>
     <string name="favSortPref" translatable="false">sort_fav_by</string>
     <string name="shakePref" translatable="false">shake_feature_key</string>
-    <string name="notificationPref" translatable="false">notification_feature_key</string>
     <string name="tvQ" translatable="false">tv</string>
     <string name="movieQ" translatable="false">movie</string>
     <string name="currentPage" translatable="false">current_page</string>
@@ -72,11 +71,8 @@
     <string name="tvSortPrefStr">Sort Tv Series By</string>
     <string name="favSortPrefStr">Sort Favourite List By</string>
     <string name="shakePrefStr">On Phone Shake</string>
-    <string name="notificationPrefStr">Notify Me About Latest Show</string>
     <string name="shakeSummaryOn">change the page</string>
     <string name="shakeSummaryOff">do not change the page</string>
-    <string name="notificationSummaryOn">notify me about latest show</string>
-    <string name="notificationSummaryOff">do not show notification</string>
 
     <!--    MONTH NAME  -->
     <string name="jan"> Jan</string>

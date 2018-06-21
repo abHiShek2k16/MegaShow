@@ -13,7 +13,7 @@ import retrofit2.Response;
 
 public class ApiRepository {
 
-    ApiInterface apiInterface = BuildUrl.getRetrofit().create(ApiInterface.class);
+    private ApiInterface apiInterface = BuildUrl.getRetrofit().create(ApiInterface.class);
 
     public MutableLiveData<ShowList> loadPopularMovies(String API_KEY, int CURRENT_PAGE){
         final MutableLiveData<ShowList> popularMovieList = new MutableLiveData<>();

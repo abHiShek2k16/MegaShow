@@ -25,11 +25,4 @@
         android:title="@string/shakePrefStr"
         android:summaryOff="@string/shakeSummaryOff"
         android:summaryOn="@string/shakeSummaryOn"/>
-
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="@string/notificationPref"
-        android:title="@string/notificationPrefStr"
-        android:summaryOff="@string/notificationSummaryOff"
-        android:summaryOn="@string/notificationSummaryOn"/>
 </PreferenceScreen>

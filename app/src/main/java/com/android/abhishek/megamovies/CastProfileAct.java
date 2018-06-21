@@ -82,8 +82,8 @@ public class CastProfileAct extends AppCompatActivity {
 
         Picasso.get()
                 .load(IMAGE_BASE_URL+imageUrl)
-                .placeholder(R.drawable.loading)
-                .error(R.drawable.error)
+                .placeholder(R.drawable.loading_place_holder)
+                .error(R.drawable.error_place_holder)
                 .into(photo);
 
         name.setText(nameStr);

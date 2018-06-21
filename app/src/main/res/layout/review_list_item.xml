@@ -5,12 +5,13 @@
     android:orientation="horizontal"
     android:paddingTop="@dimen/x16"
     android:paddingLeft="@dimen/x16">
+
     <TextView
         android:id="@+id/circleTextTv"
         android:layout_width="@dimen/x48"
         android:layout_height="@dimen/x48"
-        android:background="@drawable/circle_border"
-        android:textColor="@color/black"
+        android:background="@drawable/review_circle_background"
+        android:textColor="@color/white"
         android:textAlignment="center"
         android:paddingTop="@dimen/x2"
         android:textSize="32sp"/>

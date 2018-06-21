@@ -28,7 +28,7 @@
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolBarATMovieDetail"
                     android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
+                    android:layout_height="@dimen/x48"
                     app:popupTheme="@style/AppTheme.PopupOverlay"/>
                 <TextView
                     android:id="@+id/movieNameAtMovieDetail"
@@ -58,7 +58,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="@dimen/x16"
                     android:layout_marginBottom="@dimen/x16"
-                    android:background="@drawable/white_circle_icon"
+                    android:background="@drawable/white_circle_background"
                     app:icon_type="heart"
                     app:circle_start_color="@color/colorPrimaryDark"
                     app:dots_primary_color="@color/red"
@@ -330,7 +330,7 @@
                     android:textSize="@dimen/xs64"
                     android:paddingLeft="@dimen/x16"
                     android:paddingTop="@dimen/x12"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/colorPrimary"
                     android:fontFamily="sans-serif-condensed"/>
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -342,6 +342,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         style="?android:attr/ratingBarStyleSmall"
+                        android:backgroundTint="@color/colorPrimary"
                         android:numStars="10"
                         android:paddingLeft="@dimen/x8"
                         android:paddingRight="@dimen/x16"/>
@@ -354,7 +355,7 @@
                         android:layout_marginRight="@dimen/x16"
                         android:fontFamily="sans-serif-condensed"
                         android:drawablePadding="@dimen/x8"
-                        android:drawableRight="@drawable/baseline_person_black_18dp"/>
+                        android:drawableRight="@drawable/person_icon_black"/>
                 </LinearLayout>
             </LinearLayout>
 

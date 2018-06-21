@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewCustomAdapter>{
 
-    private List<ReviewResults> reviewResults;
+    private final List<ReviewResults> reviewResults;
     private boolean flag = false;       //  for the expand and collapse state of review
 
     public ReviewAdapter(List<ReviewResults> reviewResults) {
@@ -86,7 +86,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewCust
         TextView authorNameTv;
         @BindView(R.id.reviewTv)
         WhatsAppTextView reviewTv;
-        protected ReviewCustomAdapter(View itemView) {
+        ReviewCustomAdapter(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
         }

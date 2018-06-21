@@ -10,7 +10,7 @@ import com.android.abhishek.megamovies.network.ApiRepository;
 public class ProfileVM extends ViewModel {
 
     private MutableLiveData<PersonProfile>  personProfile;
-    private ApiRepository apiRepository = new ApiRepository();
+    private final ApiRepository apiRepository = new ApiRepository();
 
     public LiveData<PersonProfile> getPersonProfile(String API_KEY,String id) {
         if(personProfile == null){

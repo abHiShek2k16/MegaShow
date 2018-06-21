@@ -10,9 +10,10 @@ import com.google.gson.annotations.SerializedName;
 @Entity(tableName = "VideosTb")
 public class VideosResults {
 
-    private String movieId;
-    @PrimaryKey @NonNull @SerializedName(EndPoint.KEY)
+    @SerializedName(EndPoint.KEY) @PrimaryKey @NonNull
     private String videoKey;
+
+    private String movieId;
 
     @Ignore
     public VideosResults(String videoKey) {
@@ -31,4 +32,5 @@ public class VideosResults {
     public String getVideoKey() {
         return videoKey;
     }
+
 }

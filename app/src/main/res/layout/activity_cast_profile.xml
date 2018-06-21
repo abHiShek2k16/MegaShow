@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".CastProfileAct"
-    android:background="@color/white">
+    android:background="@color/white"
+    tools:ignore="Overdraw">
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -54,12 +55,13 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_below="@id/profileUselessOne"
-                android:layout_centerHorizontal="true">
+                android:layout_centerHorizontal="true"
+                tools:ignore="UseCompoundDrawables">
                 <ImageView
                     android:layout_width="@dimen/x22"
                     android:layout_height="@dimen/x22"
                     android:textAlignment="textEnd"
-                    android:src="@drawable/location"
+                    android:src="@drawable/location_icon"
                     android:contentDescription="@string/imageDesc"
                     android:padding="@dimen/x4"/>
                 <TextView

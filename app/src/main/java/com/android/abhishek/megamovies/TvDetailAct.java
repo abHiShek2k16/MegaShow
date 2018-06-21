@@ -1,7 +1,5 @@
 package com.android.abhishek.megamovies;
 
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ActivityNotFoundException;
@@ -38,7 +36,6 @@ import com.android.abhishek.megamovies.model.VideosResults;
 import com.android.abhishek.megamovies.viewModel.TvDetailApiVM;
 import com.android.abhishek.megamovies.viewModel.TvDetailDbVM;
 import com.android.abhishek.megamovies.viewModel.TvViewModelFactory;
-import com.android.abhishek.megamovies.viewModel.MovieModelFactory;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 import com.squareup.picasso.NetworkPolicy;
@@ -110,7 +107,7 @@ public class TvDetailAct extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        final Drawable upArrow = getResources().getDrawable(R.drawable.baseline_arrow_back_white_24);
+        final Drawable upArrow = getResources().getDrawable(R.drawable.arrow_back);
         upArrow.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
 
         setSupportActionBar(toolbar);
@@ -209,38 +206,13 @@ public class TvDetailAct extends AppCompatActivity {
     }
 
     private void loadFromDb(){
-        final LifecycleOwner owner = this;
+        final ShowDatabase showDatabase = ShowDatabase.getShowDatabase(getApplicationContext());
         DbExecutor.getDbExecutor().getBackgroundIo().execute(new Runnable() {
             @Override
             public void run() {
-                ShowDatabase showDatabase = ShowDatabase.getShowDatabase(getApplicationContext());
-                MovieModelFactory movieModelFactory = new MovieModelFactory(showDatabase,tvId);
-                final TvDetailDbVM tvDetailVM = ViewModelProviders.of(TvDetailAct.this, movieModelFactory).get(TvDetailDbVM.class);
-                tvDetailVM.getProductionName().observe(owner, new Observer<ProductionCompany>() {
-                    @Override
-                    public void onChanged(@Nullable ProductionCompany productionCompany) {
-                        tvDetailVM.getProductionName().removeObserver(this);
-                        if(productionCompany != null){
-                            productionName = productionCompany.getName();
-                        }
-                    }
-                });
-                tvDetailVM.getTvCreator().observe(owner, new Observer<List<TvCreatedByResults>>() {
-                    @Override
-                    public void onChanged(@Nullable List<TvCreatedByResults> tvCreatedByResult) {
-                        tvDetailVM.getTvCreator().removeObserver(this);
-                        tvCreator = tvCreatedByResult;
-                    }
-                });
-                tvDetailVM.getVideos().observe(owner, new Observer<List<VideosResults>>() {
-                    @Override
-                    public void onChanged(@Nullable List<VideosResults> videosResults) {
-                        tvDetailVM.getVideos().removeObserver(this);
-                        videos = videosResults;
-                        length = DATA_NOT_AVAILABLE;
-                    }
-                });
-
+                productionName = showDatabase.showDao().getProductionCompany(tvId)==null?"":showDatabase.showDao().getProductionCompany(tvId).getName();
+                videos = showDatabase.showDao().getVideos(tvId);
+                tvCreator = showDatabase.showDao().getTvCreator(tvId);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -270,26 +242,26 @@ public class TvDetailAct extends AppCompatActivity {
         if(networkStatus()){
             Picasso.get()
                     .load(posterImageUrl)
-                    .placeholder(R.drawable.loading)
-                    .error(R.drawable.error)
+                    .placeholder(R.drawable.loading_place_holder)
+                    .error(R.drawable.error_place_holder)
                     .into(posterImageIv);
             Picasso.get()
                     .load(tvLogo)
-                    .placeholder(R.drawable.loading)
-                    .error(R.drawable.error)
+                    .placeholder(R.drawable.loading_place_holder)
+                    .error(R.drawable.error_place_holder)
                     .into(tvLogoIv);
         }else{
             Picasso.get()
                     .load(posterImageUrl)
                     .networkPolicy(NetworkPolicy.OFFLINE)
-                    .placeholder(R.drawable.loading)
-                    .error(R.drawable.error)
+                    .placeholder(R.drawable.loading_place_holder)
+                    .error(R.drawable.error_place_holder)
                     .into(posterImageIv);
             Picasso.get()
                     .load(tvLogo)
                     .networkPolicy(NetworkPolicy.OFFLINE)
-                    .placeholder(R.drawable.loading)
-                    .error(R.drawable.error)
+                    .placeholder(R.drawable.loading_place_holder)
+                    .error(R.drawable.error_place_holder)
                     .into(tvLogoIv);
         }
 
@@ -417,7 +389,7 @@ public class TvDetailAct extends AppCompatActivity {
         });
     }
 
-    private boolean isExistInDb(){
+    private void isExistInDb(){
         ShowDatabase showDatabase = ShowDatabase.getShowDatabase(getApplicationContext());
         TvViewModelFactory vmf = new TvViewModelFactory(showDatabase,tvId);
         final TvDetailDbVM tvDetailVM = ViewModelProviders.of(this,vmf).get(TvDetailDbVM.class);
@@ -436,12 +408,11 @@ public class TvDetailAct extends AppCompatActivity {
                     loadFromApi();
                 }else if(!networkStatus() && isExist){
                     loadFromDb();
-                }else if(!networkStatus() && !isExist){
+                }else if(!networkStatus() && !isExist && tvDetail == null){
                     closeOnError(getResources().getString(R.string.netProblem));
                 }
             }
         });
-        return isExist;
     }
 
     private String changeFormatOfDate(String releaseDate){
@@ -503,24 +474,15 @@ public class TvDetailAct extends AppCompatActivity {
 
     private boolean networkStatus(){
         ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-        if(!(connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isAvailable() && connectivityManager.getActiveNetworkInfo().isConnected())){
-            return false;
-        }
-        return true;
+        return connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isAvailable() && connectivityManager.getActiveNetworkInfo().isConnected();
     }
 
     private boolean validateCreator(TvCreatedByResults tvCreatedByResult){
-        if(tvCreatedByResult.getName() != null && tvCreatedByResult.getProfilePath() != null && tvCreatedByResult.getId() != null && tvId != null) {
-            return true;
-        }
-        return false;
+        return tvCreatedByResult.getName() != null && tvCreatedByResult.getProfilePath() != null && tvCreatedByResult.getId() != null && tvId != null;
     }
 
     private boolean validateVideos(VideosResults videos){
-        if(tvId != null && videos.getVideoKey() != null){
-            return true;
-        }
-        return false;
+        return tvId != null && videos.getVideoKey() != null;
     }
 
     private void closeOnError(String message){
