@@ -1,11 +1,8 @@
 package com.android.abhishek.megamovies;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -19,23 +16,11 @@ import android.widget.Toast;
 import com.android.abhishek.megamovies.fragments.FavFragment;
 import com.android.abhishek.megamovies.fragments.MoviesFragment;
 import com.android.abhishek.megamovies.fragments.TvFragment;
+import com.android.abhishek.megamovies.util.LatestMovieUtilities;
 
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-/*  To Do
-
-    1)  Exit back button invisible
-    2)  Adding video share feature
-    3)  work on ui
-    4)  creating new xml layout for landscape in detail
-    5)  Adding animation
-
-    6)  while loading net gone problem
-    7)  rotating the screen after dislike while online close the activity
-
- */
 
 public class ListAct extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     //  XML View
@@ -46,8 +31,13 @@ public class ListAct extends AppCompatActivity implements NavigationView.OnNavig
 
     //  Api key
     @BindString(R.string.apiKey) String API_KEY;
+    @BindString(R.string.navigationOption) String currentFragmentKey;
+    @BindString(R.string.movieStr) String movie;
+    @BindString(R.string.tvStr) String tvSeries;
+    @BindString(R.string.favStr) String fav;
 
     private Toast toast;
+    private String currentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,17 +48,24 @@ public class ListAct extends AppCompatActivity implements NavigationView.OnNavig
         setNavigationView();
         checkApiKey();
 
+        LatestMovieUtilities.scheduledMovieFetchingReminder(this);
+
         if(savedInstanceState != null){
+            currentFragment = savedInstanceState.getString(currentFragmentKey);
+            title.setText(currentFragment);
             return;
         }else{
             getSupportFragmentManager().beginTransaction().add(R.id.fragmentLayout,new MoviesFragment()).commit();
+            currentFragment = movie;
         }
+
     }
 
+
     @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-        outState.putString(API_KEY,API_KEY);
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(currentFragmentKey,currentFragment);
     }
 
     @Override
@@ -82,16 +79,19 @@ public class ListAct extends AppCompatActivity implements NavigationView.OnNavig
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.navMv :
                 loadMovieFragment();
+                currentFragment = movie;
                 break;
             case R.id.navTv :
                 loadTvFragment();
+                currentFragment = tvSeries;
                 break;
             case R.id.navFav :
                 loadFavFragment();
+                currentFragment = fav;
                 break;
             case R.id.navSetting :
                 loadSettingAct();
@@ -130,17 +130,17 @@ public class ListAct extends AppCompatActivity implements NavigationView.OnNavig
     }
 
     private void loadMovieFragment(){
-        title.setText(getResources().getString(R.string.movieStr));
+        title.setText(movie);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout,new MoviesFragment()).commit();
     }
 
     private void loadTvFragment(){
-        title.setText(getResources().getString(R.string.tvStr));
+        title.setText(tvSeries);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout,new TvFragment()).commit();
     }
 
     private void loadFavFragment(){
-        title.setText(getResources().getString(R.string.favStr));
+        title.setText(fav);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragmentLayout,new FavFragment()).commit();
     }
 
@@ -149,19 +149,10 @@ public class ListAct extends AppCompatActivity implements NavigationView.OnNavig
     }
 
     private void rateApp(){
-        Uri uri = Uri.parse("market://details?id=" + this.getPackageName());
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        if(Build.VERSION.SDK_INT >= 21){
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-        }
-        try {
-            startActivity(intent);
-        } catch (ActivityNotFoundException e) {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + this.getPackageName())));
-        }
+       //   Implement while uploading app to play store
     }
 
     private void shareApp(){
-
+        //   Implement while uploading app to play store
     }
 }

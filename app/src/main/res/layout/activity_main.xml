@@ -35,7 +35,7 @@
                         android:textColor="@color/white"
                         android:text="@string/movieStr"
                         android:fontFamily="sans-serif-condensed"
-                        android:paddingTop="@dimen/x12"/>
+                        android:paddingTop="@dimen/x12" />
                     <ImageView
                         android:id="@+id/menuBtn"
                         android:layout_width="wrap_content"

@@ -4,40 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SplashScreen"
-    android:background="@color/grey">
-
-    <View
-        android:layout_width="@dimen/x4"
-        android:layout_height="@dimen/x32"
-        android:background="@color/colorPrimary"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="@dimen/x8"/>
+    android:background="@color/colorPrimary">
 
     <ImageView
-        android:layout_width="@dimen/x128"
-        android:layout_height="@dimen/x128"
-        android:src="@drawable/app_logo"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@id/splashText"
-        android:layout_marginBottom="@dimen/x64"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/celebrateIv"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/splashText"
-        android:text="@string/app_name"
-        android:textColor="@color/red"
-        android:textSize="@dimen/xs32"
-        android:textStyle="bold"/>
-
-    <ImageView
-        android:id="@+id/celebrateIv"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/x256"
         android:layout_height="@dimen/x256"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/splash_screen_icon"
-        android:scaleType="fitXY"/>
+        android:src="@drawable/app_logo"
+        android:scaleType="fitXY"
+        android:layout_centerInParent="true"
+        android:contentDescription="@string/imageDesc"/>
 
-i</RelativeLayout>
+</RelativeLayout>

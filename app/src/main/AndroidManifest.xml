@@ -22,16 +22,20 @@
             android:name=".MovieDetailAct"
             android:launchMode="singleTop"
             android:parentActivityName=".ListAct"
-            android:theme="@style/AppTheme.noBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="orientation"/>
         <activity
             android:name=".TvDetailAct"
             android:launchMode="singleTop"
             android:parentActivityName=".ListAct"
-            android:theme="@style/AppTheme.noBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="orientation"/>
         <activity
             android:name=".CastProfileAct"
-            android:theme="@style/AppTheme.noBar" />
-        <activity android:name=".ReviewAct" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="orientation"/>
+        <activity android:name=".ReviewAct"
+            android:configChanges="orientation"/>
         <activity
             android:name=".SplashScreen"
             android:theme="@style/AppTheme.NoActionBar">
@@ -44,6 +48,13 @@
         <activity android:name=".SettingActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".ListAct"/>
+
+        <service android:name=".background.LatestMovieReminder"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+            </intent-filter>
+        </service>
 
     </application>
 

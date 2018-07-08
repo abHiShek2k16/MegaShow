@@ -1,5 +1,6 @@
 package com.android.abhishek.megamovies;
 
+import android.animation.ObjectAnimator;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ActivityNotFoundException;
@@ -9,13 +10,18 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.transition.TransitionInflater;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
@@ -38,7 +44,6 @@ import com.android.abhishek.megamovies.viewModel.TvDetailDbVM;
 import com.android.abhishek.megamovies.viewModel.TvViewModelFactory;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -46,12 +51,14 @@ import java.util.List;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class TvDetailAct extends AppCompatActivity {
     //  Xml View
     @BindView(R.id.toolBarAtTv) android.support.v7.widget.Toolbar toolbar;
     @BindView(R.id.posterImageAtTv) ImageView posterImageIv;
     @BindView(R.id.logoIvAtTv) ImageView tvLogoIv;
+    @BindView(R.id.shareBtnAtTvDetail) ImageView share;
     @BindView(R.id.movieNameAtTv) TextView tvNameTv;
     @BindView(R.id.productionNameAtTv) TextView productionNameTv;
     @BindView(R.id.lengthTvAtTv) TextView lengthTv;
@@ -71,6 +78,7 @@ public class TvDetailAct extends AppCompatActivity {
     @BindView(R.id.noTSEAtTvCreator) RelativeLayout creatorError;
     @BindView(R.id.noTSEAtTvReview) RelativeLayout reviewError;
     @BindView(R.id.noTSEAtTvTrailer) RelativeLayout trailerError;
+    @BindView(R.id.detailCardAtTv) CardView cardView;
 
     //  Constant String
     @BindString(R.string.apiKey) String API_KEY;
@@ -100,12 +108,18 @@ public class TvDetailAct extends AppCompatActivity {
     private TvDetail tvDetail;
     private boolean isExist = false;
 
+    public static final float LARGE_SCALE = 1.1f;
+    private boolean symmetric = true;
+    private boolean small = true;
+    public static final String EXTRA_CURVE = "EXTRA_CURVE";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tv_detail);
 
         ButterKnife.bind(this);
+        share.setEnabled(false);
 
         final Drawable upArrow = getResources().getDrawable(R.drawable.arrow_back);
         upArrow.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
@@ -126,6 +140,17 @@ public class TvDetailAct extends AppCompatActivity {
             closeOnError(getResources().getString(R.string.somethingWrong));
         }
 
+        boolean curve = getIntent().getBooleanExtra(EXTRA_CURVE, false);
+        if(Build.VERSION.SDK_INT>=21){
+            getWindow().setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition(curve ? R.transition.curve : R.transition.move));
+        }
+
+        Picasso.get()
+                .load(intent.getData())
+                .placeholder(R.drawable.loading_place_holder)
+                .error(R.drawable.error_place_holder)
+                .into(tvLogoIv);
+
         isExistInDb();
 
         trailerRv.addOnItemTouchListener(
@@ -144,16 +169,6 @@ public class TvDetailAct extends AppCompatActivity {
                     }
                 })
         );
-
-        creatorRv.addOnItemTouchListener(new RecyclerItemClickListener(this, creatorRv, new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                String id = tvDetail.getTvCreatedByResults().get(position).getId();
-                Intent intent = new Intent(TvDetailAct.this,CastProfileAct.class);
-                intent.putExtra(getResources().getString(R.string.intentPassingOne),id);
-                startActivity(intent);
-            }
-        }));
 
         readAll.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -239,31 +254,11 @@ public class TvDetailAct extends AppCompatActivity {
     }
 
     private void setView(){
-        if(networkStatus()){
-            Picasso.get()
-                    .load(posterImageUrl)
-                    .placeholder(R.drawable.loading_place_holder)
-                    .error(R.drawable.error_place_holder)
-                    .into(posterImageIv);
-            Picasso.get()
-                    .load(tvLogo)
-                    .placeholder(R.drawable.loading_place_holder)
-                    .error(R.drawable.error_place_holder)
-                    .into(tvLogoIv);
-        }else{
-            Picasso.get()
-                    .load(posterImageUrl)
-                    .networkPolicy(NetworkPolicy.OFFLINE)
-                    .placeholder(R.drawable.loading_place_holder)
-                    .error(R.drawable.error_place_holder)
-                    .into(posterImageIv);
-            Picasso.get()
-                    .load(tvLogo)
-                    .networkPolicy(NetworkPolicy.OFFLINE)
-                    .placeholder(R.drawable.loading_place_holder)
-                    .error(R.drawable.error_place_holder)
-                    .into(tvLogoIv);
-        }
+        Picasso.get()
+                .load(posterImageUrl)
+                .placeholder(R.drawable.loading_place_holder)
+                .error(R.drawable.error_place_holder)
+                .into(posterImageIv);
 
         tvNameTv.setText(tvName);
         productionNameTv.setText(productionName);
@@ -289,7 +284,7 @@ public class TvDetailAct extends AppCompatActivity {
         if(tvCreator == null || tvCreator.size() == 0){
             creatorError.setVisibility(View.VISIBLE);
         }else{
-            CreatorAdapter creatorAdapter = new CreatorAdapter(tvCreator);
+            CreatorAdapter creatorAdapter = new CreatorAdapter(tvCreator,this);
             creatorRv.setAdapter(creatorAdapter);
         }
 
@@ -309,6 +304,7 @@ public class TvDetailAct extends AppCompatActivity {
             reviewRv.setAdapter(reviewAdapter);
         }
         likeButton.setEnabled(true);
+        share.setEnabled(true);
     }
 
     private void addToDb(){
@@ -492,5 +488,44 @@ public class TvDetailAct extends AppCompatActivity {
         toast = Toast.makeText(TvDetailAct.this,message,Toast.LENGTH_SHORT);
         toast.show();
         finish();
+    }
+
+    @OnClick(R.id.detailCardAtTv)
+    public void zoomDetail() {
+        Interpolator interpolator = AnimationUtils.loadInterpolator(this, android.R.interpolator.overshoot);
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(cardView, View.SCALE_X, (small ? LARGE_SCALE : 1f));
+        scaleX.setInterpolator(interpolator);
+        scaleX.setDuration(symmetric ? 600L : 200L);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(cardView, View.SCALE_Y, (small ? LARGE_SCALE : 1f));
+        scaleY.setInterpolator(interpolator);
+        scaleY.setDuration(600L);
+        scaleX.start();
+        scaleY.start();
+
+        small = !small;
+        if (small) {
+            symmetric = !symmetric;
+        }
+    }
+
+    @OnClick(R.id.shareBtnAtTvDetail)
+    void shareTv(){
+        if(tvDetail != null){
+            String toBeShare = tvDetail.getName();
+            if(tvDetail.getOverview() != null){
+                toBeShare += "\n\n*Description*\n"+tvDetail.getOverview();
+            }
+            if(videos != null){
+                toBeShare += "\n\n*Videos*\n";
+                for(int i=0;i<videos.size();i++){
+                    toBeShare += Uri.parse(VIDEO_WEB_BASE_URL+videos.get(i).getVideoKey())+"\n";
+                }
+            }
+            Intent sharingIntent = new Intent();
+            sharingIntent.setAction(Intent.ACTION_SEND);
+            sharingIntent.setType("text/plain");
+            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, toBeShare);
+            startActivity(sharingIntent);
+        }
     }
 }

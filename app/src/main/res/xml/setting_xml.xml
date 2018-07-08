@@ -19,10 +19,4 @@
         android:entryValues="@array/fav_sort_key"
         android:entries="@array/fav_sort_pref"/>
 
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="@string/shakePref"
-        android:title="@string/shakePrefStr"
-        android:summaryOff="@string/shakeSummaryOff"
-        android:summaryOn="@string/shakeSummaryOn"/>
 </PreferenceScreen>

@@ -1,5 +1,6 @@
 package com.android.abhishek.megamovies;
 
+import android.animation.ObjectAnimator;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -8,13 +9,18 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.transition.TransitionInflater;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
@@ -37,7 +43,6 @@ import com.android.abhishek.megamovies.viewModel.MovieDetailApiVM;
 import com.android.abhishek.megamovies.viewModel.MovieModelFactory;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -45,12 +50,14 @@ import java.util.List;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MovieDetailAct extends AppCompatActivity {
     //  xml view
     @BindView(R.id.toolBarATMovieDetail) android.support.v7.widget.Toolbar toolbar;
     @BindView(R.id.posterImageAtMovieDetail) ImageView posterImageIv;
     @BindView(R.id.logoIv) ImageView movieLogoIv;
+    @BindView(R.id.shareBtnAtMovieDetail) ImageView share;
     @BindView(R.id.movieNameAtMovieDetail) TextView movieNameTv;
     @BindView(R.id.productionNameAtMovie) TextView productionNameTv;
     @BindView(R.id.lengthTvAtMovieDetail) TextView lengthTv;
@@ -69,6 +76,7 @@ public class MovieDetailAct extends AppCompatActivity {
     @BindView(R.id.noTSEAtMvCasts) RelativeLayout castsError;
     @BindView(R.id.noTSEAtMvReview) RelativeLayout reviewError;
     @BindView(R.id.noTSEAtMvTrailer) RelativeLayout trailerError;
+    @BindView(R.id.detailCardAtMv) CardView cardView;
 
     //  constant string
     @BindString(R.string.apiKey) String API_KEY;
@@ -81,7 +89,6 @@ public class MovieDetailAct extends AppCompatActivity {
     //  temporary variable
     private String movieId;
     private String posterImageUrl = "";
-    private String movieLogo = "";
     private String productionName;
     private String length;
     private String movieName;
@@ -96,6 +103,11 @@ public class MovieDetailAct extends AppCompatActivity {
 
     private MovieDetail movieDetail = new MovieDetail();
     private boolean isExist = false;
+    public static final float LARGE_SCALE = 1.1f;
+    private boolean symmetric = true;
+    private boolean small = true;
+
+    public static final String EXTRA_CURVE = "EXTRA_CURVE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +115,7 @@ public class MovieDetailAct extends AppCompatActivity {
         setContentView(R.layout.activity_movie_detail);
 
         ButterKnife.bind(this);
+        share.setEnabled(false);
 
         final Drawable upArrow = getResources().getDrawable(R.drawable.arrow_back);
         upArrow.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
@@ -113,6 +126,7 @@ public class MovieDetailAct extends AppCompatActivity {
         getSupportActionBar().setTitle("");
         getSupportActionBar().setHomeAsUpIndicator(upArrow);
 
+
         Intent intent = getIntent();
         if(intent == null){
             closeOnError(getResources().getString(R.string.somethingWrong));
@@ -122,6 +136,17 @@ public class MovieDetailAct extends AppCompatActivity {
         if(movieId == null){
             closeOnError(getResources().getString(R.string.somethingWrong));
         }
+
+        boolean curve = getIntent().getBooleanExtra(EXTRA_CURVE, false);
+        if(Build.VERSION.SDK_INT>=21){
+            getWindow().setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition(curve ? R.transition.curve : R.transition.move));
+        }
+
+        Picasso.get()
+                .load(getIntent().getData())
+                .placeholder(R.drawable.loading_place_holder)
+                .error(R.drawable.error_place_holder)
+                .into(movieLogoIv);
 
         isExistInDb();
 
@@ -141,16 +166,6 @@ public class MovieDetailAct extends AppCompatActivity {
                     }
                 })
         );
-
-        castRv.addOnItemTouchListener(new RecyclerItemClickListener(this, castRv, new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                String id = movieCasts.get(position).getId();
-                Intent intent = new Intent(MovieDetailAct.this,CastProfileAct.class);
-                intent.putExtra(getResources().getString(R.string.intentPassingOne),id);
-                startActivity(intent);
-            }
-        }));
 
         likeButton.setOnLikeListener(new OnLikeListener() {
             @Override
@@ -212,7 +227,7 @@ public class MovieDetailAct extends AppCompatActivity {
                     videos = movieDetail.getMovieVideos()!=null?movieDetail.getMovieVideos().getVideosResults():null;
                     movieCasts = movieDetail.getMovieCasts()!=null?movieDetail.getMovieCasts().getMovieCastsResults():null;
                     reviews = movieDetail.getMovieReview()!=null?movieDetail.getMovieReview().getMovieReviewResults():null;
-                    productionName = "by "+(movieDetail.getProductionCompanies()!=null?movieDetail.getProductionCompanies().get(0).getName():DATA_NOT_AVAILABLE);
+                    productionName = "by "+(movieDetail.getProductionCompanies()!=null&&movieDetail.getProductionCompanies().size()!=0?movieDetail.getProductionCompanies().get(0).getName():DATA_NOT_AVAILABLE);
                     setVariable();
                     setView();
                 }else{
@@ -224,7 +239,6 @@ public class MovieDetailAct extends AppCompatActivity {
 
     private void setVariable() {
         posterImageUrl = IMAGE_BASE_URL + movieDetail.getBackdropPath();
-        movieLogo = IMAGE_BASE_URL + movieDetail.getPosterPath();
         try {
             length = movieDetail.getRuntime().isEmpty() ? DATA_NOT_AVAILABLE : String.valueOf(Integer.parseInt(movieDetail.getRuntime()) / 60) + "h " + String.valueOf(Integer.parseInt(movieDetail.getRuntime()) % 60) + "min";
         } catch (Exception e) {
@@ -241,31 +255,11 @@ public class MovieDetailAct extends AppCompatActivity {
     }
 
     private void setView(){
-        if(networkStatus()){
-            Picasso.get()
-                    .load(posterImageUrl)
-                    .placeholder(R.drawable.loading_place_holder)
-                    .error(R.drawable.error_place_holder)
-                    .into(posterImageIv);
-            Picasso.get()
-                    .load(movieLogo)
-                    .placeholder(R.drawable.loading_place_holder)
-                    .error(R.drawable.error_place_holder)
-                    .into(movieLogoIv);
-        }else{
-            Picasso.get()
-                    .load(posterImageUrl)
-                    .networkPolicy(NetworkPolicy.OFFLINE)
-                    .placeholder(R.drawable.loading_place_holder)
-                    .error(R.drawable.error_place_holder)
-                    .into(posterImageIv);
-            Picasso.get()
-                    .load(movieLogo)
-                    .networkPolicy(NetworkPolicy.OFFLINE)
-                    .placeholder(R.drawable.loading_place_holder)
-                    .error(R.drawable.error_place_holder)
-                    .into(movieLogoIv);
-        }
+        Picasso.get()
+                .load(posterImageUrl)
+                .placeholder(R.drawable.loading_place_holder)
+                .error(R.drawable.error_place_holder)
+                .into(posterImageIv);
 
         movieNameTv.setText(movieName);
         productionNameTv.setText(productionName);
@@ -291,7 +285,7 @@ public class MovieDetailAct extends AppCompatActivity {
         if(movieCasts == null || movieCasts.size() == 0){
             castsError.setVisibility(View.VISIBLE);
         }else{
-            MovieCastsAdapter castsAdapter = new MovieCastsAdapter(movieCasts);
+            MovieCastsAdapter castsAdapter = new MovieCastsAdapter(movieCasts,this);
             castRv.setAdapter(castsAdapter);
         }
 
@@ -312,6 +306,7 @@ public class MovieDetailAct extends AppCompatActivity {
             reviewRv.setAdapter(reviewAdapter);
         }
         likeButton.setEnabled(true);
+        share.setEnabled(true);
     }
 
     private void addToDb(){
@@ -337,7 +332,9 @@ public class MovieDetailAct extends AppCompatActivity {
                         if(validateVideos(videos.get(i))){
                             try{
                                 showDatabase.showDao().addVideos(new VideosResults(movieId,videos.get(i).getVideoKey()));
-                            }catch (Exception e){}
+                            }catch (Exception e){
+                               e.printStackTrace();
+                            }
                         }
                     }
                 }
@@ -491,6 +488,45 @@ public class MovieDetailAct extends AppCompatActivity {
         toast = Toast.makeText(MovieDetailAct.this,message,Toast.LENGTH_SHORT);
         toast.show();
         finish();
+    }
+
+    @OnClick(R.id.detailCardAtMv)
+    public void zoomDetail() {
+        Interpolator interpolator = AnimationUtils.loadInterpolator(this, android.R.interpolator.fast_out_slow_in);
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(cardView, View.SCALE_X, (small ? LARGE_SCALE : 1f));
+        scaleX.setInterpolator(interpolator);
+        scaleX.setDuration(symmetric ? 600L : 200L);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(cardView, View.SCALE_Y, (small ? LARGE_SCALE : 1f));
+        scaleY.setInterpolator(interpolator);
+        scaleY.setDuration(600L);
+        scaleX.start();
+        scaleY.start();
+
+        small = !small;
+        if (small) {
+            symmetric = !symmetric;
+        }
+    }
+
+    @OnClick(R.id.shareBtnAtMovieDetail)
+    void shareMovie(){
+        if(movieDetail != null){
+            String toBeShare = movieDetail.getTitle();
+            if(movieDetail.getOverview() != null){
+                toBeShare += "\n\n*Description*\n"+movieDetail.getOverview();
+            }
+            if(videos != null){
+                toBeShare += "\n\n*Videos*\n";
+                for(int i=0;i<videos.size();i++){
+                    toBeShare += Uri.parse(VIDEO_WEB_BASE_URL+videos.get(i).getVideoKey())+"\n";
+                }
+            }
+            Intent sharingIntent = new Intent();
+            sharingIntent.setAction(Intent.ACTION_SEND);
+            sharingIntent.setType("text/plain");
+            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, toBeShare);
+            startActivity(sharingIntent);
+        }
     }
 }
 

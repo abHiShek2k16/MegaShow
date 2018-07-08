@@ -3,11 +3,11 @@ package com.android.abhishek.megamovies.fragments;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,6 +20,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -28,9 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.abhishek.megamovies.R;
-import com.android.abhishek.megamovies.TvDetailAct;
 import com.android.abhishek.megamovies.adapter.ListAdapter;
-import com.android.abhishek.megamovies.listener.RecyclerItemClickListener;
 import com.android.abhishek.megamovies.model.ShowList;
 import com.android.abhishek.megamovies.viewModel.TvListVM;
 
@@ -62,15 +62,17 @@ public class TvFragment extends Fragment implements SharedPreferences.OnSharedPr
     @BindString(R.string.popularQ) String TV_SORT_BY;
     @BindString(R.string.tvSortPref) String tvSortKey;
     @BindString(R.string.currentPage) String currentPageKey;
+    @BindString(R.string.recyclerViewState) String recyclerStateKey;
 
     private int NO_OF_IMAGE = 2;
     private int currentPage = 1;
     private int previousPage = 1;
     private int totalPage = 1;
-    private ShowList tvListObj;
+
     private ShowList tempShowList = new ShowList();
     private Toast toast;
     private boolean flag = true;
+    private Parcelable parcelable;
 
     public TvFragment() {
 
@@ -83,7 +85,7 @@ public class TvFragment extends Fragment implements SharedPreferences.OnSharedPr
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tv, container, false);
         ButterKnife.bind(this,view);
         loadPreferences();
@@ -95,6 +97,9 @@ public class TvFragment extends Fragment implements SharedPreferences.OnSharedPr
             }
             if(savedInstanceState.containsKey(tvSortKey)){
                 TV_SORT_BY = savedInstanceState.getString(tvSortKey);
+            }
+            if(savedInstanceState.containsKey(recyclerStateKey)){
+                parcelable = ((Bundle) savedInstanceState).getParcelable(recyclerStateKey);
             }
             flag = false;
         }
@@ -109,6 +114,7 @@ public class TvFragment extends Fragment implements SharedPreferences.OnSharedPr
         super.onSaveInstanceState(outState);
         outState.putString(tvSortKey,TV_SORT_BY);
         outState.putInt(currentPageKey, currentPage);
+        outState.putParcelable(recyclerStateKey,recyclerView.getLayoutManager().onSaveInstanceState());
     }
 
     @Override
@@ -117,15 +123,6 @@ public class TvFragment extends Fragment implements SharedPreferences.OnSharedPr
 
         checkOrientation();
         loadTv();
-
-        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Intent intent = new Intent(getActivity(),TvDetailAct.class);
-                intent.putExtra(getResources().getString(R.string.intentPassingOne),tvListObj.getResults().get(position).getId());
-                startActivity(intent);
-            }
-        }));
 
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -224,15 +221,21 @@ public class TvFragment extends Fragment implements SharedPreferences.OnSharedPr
         errorLayout.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
 
-        tvListObj = showList;
         totalPage = showList.getTotalPages();
         previousPage = currentPage;
 
         doPagination();
 
+        int resId = R.anim.recycler_animation;
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getActivity(), resId);
+        recyclerView.setLayoutAnimation(animation);
+
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), NO_OF_IMAGE));
-        ListAdapter movieListAdapter = new ListAdapter(showList.getResults());
+        ListAdapter movieListAdapter = new ListAdapter(showList.getResults(),getActivity(),"Tv");
         recyclerView.setAdapter(movieListAdapter);
+        if(parcelable != null){
+            recyclerView.getLayoutManager().onRestoreInstanceState(parcelable);
+        }
     }
 
     private void showError(){

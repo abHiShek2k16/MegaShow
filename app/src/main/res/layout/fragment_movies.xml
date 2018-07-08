@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/x4"
         android:layout_marginBottom="@dimen/x48"
-        android:layout_below="@id/fragmentPbAtMv"/>
+        android:layout_below="@id/fragmentPbAtMv" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,7 +39,8 @@
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:layout_marginRight="@dimen/x4"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            android:foreground="@drawable/ripple_effect"/>
         <TextView
             android:id="@+id/showPageNo"
             android:layout_width="match_parent"
@@ -63,7 +64,8 @@
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:layout_marginLeft="@dimen/x4"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            android:foreground="@drawable/ripple_effect"/>
     </LinearLayout>
 
     <RelativeLayout
@@ -93,7 +95,8 @@
             android:layout_marginTop="@dimen/x8"
             android:text="@string/tryAgain"
             android:textColor="@color/white"
-            android:textAllCaps="false"/>
+            android:textAllCaps="false"
+            android:foreground="@drawable/ripple_effect"/>
     </RelativeLayout>
 
 </RelativeLayout>

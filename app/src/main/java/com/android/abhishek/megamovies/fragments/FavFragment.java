@@ -2,10 +2,10 @@ package com.android.abhishek.megamovies.fragments;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,17 +18,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.android.abhishek.megamovies.MovieDetailAct;
 import com.android.abhishek.megamovies.R;
-import com.android.abhishek.megamovies.TvDetailAct;
 import com.android.abhishek.megamovies.adapter.ListAdapter;
 import com.android.abhishek.megamovies.viewModel.FavVM;
-import com.android.abhishek.megamovies.listener.RecyclerItemClickListener;
 import com.android.abhishek.megamovies.model.ListResults;
 import com.android.abhishek.megamovies.model.MovieDetail;
 import com.android.abhishek.megamovies.model.TvDetail;
@@ -53,11 +52,13 @@ public class FavFragment extends Fragment implements SharedPreferences.OnSharedP
 
     //  Temporary Variable
     @BindString(R.string.favSortPref) String favSortKey;
+    @BindString(R.string.recyclerViewState) String recyclerStateKey;
     @BindString(R.string.movieQ) String FAV_SORT_BY;
 
     private int NO_OF_IMAGE = 2;
     private List<ListResults> resultList;
     private Toast toast;
+    private Parcelable parcelable;
 
     public FavFragment() {
 
@@ -70,7 +71,7 @@ public class FavFragment extends Fragment implements SharedPreferences.OnSharedP
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fav, container, false);
         ButterKnife.bind(this,view);
         loadPreferences();
@@ -79,7 +80,9 @@ public class FavFragment extends Fragment implements SharedPreferences.OnSharedP
             if(savedInstanceState.containsKey(favSortKey)){
                 FAV_SORT_BY = savedInstanceState.getString(favSortKey);
             }
-
+            if(savedInstanceState.containsKey(recyclerStateKey)){
+                parcelable = ((Bundle) savedInstanceState).getParcelable(recyclerStateKey);
+            }
         }
         menu = getActivity().findViewById(R.id.menuBtn);
         registerForContextMenu(menu);
@@ -90,6 +93,7 @@ public class FavFragment extends Fragment implements SharedPreferences.OnSharedP
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(favSortKey,FAV_SORT_BY);
+        outState.putParcelable(recyclerStateKey,recyclerView.getLayoutManager().onSaveInstanceState());
     }
 
     @Override
@@ -98,21 +102,6 @@ public class FavFragment extends Fragment implements SharedPreferences.OnSharedP
 
         checkOrientation();
         loadFav();
-
-        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                if(FAV_SORT_BY.equals(MOVIE)){
-                    Intent intent = new Intent(getActivity(),MovieDetailAct.class);
-                    intent.putExtra(getResources().getString(R.string.intentPassingOne),resultList.get(position).getId());
-                    startActivity(intent);
-                }else{
-                    Intent intent = new Intent(getActivity(),TvDetailAct.class);
-                    intent.putExtra(getResources().getString(R.string.intentPassingOne),resultList.get(position).getId());
-                    startActivity(intent);
-                }
-            }
-        }));
 
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,12 +138,14 @@ public class FavFragment extends Fragment implements SharedPreferences.OnSharedP
             viewModel.getMovieDetailList().observe(this, new Observer<List<MovieDetail>>() {
                 @Override
                 public void onChanged(@Nullable List<MovieDetail> movieDetails) {
-                    List<ListResults> listResultsArrayList = new ArrayList<>();
-                    for(int i=0;i<movieDetails.size();i++){
-                        listResultsArrayList.add(new ListResults(movieDetails.get(i).getMovieId(),movieDetails.get(i).getPosterPath()));
+                    if(movieDetails != null){
+                        List<ListResults> listResultsArrayList = new ArrayList<>();
+                        for(int i=0;i<movieDetails.size();i++){
+                            listResultsArrayList.add(new ListResults(movieDetails.get(i).getMovieId(),movieDetails.get(i).getPosterPath()));
+                        }
+                        resultList = listResultsArrayList;
+                        setResultList();
                     }
-                    resultList = listResultsArrayList;
-                    setResultList();
                 }
             });
         }else{
@@ -162,12 +153,14 @@ public class FavFragment extends Fragment implements SharedPreferences.OnSharedP
             viewModel.getTvDetailList().observe(this, new Observer<List<TvDetail>>() {
                 @Override
                 public void onChanged(@Nullable List<TvDetail> tvDetails) {
-                    List<ListResults> listResultsArrayList = new ArrayList<>();
-                    for(int i=0;i<tvDetails.size();i++){
-                        listResultsArrayList.add(new ListResults(tvDetails.get(i).getMovieId(),tvDetails.get(i).getPosterPath()));
+                    if(tvDetails != null){
+                        List<ListResults> listResultsArrayList = new ArrayList<>();
+                        for(int i=0;i<tvDetails.size();i++){
+                            listResultsArrayList.add(new ListResults(tvDetails.get(i).getMovieId(),tvDetails.get(i).getPosterPath()));
+                        }
+                        resultList = listResultsArrayList;
+                        setResultList();
                     }
-                    resultList = listResultsArrayList;
-                    setResultList();
                 }
             });
         }
@@ -180,9 +173,17 @@ public class FavFragment extends Fragment implements SharedPreferences.OnSharedP
         if(resultList == null || resultList.size() == 0){
             showError();
         }
+
+        int resId = R.anim.recycler_animation;
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getActivity(), resId);
+        recyclerView.setLayoutAnimation(animation);
+
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), NO_OF_IMAGE));
-        ListAdapter movieListAdapter = new ListAdapter(resultList);
+        ListAdapter movieListAdapter = new ListAdapter(resultList,getActivity(),FAV_SORT_BY);
         recyclerView.setAdapter(movieListAdapter);
+        if(parcelable != null){
+            recyclerView.getLayoutManager().onRestoreInstanceState(parcelable);
+        }
     }
 
     private void showError(){

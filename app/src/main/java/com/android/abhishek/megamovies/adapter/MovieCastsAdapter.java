@@ -1,5 +1,10 @@
 package com.android.abhishek.megamovies.adapter;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.abhishek.megamovies.CastProfileAct;
 import com.android.abhishek.megamovies.R;
 import com.android.abhishek.megamovies.model.EndPoint;
 import com.android.abhishek.megamovies.model.MovieCastsResult;
@@ -21,9 +27,11 @@ import butterknife.ButterKnife;
 public class MovieCastsAdapter extends RecyclerView.Adapter<MovieCastsAdapter.CastsCustomAdapter>{
 
     private final List<MovieCastsResult> movieCastsResults;
+    private final Activity activity;
 
-    public MovieCastsAdapter(List<MovieCastsResult> movieCastsResults) {
+    public MovieCastsAdapter(List<MovieCastsResult> movieCastsResults, Activity activity) {
         this.movieCastsResults = movieCastsResults;
+        this.activity = activity;
     }
 
     @NonNull
@@ -34,12 +42,13 @@ public class MovieCastsAdapter extends RecyclerView.Adapter<MovieCastsAdapter.Ca
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CastsCustomAdapter holder, int position) {
-        MovieCastsResult movieCastsResult = movieCastsResults.get(position);
+    public void onBindViewHolder(@NonNull final CastsCustomAdapter holder, int position) {
+
+        final MovieCastsResult movieCastsResult = movieCastsResults.get(position);
         if(movieCastsResult == null){
             return;
         }
-        String IMAGE_BASE_URL = EndPoint.IMAGE_BASE_URL;
+        final String IMAGE_BASE_URL = EndPoint.IMAGE_BASE_URL;
         Picasso.get()
                 .load(IMAGE_BASE_URL +movieCastsResult.getProfilePath())
                 .placeholder(R.drawable.loading_place_holder)
@@ -49,6 +58,23 @@ public class MovieCastsAdapter extends RecyclerView.Adapter<MovieCastsAdapter.Ca
         String character = movieCastsResult.getCharacter()==null?"":movieCastsResult.getCharacter();
         holder.nameTv.setText(name);
         holder.rollTv.setText(character);
+
+        holder.castIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(activity, CastProfileAct.class);
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.putExtra(activity.getResources().getString(R.string.intentPassingOne),movieCastsResult.getId());
+                boolean curve = (holder.getAdapterPosition() % 2 == 0);
+                intent.setData(Uri.parse(IMAGE_BASE_URL+movieCastsResult.getProfilePath()));
+                intent.putExtra(CastProfileAct.EXTRA_CURVE, curve);
+                if(Build.VERSION.SDK_INT>=21){
+                    activity.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity, holder.castIv, holder.castIv.getTransitionName()).toBundle());
+                }else{
+                    activity.startActivity(intent);
+                }
+            }
+        });
     }
 
     @Override

@@ -3,16 +3,17 @@ package com.android.abhishek.megamovies.fragments;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -20,6 +21,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -27,10 +30,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.abhishek.megamovies.MovieDetailAct;
 import com.android.abhishek.megamovies.R;
 import com.android.abhishek.megamovies.adapter.ListAdapter;
-import com.android.abhishek.megamovies.listener.RecyclerItemClickListener;
 import com.android.abhishek.megamovies.model.ListResults;
 import com.android.abhishek.megamovies.model.ShowList;
 import com.android.abhishek.megamovies.viewModel.MovieListVM;
@@ -67,6 +68,7 @@ public class MoviesFragment extends Fragment implements SharedPreferences.OnShar
     //  Key To Restore From Shared Pref
     @BindString(R.string.movieSortPref) String movieSortKey;
     @BindString(R.string.currentPage) String currentPageKey;
+    @BindString(R.string.recyclerViewState) String recyclerStateKey;
 
     //  Temporary Variables
     private int NO_OF_IMAGE = 2;
@@ -77,6 +79,7 @@ public class MoviesFragment extends Fragment implements SharedPreferences.OnShar
     private ShowList tempShowList = new ShowList();
     private Toast toast;
     private boolean flag = true;
+    private Parcelable parcelable;
 
     public MoviesFragment() {
 
@@ -89,7 +92,7 @@ public class MoviesFragment extends Fragment implements SharedPreferences.OnShar
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movies, container, false);
         ButterKnife.bind(this,view);
         loadPreferences();
@@ -101,6 +104,9 @@ public class MoviesFragment extends Fragment implements SharedPreferences.OnShar
             if(savedInstanceState.containsKey(currentPageKey)){
                 currentPage = savedInstanceState.getInt(currentPageKey);
                 previousPage = currentPage;
+            }
+            if(savedInstanceState.containsKey(recyclerStateKey)){
+                 parcelable = ((Bundle) savedInstanceState).getParcelable(recyclerStateKey);
             }
             flag = false;
         }
@@ -115,6 +121,7 @@ public class MoviesFragment extends Fragment implements SharedPreferences.OnShar
         super.onSaveInstanceState(outState);
         outState.putString(movieSortKey,MOVIE_SORT_BY);
         outState.putInt(currentPageKey, currentPage);
+        outState.putParcelable(recyclerStateKey,recyclerView.getLayoutManager().onSaveInstanceState());
     }
 
     @Override
@@ -123,15 +130,6 @@ public class MoviesFragment extends Fragment implements SharedPreferences.OnShar
 
         checkOrientation();
         loadMovies();
-
-        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Intent intent = new Intent(getActivity(),MovieDetailAct.class);
-                intent.putExtra(getResources().getString(R.string.intentPassingOne),listResults.get(position).getId());
-                startActivity(intent);
-            }
-        }));
 
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -238,9 +236,18 @@ public class MoviesFragment extends Fragment implements SharedPreferences.OnShar
 
         doPagination();
 
-        ListAdapter movieListAdapter = new ListAdapter(listResults);
+        int resId = R.anim.recycler_animation;
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getActivity(), resId);
+        recyclerView.setLayoutAnimation(animation);
+
+        ListAdapter movieListAdapter = new ListAdapter(listResults,getActivity(),"Movie");
+        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), NO_OF_IMAGE));
         recyclerView.setAdapter(movieListAdapter);
+        if(parcelable != null){
+            recyclerView.getLayoutManager().onRestoreInstanceState(parcelable);
+        }
+
     }
 
     private void showError(){
@@ -353,4 +360,5 @@ public class MoviesFragment extends Fragment implements SharedPreferences.OnShar
         pageText.setVisibility(View.VISIBLE);
         pageText.setText("Page "+ currentPage +" of "+ totalPage);
     }
+
 }

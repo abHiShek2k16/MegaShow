@@ -16,11 +16,11 @@ public class VideosResults {
     private String movieId;
 
     @Ignore
-    public VideosResults(String videoKey) {
+    public VideosResults(@NonNull String videoKey) {
         this.videoKey = videoKey;
     }
 
-    public VideosResults(String movieId, String videoKey) {
+    public VideosResults(String movieId, @NonNull String videoKey) {
         this.movieId = movieId;
         this.videoKey = videoKey;
     }
@@ -29,6 +29,7 @@ public class VideosResults {
         return movieId;
     }
 
+    @NonNull
     public String getVideoKey() {
         return videoKey;
     }

@@ -1,6 +1,7 @@
 package com.android.abhishek.megamovies.network;
 
 import android.arch.lifecycle.MutableLiveData;
+import android.support.annotation.NonNull;
 
 import com.android.abhishek.megamovies.model.MovieDetail;
 import com.android.abhishek.megamovies.model.PersonProfile;
@@ -19,12 +20,12 @@ public class ApiRepository {
         final MutableLiveData<ShowList> popularMovieList = new MutableLiveData<>();
         apiInterface.getPopularMovies(API_KEY,CURRENT_PAGE).enqueue(new Callback<ShowList>() {
             @Override
-            public void onResponse(Call<ShowList> call, Response<ShowList> response) {
+            public void onResponse(@NonNull Call<ShowList> call, @NonNull Response<ShowList> response) {
                 popularMovieList.setValue(response.body());
             }
 
             @Override
-            public void onFailure(Call<ShowList> call, Throwable t) {
+            public void onFailure(@NonNull Call<ShowList> call, @NonNull Throwable t) {
 
             }
         });
@@ -35,12 +36,12 @@ public class ApiRepository {
         final MutableLiveData<ShowList> topRatedMovieList  = new MutableLiveData<>();
         apiInterface.getTopRatedMovies(API_KEY,CURRENT_PAGE).enqueue(new Callback<ShowList>() {
             @Override
-            public void onResponse(Call<ShowList> call, Response<ShowList> response) {
+            public void onResponse(@NonNull Call<ShowList> call, @NonNull Response<ShowList> response) {
                 topRatedMovieList.setValue(response.body());
             }
 
             @Override
-            public void onFailure(Call<ShowList> call, Throwable t) {
+            public void onFailure(@NonNull Call<ShowList> call, @NonNull Throwable t) {
 
             }
         });
@@ -51,12 +52,12 @@ public class ApiRepository {
         final MutableLiveData<ShowList> upcomingMovieList = new MutableLiveData<>();
         apiInterface.getUpcomingMovies(API_KEY,CURRENT_PAGE).enqueue(new Callback<ShowList>() {
             @Override
-            public void onResponse(Call<ShowList> call, Response<ShowList> response) {
+            public void onResponse(@NonNull Call<ShowList> call, @NonNull Response<ShowList> response) {
                 upcomingMovieList.setValue(response.body());
             }
 
             @Override
-            public void onFailure(Call<ShowList> call, Throwable t) {
+            public void onFailure(@NonNull Call<ShowList> call, @NonNull Throwable t) {
 
             }
         });
@@ -67,12 +68,12 @@ public class ApiRepository {
         final MutableLiveData<ShowList> nowPlayingMovieList = new MutableLiveData<>();
         apiInterface.getNowPlayingMovies(API_KEY,CURRENT_PAGE).enqueue(new Callback<ShowList>() {
             @Override
-            public void onResponse(Call<ShowList> call, Response<ShowList> response) {
+            public void onResponse(@NonNull Call<ShowList> call, @NonNull Response<ShowList> response) {
                 nowPlayingMovieList.setValue(response.body());
             }
 
             @Override
-            public void onFailure(Call<ShowList> call, Throwable t) {
+            public void onFailure(@NonNull Call<ShowList> call, @NonNull Throwable t) {
 
             }
         });
@@ -83,12 +84,12 @@ public class ApiRepository {
         final MutableLiveData<MovieDetail> movieDetailFromApi = new MutableLiveData<>();
         apiInterface.getMovieDetail(movieId,ApiKey,AppendQuery).enqueue(new Callback<MovieDetail>() {
             @Override
-            public void onResponse(Call<MovieDetail> call, Response<MovieDetail> response) {
+            public void onResponse(@NonNull Call<MovieDetail> call, @NonNull Response<MovieDetail> response) {
                 movieDetailFromApi.setValue(response.body());
             }
 
             @Override
-            public void onFailure(Call<MovieDetail> call, Throwable t) {
+            public void onFailure(@NonNull Call<MovieDetail> call, @NonNull Throwable t) {
 
             }
         });
@@ -99,12 +100,12 @@ public class ApiRepository {
         final MutableLiveData<TvDetail> tvDetailFromApi = new MutableLiveData<>();
         apiInterface.getTvDetail(tvId,ApiKey,AppendQuery).enqueue(new Callback<TvDetail>() {
             @Override
-            public void onResponse(Call<TvDetail> call, Response<TvDetail> response) {
+            public void onResponse(@NonNull Call<TvDetail> call, @NonNull Response<TvDetail> response) {
                 tvDetailFromApi.setValue(response.body());
             }
 
             @Override
-            public void onFailure(Call<TvDetail> call, Throwable t) {
+            public void onFailure(@NonNull Call<TvDetail> call, @NonNull Throwable t) {
 
             }
         });
@@ -115,12 +116,12 @@ public class ApiRepository {
         final MutableLiveData<ShowList> popularTvList = new MutableLiveData<>();
         apiInterface.getPopularTv(API_KEY,CURRENT_PAGE).enqueue(new Callback<ShowList>() {
             @Override
-            public void onResponse(Call<ShowList> call, Response<ShowList> response) {
+            public void onResponse(@NonNull Call<ShowList> call, @NonNull Response<ShowList> response) {
                 popularTvList.setValue(response.body());
             }
 
             @Override
-            public void onFailure(Call<ShowList> call, Throwable t) {
+            public void onFailure(@NonNull Call<ShowList> call, @NonNull Throwable t) {
 
             }
         });
@@ -131,12 +132,12 @@ public class ApiRepository {
         final MutableLiveData<ShowList> topRatedTvList = new MutableLiveData<>();
         apiInterface.getTopRatedTv(API_KEY,CURRENT_PAGE).enqueue(new Callback<ShowList>() {
             @Override
-            public void onResponse(Call<ShowList> call, Response<ShowList> response) {
+            public void onResponse(@NonNull Call<ShowList> call, @NonNull Response<ShowList> response) {
                 topRatedTvList.setValue(response.body());
             }
 
             @Override
-            public void onFailure(Call<ShowList> call, Throwable t) {
+            public void onFailure(@NonNull Call<ShowList> call, @NonNull Throwable t) {
 
             }
         });
@@ -147,12 +148,12 @@ public class ApiRepository {
         final MutableLiveData<ShowList> onTheAirTvList = new MutableLiveData<>();
         apiInterface.getOnTheAir(API_KEY,CURRENT_PAGE).enqueue(new Callback<ShowList>() {
             @Override
-            public void onResponse(Call<ShowList> call, Response<ShowList> response) {
+            public void onResponse(@NonNull Call<ShowList> call, @NonNull Response<ShowList> response) {
                 onTheAirTvList.setValue(response.body());
             }
 
             @Override
-            public void onFailure(Call<ShowList> call, Throwable t) {
+            public void onFailure(@NonNull Call<ShowList> call, @NonNull Throwable t) {
 
             }
         });
@@ -163,12 +164,12 @@ public class ApiRepository {
         final MutableLiveData<ShowList> airingTodayTvList = new MutableLiveData<>();
         apiInterface.getAiringToday(API_KEY,CURRENT_PAGE).enqueue(new Callback<ShowList>() {
             @Override
-            public void onResponse(Call<ShowList> call, Response<ShowList> response) {
+            public void onResponse(@NonNull Call<ShowList> call, @NonNull Response<ShowList> response) {
                 airingTodayTvList.setValue(response.body());
             }
 
             @Override
-            public void onFailure(Call<ShowList> call, Throwable t) {
+            public void onFailure(@NonNull Call<ShowList> call, @NonNull Throwable t) {
 
             }
         });
@@ -179,12 +180,12 @@ public class ApiRepository {
         final MutableLiveData<PersonProfile> personProfile = new MutableLiveData<>();
         apiInterface.getProfile(id,API_KEY).enqueue(new Callback<PersonProfile>() {
             @Override
-            public void onResponse(Call<PersonProfile> call, Response<PersonProfile> response) {
+            public void onResponse(@NonNull Call<PersonProfile> call, @NonNull Response<PersonProfile> response) {
                 personProfile.setValue(response.body());
             }
 
             @Override
-            public void onFailure(Call<PersonProfile> call, Throwable t) {
+            public void onFailure(@NonNull Call<PersonProfile> call, @NonNull Throwable t) {
 
             }
         });

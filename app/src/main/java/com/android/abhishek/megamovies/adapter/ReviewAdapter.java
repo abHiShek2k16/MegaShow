@@ -33,7 +33,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewCust
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ReviewCustomAdapter holder, int position) {
+    public void onBindViewHolder(@NonNull final ReviewCustomAdapter holder,int position) {
         ReviewResults reviewResults = this.reviewResults.get(position);
         if(reviewResults == null){
             return;

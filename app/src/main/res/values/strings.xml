@@ -25,14 +25,22 @@
     <string name="movieSortPref" translatable="false">sort_movie_by</string>
     <string name="tvSortPref" translatable="false">sort_tv_by</string>
     <string name="favSortPref" translatable="false">sort_fav_by</string>
-    <string name="shakePref" translatable="false">shake_feature_key</string>
     <string name="tvQ" translatable="false">tv</string>
     <string name="movieQ" translatable="false">movie</string>
     <string name="currentPage" translatable="false">current_page</string>
+    <string name="navigationOption" translatable="false">current_option</string>
+    <string name="recyclerViewState" translatable="false">current_recycler_state</string>
 
     <!--    INTENT KEY  -->
     <string name="intentPassingOne" translatable="false">INTENT_STRING_ONE</string>
     <string name="intentPassingTwo" translatable="false">INTENT_STRING_TWO</string>
+    <string name="curve_transition_poster" translatable="false">Transition_CURVE_POSTER</string>
+    <string name="curve_transition_cast" translatable="false">Transition_CURVE_CAST</string>
+
+    <!--    Notification String -->
+    <string name="notificationTitle">Today Popular Movie</string>
+    <string name="notificationDesc">Click to know more about the movie</string>
+    <string name="notificationChannelName" translatable="false">MOVIE_CHANNEL</string>
 
     <!--    XML STRING -->
     <string name="movieStr">Movies</string>
@@ -70,9 +78,6 @@
     <string name="movieSortPrefStr">Sort Movie By</string>
     <string name="tvSortPrefStr">Sort Tv Series By</string>
     <string name="favSortPrefStr">Sort Favourite List By</string>
-    <string name="shakePrefStr">On Phone Shake</string>
-    <string name="shakeSummaryOn">change the page</string>
-    <string name="shakeSummaryOff">do not change the page</string>
 
     <!--    MONTH NAME  -->
     <string name="jan"> Jan</string>

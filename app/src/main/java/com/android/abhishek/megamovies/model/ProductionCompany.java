@@ -16,19 +16,21 @@ public class ProductionCompany {
     private String movieId;
 
     @Ignore
-    public ProductionCompany(String name) {
+    public ProductionCompany(@NonNull String name) {
         this.name = name;
     }
 
-    public ProductionCompany(String name, String movieId) {
+    public ProductionCompany(@NonNull String name, @NonNull String movieId) {
         this.name = name;
         this.movieId = movieId;
     }
 
+    @NonNull
     public String getMovieId() {
         return movieId;
     }
 
+    @NonNull
     public String getName() {
         return name;
     }

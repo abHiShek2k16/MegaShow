@@ -5,9 +5,11 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.transition.TransitionInflater;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +38,8 @@ public class CastProfileAct extends AppCompatActivity {
     private PersonProfile personProfile;
     private Toast toast;
 
+    public static final String EXTRA_CURVE = "EXTRA_CURVE";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +57,18 @@ public class CastProfileAct extends AppCompatActivity {
         if(id == null) {
             closeOnError(getResources().getString(R.string.somethingWrong));
         }
+
+        boolean curve = getIntent().getBooleanExtra(EXTRA_CURVE, false);
+        if(Build.VERSION.SDK_INT>=21){
+            getWindow().setSharedElementEnterTransition(TransitionInflater.from(this).inflateTransition(curve ? R.transition.curve : R.transition.move));
+        }
+
+        Picasso.get()
+                .load(intent.getData())
+                .placeholder(R.drawable.loading_place_holder)
+                .error(R.drawable.error_place_holder)
+                .into(photo);
+
         loadProfile();
     }
 
@@ -78,13 +94,6 @@ public class CastProfileAct extends AppCompatActivity {
         }catch (Exception e){
             bioStr = DATA_NOT_AVAILABLE;
         }
-        String imageUrl = personProfile.getProfilePath();
-
-        Picasso.get()
-                .load(IMAGE_BASE_URL+imageUrl)
-                .placeholder(R.drawable.loading_place_holder)
-                .error(R.drawable.error_place_holder)
-                .into(photo);
 
         name.setText(nameStr);
         year.setText(changeFormatOfDate(yearStr));

@@ -51,7 +51,7 @@ public class TvDetail {
     private List<ProductionCompany> productionCompanies;
 
     @Ignore
-    public TvDetail(String movieId, String backdropPath, List<Integer> runTime, List<TvCreatedByResults> tvCreatedByResults, String firstAirDate, String lastAirDate, String name, String noOfEpisode, String noOfSeason, String overview, String posterPath, String voteAvg, String voteCount, Videos videos, Review review, List<ProductionCompany> productionCompanies) {
+    public TvDetail(@NonNull String movieId, String backdropPath, List<Integer> runTime, List<TvCreatedByResults> tvCreatedByResults, String firstAirDate, String lastAirDate, String name, String noOfEpisode, String noOfSeason, String overview, String posterPath, String voteAvg, String voteCount, Videos videos, Review review, List<ProductionCompany> productionCompanies) {
         this.movieId = movieId;
         this.backdropPath = backdropPath;
         this.runTime = runTime;
@@ -70,7 +70,7 @@ public class TvDetail {
         this.productionCompanies = productionCompanies;
     }
 
-    public TvDetail(String movieId, String backdropPath, String firstAirDate, String lastAirDate, String name, String noOfEpisode, String noOfSeason, String overview, String posterPath, String voteAvg, String voteCount) {
+    public TvDetail(@NonNull String movieId, String backdropPath, String firstAirDate, String lastAirDate, String name, String noOfEpisode, String noOfSeason, String overview, String posterPath, String voteAvg, String voteCount) {
         this.movieId = movieId;
         this.backdropPath = backdropPath;
         this.firstAirDate = firstAirDate;
@@ -144,6 +144,7 @@ public class TvDetail {
         return productionCompanies;
     }
 
+    @NonNull
     public String getMovieId() {
         return movieId;
     }

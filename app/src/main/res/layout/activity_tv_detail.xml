@@ -18,17 +18,42 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white">
-                <ImageView
-                    android:id="@+id/posterImageAtTv"
+
+                <FrameLayout
+                    android:id="@+id/posterFrameAtTv"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/x256"
-                    android:contentDescription="@string/imageDesc"
-                    android:scaleType="fitXY" />
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/posterImageAtTv"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/x256"
+                        android:contentDescription="@string/imageDesc"
+                        android:scaleType="fitXY" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/x256"
+                        android:background="@drawable/scrim_back_poster"/>
+                </FrameLayout>
+
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolBarAtTv"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/x48"
-                    app:popupTheme="@style/AppTheme.PopupOverlay"/>
+                    app:popupTheme="@style/AppTheme.PopupOverlay">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:id="@+id/shareBtnAtTvDetail"
+                            android:layout_width="@dimen/x22"
+                            android:layout_height="@dimen/x22"
+                            android:src="@drawable/share_menu_icon"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginTop="@dimen/x12"
+                            android:layout_marginRight="@dimen/x16"
+                            android:contentDescription="@string/imageDesc"/>
+                    </RelativeLayout>
+                </android.support.v7.widget.Toolbar>
                 <TextView
                     android:id="@+id/movieNameAtTv"
                     android:layout_width="match_parent"
@@ -37,7 +62,7 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/xs22"
                     android:textStyle="bold"
-                    android:layout_below="@id/posterImageAtTv"
+                    android:layout_below="@id/posterFrameAtTv"
                     android:singleLine="true"
                     android:ellipsize="marquee"
                     android:paddingTop="@dimen/x8"
@@ -50,6 +75,8 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/xs16"
                     android:layout_below="@id/movieNameAtTv"
+                    android:singleLine="true"
+                    android:ellipsize="marquee"
                     android:paddingBottom="@dimen/x8"
                     android:paddingLeft="@dimen/x16"/>
                 <com.like.LikeButton
@@ -80,6 +107,7 @@
                 app:cardUseCompatPadding="true"
                 android:background="@color/grey">
                 <android.support.v7.widget.CardView
+                    android:id="@+id/detailCardAtTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="@dimen/x12"
@@ -101,6 +129,7 @@
                             android:layout_weight="1"
                             android:scaleType="fitXY"
                             android:contentDescription="@string/imageDesc"
+                            android:transitionName="@string/curve_transition_poster"
                             android:layout_marginBottom="@dimen/x12"/>
 
                         <LinearLayout

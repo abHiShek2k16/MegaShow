@@ -71,7 +71,7 @@ public class MovieDetail {
         this.movieCasts = movieCasts;
     }
 
-    public MovieDetail(String movieId, String backdropPath, String overview, String posterPath, String releaseDate, String runtime, String title, String voteAvg, String voteCount) {
+    public MovieDetail(@NonNull String movieId, String backdropPath, String overview, String posterPath, String releaseDate, String runtime, String title, String voteAvg, String voteCount) {
         this.movieId = movieId;
         this.backdropPath = backdropPath;
         this.overview = overview;
@@ -131,6 +131,7 @@ public class MovieDetail {
         return movieCasts;
     }
 
+    @NonNull
     public String getMovieId() {
         return movieId;
     }
