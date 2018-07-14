@@ -20,5 +20,5 @@ If you want to contribute or just want to check the code then fork or clone the 
 </br><br/>You are ready to go
 
 ## License & copyright
-Licensed under the [MIT License](License).
+Licensed under the [MIT License](LICENSE).
 
