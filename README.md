@@ -18,3 +18,7 @@ _Name_, _Production Name_, _Length_, _Releasing Date_, _Trailers_, _Casts_, _Cre
 **Setup**<br/>
 If you want to contribute or just want to check the code then fork or clone the project as you need and open in _Android Studio_ then go to **String.xml** file under res>values folder and place your **tmdb** Api
 </br><br/>You are ready to go
+
+## License & copyright
+Licensed under the [MIT License](License).
+
