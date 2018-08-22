@@ -17,7 +17,7 @@ _Name_, _Production Name_, _Length_, _Releasing Date_, _Trailers_, _Casts_, _Cre
 4) ViewModel with LiveData
 5) Room
 6) Preference
-7) JonDispathcer
+7) JobDispathcer
 8) CircularImageView
 9) TextFormatter
 
